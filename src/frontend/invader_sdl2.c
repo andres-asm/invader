@@ -26,18 +26,18 @@
 #define NK_IMPLEMENTATION
 #define NK_SDL_GL3_IMPLEMENTATION
 
-#define WINDOW_WIDTH 1920
-#define WINDOW_HEIGHT 1080
-
 #include <GL/glew.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 
 #include "invader.h"
+#include "util.h"
 #include "nuklear_sdl_gl3.h"
 
 #define WINDOW_WIDTH 1920
 #define WINDOW_HEIGHT 1080
+
+static const char* tag = "[sdl]";
 
 int main(int argc, char *argv[])
 {
@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
    glewExperimental = 1;
    if (glewInit() != GLEW_OK)
    {
-      fprintf(stderr, "[invader] Failed to setup GLEW\n");
+      logger(LOG_ERROR, tag, "error: failed to setup GLEW\n");
       exit(1);
    }
 

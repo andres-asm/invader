@@ -1,6 +1,8 @@
 SRC = ./src/frontend/invader.c \
       ./src/frontend/config.c \
+      ./src/backend/libretro/piccolo.c \
+      ./src/util.c \
       ./deps/libretro/compat/compat_strl.c \
       ./deps/inih/ini.c
 
-INCLUDE = -I./deps/nuklear -I./include/nuklear -I./deps/inih -I./deps/libretro/include
+INCLUDE = -I./deps/nuklear -I./include/nuklear -I./deps/inih -I./deps/libretro/include -I./src/

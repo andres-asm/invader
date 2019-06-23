@@ -5,10 +5,14 @@
 #include <stdlib.h>
 #include <compat/strl.h>
 
+#include "util.h"
+
 #define MATCH(s, n) strcmp(section, s) == 0 && strcmp(name, n) == 0
 
 setting *setting_array;
 size_t setting_array_size;
+
+static const char* tag = "[config]";
 
 enum setting_type
 {
@@ -16,7 +20,7 @@ enum setting_type
    SETTING_INT,
    SETTING_FLOAT,
    SETTING_STRING,
-   SETTING_BOOL,
+   SETTING_BOOL
 };
 
 void setting_init_string(setting *s, char* name, char* desc)
@@ -37,7 +41,7 @@ void config_init()
       0) / sizeof(setting);
    setting_array = (setting *)calloc(setting_array_size, sizeof(setting));
 
-   printf ("[config] settings: %d\n", setting_array_size);
+   logger(LOG_INFO, tag, "settings found: %d\n", setting_array_size);
 
    setting *s;
    int index = 0;
@@ -63,25 +67,25 @@ static int config_load_handler(void* c, const char* section,
       case SETTING_INT:
       case SETTING_UINT:
          *((unsigned*)s->data) = atoi(value);
-         printf("[config] setting: %s value: %d\n", s->name, *((unsigned*)s->data));
+         logger(LOG_DEBUG, tag, "settings %s value: %d\n", s->name, *((unsigned*)s->data));
          break;
       case SETTING_FLOAT:
          *((float*)s->data) = atof(value);
-         printf("[config] setting: %s value: %f\n", s->name, *((float*)s->data));
+         logger(LOG_DEBUG, tag, "settings %s value: %d\n", s->name, *((float*)s->data));
          break;
       case SETTING_BOOL:
          if (!strcmp(value, "true"))
             *((bool*)s->data) = true;
          else
             *((bool*)s->data) = false;
-         printf("[config] setting: %s value: %d\n", s->name, *((bool*)s->data));
+         logger(LOG_DEBUG, tag, "settings %s value: %s\n", s->name, *((bool*)s->data) ? "true" : "false");
          break;
       case SETTING_STRING:
          strlcpy(s->data, value, s->size);
-         printf("[config] setting: %s value: %s size: %u\n", s->name, s->data, s->size);
+         logger(LOG_DEBUG, tag, "settings %s value: %s size: %d\n", s->name, s->data, s->size);
          break;
       default:
-         printf("[config] setting: %s unknown setting type\n", s->name);
+         logger(LOG_DEBUG, tag, "settings %s unknown\n", s->name);
    }
    return true;
 }
@@ -119,10 +123,10 @@ bool config_load(char* file)
 {
    setting *s;
    i = 0;
-   printf("[config] loading...\n");
+   logger(LOG_INFO, tag, "loading config file: %s\n", file);
    if (ini_parse(file, config_load_handler, cfg) < 0)
    {
-      printf("[config] error loading file %s\n", file);
+      logger(LOG_ERROR, tag, "error loading config file: %s\n", file);
       return false;
    }
 

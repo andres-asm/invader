@@ -18,18 +18,17 @@
 #define NK_KEYSTATE_BASED_INPUT
 
 #include "invader.h"
+#include "util.h"
 #include "nuklear_glfw_gl3.h"
 
 #define WINDOW_WIDTH 1920
 #define WINDOW_HEIGHT 1080
 
-#define MAX_VERTEX_BUFFER 512 * 1024
-#define MAX_ELEMENT_BUFFER 128 * 1024
-
+static const char* tag = "[glfw]";
 
 static void error_callback(int e, const char *d)
 {
-   printf("Error %d: %s\n", e, d);
+   logger(LOG_ERROR, tag, "error: %d description: %s\n", e, d);
 }
 
 int main(void)
@@ -44,7 +43,7 @@ int main(void)
    glfwSetErrorCallback(error_callback);
    if (!glfwInit())
    {
-      fprintf(stdout, "[GFLW] failed to init!\n");
+      logger(LOG_ERROR, tag, "error: failed to initialize\n");
       exit(1);
    }
    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -62,7 +61,7 @@ int main(void)
    glewExperimental = 1;
    if (glewInit() != GLEW_OK)
    {
-      fprintf(stderr, "[invader] Failed to setup GLEW\n");
+      logger(LOG_ERROR, tag, "error: failed to setup GLEW\n");
       exit(1);
    }
 
