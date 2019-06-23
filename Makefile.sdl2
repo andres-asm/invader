@@ -4,7 +4,8 @@ BIN = invader_sdl2
 # Flags
 CFLAGS += -std=c99 -pedantic -O2
 
-SRC = ./src/frontend/invader_sdl2.c
+SRC = ./src/frontend/invader_sdl2.c \
+      ./src/frontend/invader.c
 
 OBJ = $(SRC:.c=.o)
 
