@@ -1,4 +1,4 @@
-## 0.0.1
+## 0.1.0
 - initial commit
 - setup project structure
 - add dependencies
