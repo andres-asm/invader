@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-   win = SDL_CreateWindow("Invader",
+   win = SDL_CreateWindow("invader SDL2",
       SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
       WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_OPENGL|SDL_WINDOW_SHOWN|SDL_WINDOW_ALLOW_HIGHDPI);
    glContext = SDL_GL_CreateContext(win);
@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
    glewExperimental = 1;
    if (glewInit() != GLEW_OK)
    {
-      fprintf(stderr, "Failed to setup GLEW\n");
+      fprintf(stderr, "[invader] Failed to setup GLEW\n");
       exit(1);
    }
 
