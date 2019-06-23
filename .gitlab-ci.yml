@@ -1,7 +1,8 @@
 before_script:
-  - apt-get update -qq && apt-get install -y -qq git build-essential
   - git submodule sync --recursive
   - git submodule update --init --recursive
+  - git clean -xdf
 build:
   script:
-    - make -j2
+    - make -j2 -f Makefile.sdl2
+    - make -j2 -f Makefile.glfw3
