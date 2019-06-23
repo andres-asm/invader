@@ -4,6 +4,8 @@
 
 #include "common.h"
 
-void render_gui(struct nk_context *ctx);
+void cfg_load();
+
+void gui_render(struct nk_context *ctx);
 
 #endif

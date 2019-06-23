@@ -1,15 +1,13 @@
 # Install
+include Makefile.common
 BIN = invader_sdl2
 
 # Flags
-CFLAGS += -std=c99 -pedantic -O2
-
-SRC = ./src/frontend/invader_sdl2.c \
-      ./src/frontend/invader.c
+CFLAGS += -pedantic -O2
 
 OBJ = $(SRC:.c=.o)
 
-INCLUDE = -I./deps/nuklear -I./include/nuklear
+SRC += ./src/frontend/invader_sdl2.c
 
 ifeq ($(OS),Windows_NT)
 BIN := $(BIN).exe

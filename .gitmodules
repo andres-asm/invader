@@ -7,3 +7,6 @@
 [submodule "deps/libretro"]
 	path = deps/libretro
 	url = https://github.com/libretro/libretro-common.git
+[submodule "deps/inih"]
+	path = deps/inih
+	url = https://github.com/benhoyt/inih.git

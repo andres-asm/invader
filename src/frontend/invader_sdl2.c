@@ -70,6 +70,9 @@ int main(int argc, char *argv[])
       exit(1);
    }
 
+   /* Configuration setup */
+   cfg_load();
+
    ctx = nk_sdl_init(win);
    /* Load Fonts: if none of these are loaded a default font will be used  */
    /* Load Cursor: if you uncomment cursor loading please hide the cursor */
@@ -86,7 +89,7 @@ int main(int argc, char *argv[])
       {
          /* Input */
          SDL_Event evt;
-         render_gui(ctx);
+         gui_render(ctx);
          nk_input_begin(ctx);
          while (SDL_PollEvent(&evt))
          {

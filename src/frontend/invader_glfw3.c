@@ -66,6 +66,9 @@ int main(void)
       exit(1);
    }
 
+   /* Configuration setup */
+   cfg_load();
+
    ctx = nk_glfw3_init(win, NK_GLFW3_INSTALL_CALLBACKS);
    /* Load Fonts: if none of these are loaded a default font will be used  */
    /* Load Cursor: if you uncomment cursor loading please hide the cursor */
@@ -89,7 +92,7 @@ int main(void)
       glfwPollEvents();
       nk_glfw3_new_frame();
 
-      render_gui(ctx);
+      gui_render(ctx);
 
       /* Draw */
       glfwGetWindowSize(win, &width, &height);
