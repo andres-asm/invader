@@ -1,3 +1,9 @@
 [submodule "deps/nuklear"]
 	path = deps/nuklear
 	url = https://github.com/vurtun/nuklear.git
+[submodule "deps/common"]
+	path = deps/common
+	url = https://github.com/libretro/libretro-common.git
+[submodule "deps/libretro"]
+	path = deps/libretro
+	url = https://github.com/libretro/libretro-common.git
