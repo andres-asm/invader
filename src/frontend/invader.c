@@ -16,6 +16,9 @@
 #include "libretro/piccolo.h"
 
 core_info_t core_info[100];
+core_info_t current_core_info;
+unsigned core_count;
+unsigned current_core;
 
 static const char* tag = "[invader]";
 
@@ -38,10 +41,13 @@ bool core_list_init(const char* in)
       strlcpy(core_info[i].file_name, list->file_names[i], sizeof(core_info[i].file_name));
       snprintf(buf, sizeof(buf), "%s/%s", in, list->file_names[i]);
       core_peek(buf, &core_info[i]);
+      core_info[i].core_id = i;
 
-      logger(LOG_INFO, tag, "core name: %s\n", core_info[i].core_name);
-      logger(LOG_INFO, tag, "core version: %s\n", core_info[i].core_version);
-      logger(LOG_INFO, tag, "valid extensions: %s\n", core_info[i].extensions);
+      logger(LOG_DEBUG, tag, "core name: %s\n", core_info[i].core_name);
+      logger(LOG_DEBUG, tag, "core version: %s\n", core_info[i].core_version);
+      logger(LOG_DEBUG, tag, "valid extensions: %s\n", core_info[i].extensions);
+
+      core_count++;
    }
 
    return true;
@@ -51,6 +57,7 @@ bool core_list_init(const char* in)
 void gui_render(struct nk_context *ctx)
 {
    static bool test;
+   static unsigned previous_core;
 
    if (!test)
       test = core_list_init(setting_get_string("directory_cores"));
@@ -61,21 +68,35 @@ void gui_render(struct nk_context *ctx)
          NK_WINDOW_MINIMIZABLE|NK_WINDOW_TITLE))
    {
       nk_layout_row_dynamic(ctx, 30, 2);
-      nk_label(ctx, setting_get("directory_cores")->desc, NK_TEXT_ALIGN_CENTERED | NK_TEXT_LEFT);
 
+      nk_label(ctx, setting_get("directory_cores")->desc, NK_TEXT_ALIGN_CENTERED | NK_TEXT_LEFT);
       char* string = setting_get_string("directory_cores");
       int len = strlen(setting_get_string("directory_cores"));
       int size = setting_get("directory_cores")->size;
-
       nk_edit_string(ctx, NK_EDIT_SIMPLE, string, &len, size, nk_filter_default);
 
       nk_label(ctx, setting_get("directory_games")->desc, NK_TEXT_ALIGN_CENTERED | NK_TEXT_LEFT);
-
       string = setting_get_string("directory_games");
       len = strlen(setting_get_string("directory_games"));
       size = setting_get("directory_games")->size;
-
       nk_edit_string(ctx, NK_EDIT_SIMPLE, string, &len, size, nk_filter_default);
+
+      nk_layout_row_dynamic(ctx, 30, 1);
+      nk_label(ctx, "Core:", NK_TEXT_ALIGN_CENTERED | NK_TEXT_LEFT);
+
+      //NK_API int nk_combo(struct nk_context*, const char **items, int count, int selected, int item_height, struct nk_vec2 size);
+      char* core_entries[100];
+      for (unsigned i = 0; i < core_count; i++)
+         core_entries[i] = core_info[i].core_name;
+
+      current_core = nk_combo(ctx, core_entries, core_count, current_core, 30, nk_vec2(200,200));
+
+      if (previous_core != current_core)
+      {
+         core_peek(core_info[current_core].file_name, &current_core_info);
+         previous_core = current_core;
+      }
+
    }
    nk_end(ctx);
 }

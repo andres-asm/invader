@@ -76,11 +76,11 @@ void core_peek(const char *in, core_info_t *out)
    piccolo.retro_get_system_info(&piccolo_system_info);
 
    strlcpy(out->file_name, in, sizeof(out->file_name));
-   strlcpy(out->core_name, in, sizeof(out->core_name));
-   strlcpy(out->core_version, in, sizeof(out->core_version));
-   strlcpy(out->extensions, in, sizeof(out->extensions));
+   strlcpy(out->core_name, piccolo_system_info.library_name, sizeof(out->core_name));
+   strlcpy(out->core_version, piccolo_system_info.library_version, sizeof(out->core_version));
+   strlcpy(out->extensions, piccolo_system_info.valid_extensions, sizeof(out->extensions));
 
-#ifdef DEBUG
+#ifndef DEBUG
    logger(LOG_DEBUG, tag, "retro api version: %d\n", piccolo.retro_api_version());
    logger(LOG_DEBUG, tag, "core name: %s\n", piccolo_system_info.library_name);
    logger(LOG_DEBUG, tag, "core version: %s\n", piccolo_system_info.library_version);

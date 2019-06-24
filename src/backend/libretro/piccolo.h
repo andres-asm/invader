@@ -6,6 +6,7 @@
 
 struct core_info
 {
+   unsigned core_id;
    char file_name[PATH_MAX_LENGTH];
    char core_name[PATH_MAX_LENGTH];
    char core_version[PATH_MAX_LENGTH];
