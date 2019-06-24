@@ -97,6 +97,12 @@ void gui_render(struct nk_context *ctx)
          previous_core = current_core;
       }
 
+      nk_layout_row_dynamic(ctx, 30, 2);
+      nk_label(ctx, "Core version:", NK_TEXT_ALIGN_CENTERED | NK_TEXT_LEFT);
+      nk_label(ctx, current_core_info.core_version, NK_TEXT_ALIGN_CENTERED | NK_TEXT_LEFT);
+      nk_label(ctx, "Valid extensions:", NK_TEXT_ALIGN_CENTERED | NK_TEXT_LEFT);
+      nk_label(ctx, current_core_info.extensions, NK_TEXT_ALIGN_CENTERED | NK_TEXT_LEFT);
+
    }
    nk_end(ctx);
 }

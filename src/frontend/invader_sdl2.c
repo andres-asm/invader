@@ -34,8 +34,8 @@
 #include "util.h"
 #include "nuklear_sdl_gl3.h"
 
-#define WINDOW_WIDTH 1920
-#define WINDOW_HEIGHT 1080
+#define WINDOW_WIDTH 1280
+#define WINDOW_HEIGHT 720
 
 static const char* tag = "[sdl]";
 
