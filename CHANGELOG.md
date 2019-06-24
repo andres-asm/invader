@@ -8,3 +8,5 @@
 - add config handler
 - add logger
 - add libretro function pointers
+- add core loading
+- add core selector
