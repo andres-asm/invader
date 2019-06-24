@@ -18,7 +18,7 @@ else
 	ifeq ($(UNAME_S),Darwin)
 		LIBS := $(GLFW3) -framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo -lm -lGLEW -L/usr/local/lib
 	else
-		LIBS = $(GLFW3) -lGL -lm -lGLU -lGLEW
+		LIBS = $(GLFW3) -lGL -lm -lGLU -lGLEW -ldl
 	endif
 endif
 

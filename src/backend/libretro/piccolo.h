@@ -1,9 +1,18 @@
 #ifndef PICCOLO_H_
 #define PICCOLO_H_
 
+#include "util.h"
 #include "libretro.h"
 
-static struct {
+struct core_info
+{
+   char file_name[PATH_MAX_LENGTH];
+   char core_name[PATH_MAX_LENGTH];
+   char core_version[PATH_MAX_LENGTH];
+   char extensions[PATH_MAX_LENGTH];
+} typedef core_info_t;
+
+struct {
    void *handle;
    bool initialized;
    void (*retro_init)(void);
@@ -27,4 +36,5 @@ static struct {
    size_t (*retro_get_memory_size)(unsigned id);
 } piccolo;
 
+void core_peek(const char *in, core_info_t *out);
 #endif
