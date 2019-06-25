@@ -3,7 +3,7 @@ include Makefile.common
 BIN = invader_sdl2
 
 # Flags
-CFLAGS += -std=c99 -O0 -DEBUG
+CFLAGS += -std=c99 -O0 -DEBUG -pedantic
 
 OBJ = $(SRC:.c=.o)
 

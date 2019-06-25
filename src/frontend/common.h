@@ -11,6 +11,7 @@
 #define NK_INCLUDE_DEFAULT_FONT
 
 #include "nuklear.h"
+#include "nuklear_extra.h"
 
 #define UNUSED(a) (void)a
 #define MIN(a,b) ((a) < (b) ? (a) : (b))

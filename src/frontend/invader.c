@@ -91,7 +91,7 @@ void gui_render(struct nk_context *ctx)
       nk_layout_row_dynamic(ctx, 30, 1);
       nk_label(ctx, "Core:", NK_TEXT_ALIGN_CENTERED | NK_TEXT_LEFT);
 
-      char* core_entries[100];
+      const char* core_entries[100];
       for (unsigned i = 0; i < core_count; i++)
          core_entries[i] = core_info[i].core_name;
 
