@@ -1,5 +1,6 @@
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <compat/strl.h>
 #include <dynamic/dylib.h>
 
