@@ -3,7 +3,22 @@ include Makefile.common
 BIN = invader_glfw3
 
 # Flags
-CFLAGS += -std=c99 -pedantic -O3
+CFLAGS += -std=c99
+
+ifeq ($(DEBUG),1)
+ifneq ($(OS),Windows_NT)
+   CFLAGS += -g -O0 -DDEBUG -pedantic -D_GNU_SOURCE
+   LIBS += -g
+else
+   CFLAGS += -g -O0 -DDEBUG -pedantic
+endif
+else
+ifneq ($(OS),Windows_NT)
+   CFLAGS += -O3 -pedantic -D_GNU_SOURCE
+else
+   CFLAGS += -O3 -pedantic
+endif
+endif
 
 OBJ = $(SRC:.c=.o)
 
