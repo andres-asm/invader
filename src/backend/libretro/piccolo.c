@@ -142,6 +142,7 @@ void core_load(const char *in, core_info_t *info, core_option_t *options, bool p
    load_retro_sym(retro_get_system_info);
    load_sym(set_environment, retro_set_environment);
 
+   piccolo.retro_api_version();
    piccolo.retro_get_system_info(&piccolo.system_info);
 
    strlcpy(piccolo.core_info->file_name, in, sizeof(piccolo.core_info->file_name));
@@ -194,33 +195,6 @@ void core_load(const char *in, core_info_t *info, core_option_t *options, bool p
    set_audio_sample_batch(piccolo_audio_sample_batch);
 
    piccolo.retro_get_system_av_info(&piccolo.av_info);
-#if 0
-struct retro_game_geometry
-{
-   unsigned base_width;    /* Nominal video width of game. */
-   unsigned base_height;   /* Nominal video height of game. */
-   unsigned max_width;     /* Maximum possible width of game. */
-   unsigned max_height;    /* Maximum possible height of game. */
-
-   float    aspect_ratio;  /* Nominal aspect ratio of game. If
-                            * aspect_ratio is <= 0.0, an aspect ratio
-                            * of base_width / base_height is assumed.
-                            * A frontend could override this setting,
-                            * if desired. */
-};
-
-struct retro_system_timing
-{
-   double fps;             /* FPS of video content. */
-   double sample_rate;     /* Sampling rate of audio. */
-};
-
-struct retro_system_av_info
-{
-   struct retro_game_geometry geometry;
-   struct retro_system_timing timing;
-};
-#endif
 
    logger(LOG_DEBUG, tag, "geometry: %ux%d/%ux%d %f\n", 
       piccolo.av_info.geometry.base_width, piccolo.av_info.geometry.base_height, piccolo.av_info.geometry.max_width, piccolo.av_info.geometry.max_height, piccolo.av_info.geometry.aspect_ratio);
