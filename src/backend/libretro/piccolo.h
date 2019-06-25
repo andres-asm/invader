@@ -11,10 +11,12 @@ struct core_info
    char core_name[PATH_MAX_LENGTH];
    char core_version[PATH_MAX_LENGTH];
    char extensions[PATH_MAX_LENGTH];
+
+   bool supports_no_game;
 } typedef core_info_t;
 
 struct {
-   void *handle;
+   void   *handle;
    bool initialized;
    void (*retro_init)(void);
    void (*retro_deinit)(void);

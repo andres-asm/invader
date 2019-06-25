@@ -7,6 +7,7 @@
 #include "util.h"
 
 static const char *tag = "[core]";
+static bool supports_no_game;
 
 #define load_sym(V, S) do {\
    if (!(V = dylib_proc(piccolo.handle, #S))) \
@@ -16,13 +17,26 @@ static const char *tag = "[core]";
 #define load_retro_sym(S) load_sym(piccolo.S, S)
 
 static struct retro_system_info piccolo_system_info = {0};
-static struct retro_game_info piccolo_game_info = {0};
+static struct retro_game_info   piccolo_game_info   = {0};
 
-static bool core_environment(unsigned cmd, void *data)
+
+static bool piccolo_set_environment(unsigned cmd, void *data)
 {
-   return false;
+   switch(cmd)
+   {
+      case RETRO_ENVIRONMENT_SET_SUPPORT_NO_GAME:
+      {
+         supports_no_game = (bool*)data;
+         logger(LOG_DEBUG, tag, "RETRO_ENVIRONMENT_SET_SUPPORT_NO_GAME: %s\n", PRINT_BOOLEAN(supports_no_game));
+         break;
+      }
+      default:
+         logger(LOG_DEBUG, tag, "unknown command: %d\n", cmd);
+   }
+   return true;
 }
 
+/*
 static void core_video_refresh(const void *data, unsigned width, unsigned height, size_t pitch)
 {
    return;
@@ -47,9 +61,12 @@ static size_t core_audio_sample_batch(const int16_t *data, size_t frames)
 {
    return 0;
 }
+*/
 
 void core_peek(const char *in, core_info_t *out)
 {
+   supports_no_game = false;
+
    void (*set_environment)(retro_environment_t) = NULL;
    void (*set_video_refresh)(retro_video_refresh_t) = NULL;
    void (*set_input_poll)(retro_input_poll_t) = NULL;
@@ -72,6 +89,7 @@ void core_peek(const char *in, core_info_t *out)
 
    load_retro_sym(retro_api_version);
    load_retro_sym(retro_get_system_info);
+   load_sym(set_environment, retro_set_environment);
 
    piccolo.retro_get_system_info(&piccolo_system_info);
 
@@ -86,6 +104,9 @@ void core_peek(const char *in, core_info_t *out)
    logger(LOG_DEBUG, tag, "core version: %s\n", piccolo_system_info.library_version);
    logger(LOG_DEBUG, tag, "valid extensions: %s\n", piccolo_system_info.valid_extensions);
 #endif
+
+   set_environment(piccolo_set_environment);
+   out->supports_no_game = supports_no_game;
 
    dylib_close(piccolo.handle);
 }

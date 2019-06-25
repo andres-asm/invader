@@ -56,11 +56,11 @@ bool core_list_init(const char* in)
 /* Render the main interface */
 void gui_render(struct nk_context *ctx)
 {
-   static bool test;
+   static bool initialized;
    static unsigned previous_core;
 
-   if (!test)
-      test = core_list_init(setting_get_string("directory_cores"));
+   if (!initialized)
+      core_list_init(setting_get_string("directory_cores"));
 
    /* GUI */
    if (nk_begin(ctx, "Obviously not the final GUI", nk_rect(50, 50, 300, 300),
@@ -91,7 +91,7 @@ void gui_render(struct nk_context *ctx)
 
       current_core = nk_combo(ctx, core_entries, core_count, current_core, 30, nk_vec2(200,200));
 
-      if (previous_core != current_core)
+      if (!initialized || previous_core != current_core)
       {
          core_peek(core_info[current_core].file_name, &current_core_info);
          previous_core = current_core;
@@ -102,7 +102,10 @@ void gui_render(struct nk_context *ctx)
       nk_label(ctx, current_core_info.core_version, NK_TEXT_ALIGN_CENTERED | NK_TEXT_LEFT);
       nk_label(ctx, "Valid extensions:", NK_TEXT_ALIGN_CENTERED | NK_TEXT_LEFT);
       nk_label(ctx, current_core_info.extensions, NK_TEXT_ALIGN_CENTERED | NK_TEXT_LEFT);
-
+      nk_layout_row_dynamic(ctx, 30, 1);
+      nk_checkbox_bool(ctx, "Supports running without game", &current_core_info.supports_no_game);
    }
    nk_end(ctx);
+
+   initialized = true;
 }

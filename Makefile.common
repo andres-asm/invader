@@ -4,9 +4,10 @@ SRC = ./src/frontend/invader.c \
       ./src/frontend/config.c \
       ./src/backend/libretro/piccolo.c \
       ./src/util.c \
+      ./src/nuklear_extra.c \
       ./deps/libretro/compat/compat_strl.c \
       ./deps/libretro/encodings/encoding_utf.c \
       ./deps/libretro/dynamic/dylib.c \
       ./deps/inih/ini.c
 
-INCLUDE = -I./deps/nuklear -I./include/nuklear -I./deps/inih -I./deps/libretro/include -I./src/ -I./src/backend/
+INCLUDE = -I./deps/nuklear -I./include/nuklear -I./deps/inih -I./deps/libretro/include -I./src/ -I./src/backend/ -I./src/frontend/

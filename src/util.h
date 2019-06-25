@@ -3,6 +3,8 @@
 
 #define PATH_MAX_LENGTH 4096
 
+#define PRINT_BOOLEAN(X) X == true ? "true" : "false"
+
 enum logger_level
 {
    LOG_DEBUG = 0,
