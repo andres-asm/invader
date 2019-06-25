@@ -8,29 +8,16 @@
 #include "util.h"
 
 static const char *tag = "[core]";
-static bool supports_no_game;
 
+bool supports_no_game;
 piccolo_t piccolo = {0};
 
- #define load_sym(V, S) do {\
-   function_t func = dylib_proc(piccolo.handle, #S); \
-   memcpy(&V, &func, sizeof(func)); \
-   if (!func) \
-       logger(LOG_ERROR, tag, "failed to load symbol '" #S "'': %s"); \
-    } while (0)
-
-
-#define load_retro_sym(S) load_sym(piccolo.S, S)
-
-static struct retro_system_info piccolo_system_info = {0};
-static struct retro_game_info   piccolo_game_info   = {0};
-
-core_option_t *core_options;
+struct retro_game_info   piccolo_game_info   = {0};
 
 static void piccolo_set_variables(void *data)
 {
    char buf[PATH_MAX_LENGTH];
-   unsigned options;
+   unsigned options = 0;
    const char *values;
    const char *value;
 
@@ -45,8 +32,8 @@ static void piccolo_set_variables(void *data)
       count++;
       options++;
    }
+   core_option_t * core_options = piccolo.core_options;
 
-   core_options = (core_option_t*) calloc(options, sizeof(core_option_t));
    logger(LOG_DEBUG, tag, "variables: %u\n", options);
    for (unsigned i = 0; i < options; i++)
    {
@@ -70,7 +57,7 @@ static void piccolo_set_variables(void *data)
    }
 }
 
-static bool piccolo_set_environment(unsigned cmd, void *data)
+bool piccolo_set_environment(unsigned cmd, void *data)
 {
    switch(cmd)
    {
@@ -92,37 +79,10 @@ static bool piccolo_set_environment(unsigned cmd, void *data)
    return true;
 }
 
-/*
-static void core_video_refresh(const void *data, unsigned width, unsigned height, size_t pitch)
-{
-   return;
-}
-
-static void core_input_poll()
-{
-   return;
-}
-
-static int16_t core_input_state(unsigned port, unsigned device, unsigned index, unsigned id)
-{
-   return 0;
-}
-
-static void core_audio_sample(int16_t left, int16_t right)
-{
-   return;
-}
-
-static size_t core_audio_sample_batch(const int16_t *data, size_t frames)
-{
-   return 0;
-}
-*/
-
-void core_peek(const char *in, core_info_t *out, core_option_t *opts)
+void core_peek(const char *in, core_info_t *out, core_option_t *options)
 {
    supports_no_game = false;
-   core_options = opts;
+   piccolo.core_options = options;
 
    void (*set_environment)(retro_environment_t) = NULL;
    void (*set_video_refresh)(retro_video_refresh_t) = NULL;
@@ -147,18 +107,18 @@ void core_peek(const char *in, core_info_t *out, core_option_t *opts)
    load_retro_sym(retro_get_system_info);
    load_sym(set_environment, retro_set_environment);
 
-   piccolo.retro_get_system_info(&piccolo_system_info);
+   piccolo.retro_get_system_info(&piccolo.system_info);
 
    strlcpy(out->file_name, in, sizeof(out->file_name));
-   strlcpy(out->core_name, piccolo_system_info.library_name, sizeof(out->core_name));
-   strlcpy(out->core_version, piccolo_system_info.library_version, sizeof(out->core_version));
-   strlcpy(out->extensions, piccolo_system_info.valid_extensions, sizeof(out->extensions));
+   strlcpy(out->core_name, piccolo.system_info.library_name, sizeof(out->core_name));
+   strlcpy(out->core_version, piccolo.system_info.library_version, sizeof(out->core_version));
+   strlcpy(out->extensions, piccolo.system_info.valid_extensions, sizeof(out->extensions));
 
 #ifndef DEBUG
    logger(LOG_DEBUG, tag, "retro api version: %d\n", piccolo.retro_api_version());
-   logger(LOG_DEBUG, tag, "core name: %s\n", piccolo_system_info.library_name);
-   logger(LOG_DEBUG, tag, "core version: %s\n", piccolo_system_info.library_version);
-   logger(LOG_DEBUG, tag, "valid extensions: %s\n", piccolo_system_info.valid_extensions);
+   logger(LOG_DEBUG, tag, "core name: %s\n", piccolo.system_info.library_name);
+   logger(LOG_DEBUG, tag, "core version: %s\n", piccolo.system_info.library_version);
+   logger(LOG_DEBUG, tag, "valid extensions: %s\n", piccolo.system_info.valid_extensions);
 #endif
 
    set_environment(piccolo_set_environment);

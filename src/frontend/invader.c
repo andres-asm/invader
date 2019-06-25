@@ -16,11 +16,13 @@
 #include "libretro/piccolo.h"
 
 core_info_t core_info[100];
+core_option_t core_options[100];
+
 core_info_t current_core_info;
 unsigned core_count;
 unsigned current_core;
 
-core_option_t *current_core_options;
+
 
 static const char* tag = "[invader]";
 
@@ -46,7 +48,7 @@ bool core_list_init(const char* in)
    {
       strlcpy(core_info[i].file_name, list->file_names[i], sizeof(core_info[i].file_name));
       snprintf(buf, sizeof(buf), "%s/%s", in, list->file_names[i]);
-      core_peek(buf, &core_info[i], current_core_options);
+      core_peek(buf, &core_info[i], core_options);
       core_info[i].core_id = i;
 
 #ifdef DEBUG
@@ -99,7 +101,7 @@ void gui_render(struct nk_context *ctx)
 
       if (core_count !=0 && (!initialized || previous_core != current_core))
       {
-         core_peek(core_info[current_core].file_name, &current_core_info, current_core_options);
+         core_peek(core_info[current_core].file_name, &current_core_info, core_options);
          previous_core = current_core;
       }
 

@@ -4,6 +4,16 @@
 #include "util.h"
 #include "libretro.h"
 
+#define load_sym(V, S) do {\
+   function_t func = dylib_proc(piccolo.handle, #S); \
+   memcpy(&V, &func, sizeof(func)); \
+   if (!func) \
+      logger(LOG_ERROR, tag, "failed to load symbol '" #S "'': %s"); \
+   } while (0)
+
+
+#define load_retro_sym(S) load_sym(piccolo.S, S)
+
 struct core_info
 {
    unsigned core_id;
@@ -49,6 +59,8 @@ struct piccolo
 
    core_option_t *core_options;
    void (*set_variables)(void *data);
+   struct retro_system_info system_info;
+
 } typedef piccolo_t;
 
 void core_peek(const char *in, core_info_t *out, core_option_t *opts);
