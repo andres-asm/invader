@@ -1,5 +1,6 @@
 #include <string.h>
 #include <stdio.h>
+#include <stdarg.h>
 #include <stdlib.h>
 #include <compat/strl.h>
 #include <dynamic/dylib.h>
@@ -12,6 +13,20 @@ static const char *tag = "[core]";
 piccolo_t piccolo = {0};
 
 struct retro_game_info   piccolo_game_info   = {0};
+
+static void piccolo_logger(enum retro_log_level level, const char *fmt, ...)
+{
+   va_list va;
+   char buffer[4096] = {0};
+   static const char *level_char = "diwe";
+
+   va_start(va, fmt);
+   vsnprintf(buffer, sizeof(buffer), fmt, va);
+   va_end(va);
+
+   fprintf(stderr, "[%c] --- %s %s", level_char[level], "[libretro]", buffer);
+   fflush(stderr);
+}
 
 static void piccolo_set_variables(void *data)
 {
@@ -77,6 +92,13 @@ static bool piccolo_set_environment(unsigned cmd, void *data)
          logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_SET_PIXEL_FORMAT: %s\n", PRINT_PIXFMT(*(int*)data));
          piccolo.core_info->pixel_format = *(int*)data;
          break;
+      case RETRO_ENVIRONMENT_GET_LOG_INTERFACE:
+      {
+         logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_LOG_INTERFACE\n");
+         struct retro_log_callback *callback = (struct retro_log_callback*)data;
+         callback->log = piccolo_logger;
+         break;
+      }
       default:
          logger(LOG_DEBUG, tag, "unknown command: %d\n", cmd);
    }
@@ -196,10 +218,13 @@ void core_load(const char *in, core_info_t *info, core_option_t *options, bool p
 
    piccolo.retro_get_system_av_info(&piccolo.av_info);
 
-   logger(LOG_DEBUG, tag, "geometry: %ux%d/%ux%d %f\n", 
-      piccolo.av_info.geometry.base_width, piccolo.av_info.geometry.base_height, piccolo.av_info.geometry.max_width, piccolo.av_info.geometry.max_height, piccolo.av_info.geometry.aspect_ratio);
-   logger(LOG_DEBUG, tag, "timing: %ffps %fHz", piccolo.av_info.timing.fps, piccolo.av_info.timing.sample_rate);
-   //piccolo.retro_init();
+   logger(LOG_DEBUG, tag, "geometry: %ux%d/%ux%d %f\n",
+      piccolo.av_info.geometry.base_width, piccolo.av_info.geometry.base_height,
+      piccolo.av_info.geometry.max_width, piccolo.av_info.geometry.max_height,
+      piccolo.av_info.geometry.aspect_ratio);
+   logger(LOG_DEBUG, tag, "timing: %ffps %fHz\n",
+      piccolo.av_info.timing.fps, piccolo.av_info.timing.sample_rate);
+   piccolo.retro_init();
    piccolo.initialized = true;
 }
 
