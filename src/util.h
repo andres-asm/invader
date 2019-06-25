@@ -1,9 +1,12 @@
 #ifndef UTIL_H_
 #define UTIL_H_
 
+#include "libretro.h"
+
 #define PATH_MAX_LENGTH 4096
 
 #define PRINT_BOOLEAN(X) X == true ? "true" : "false"
+#define PRINT_PIXFMT(X) X == RETRO_PIXEL_FORMAT_0RGB1555 ? "0RGB1555" : RETRO_PIXEL_FORMAT_XRGB8888 ? "XRGB8888" : RETRO_PIXEL_FORMAT_RGB565 ? "RGB565" : "UNKNOWN"
 
 enum logger_level
 {

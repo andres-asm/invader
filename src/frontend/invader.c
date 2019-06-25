@@ -49,7 +49,7 @@ bool core_list_init(const char* in)
    {
       strlcpy(core_info_list[i].file_name, list->file_names[i], sizeof(core_info_list[i].file_name));
       snprintf(buf, sizeof(buf), "%s/%s", in, list->file_names[i]);
-      core_peek(buf, &core_info_list[i], core_options);
+      core_load(buf, &core_info_list[i], core_options, true);
       core_info_list[i].core_id = i;
 
 #ifdef DEBUG
@@ -100,9 +100,22 @@ void gui_render(struct nk_context *ctx)
 
       current_core = nk_combo(ctx, core_entries, core_count, current_core, 30, nk_vec2(200,200));
 
+      nk_layout_row_dynamic(ctx, 30, 2);
+      if(current_core_info.supports_no_game)
+      {
+         if(nk_button_label(ctx, "Start core"))
+         {
+            core_load(core_info_list[current_core].file_name, &current_core_info, core_options, false);
+         }
+      }
+      if (nk_button_label(ctx, "Load content"))
+      {
+         core_load(core_info_list[current_core].file_name, &current_core_info, core_options, false);
+      }
+
       if (core_count !=0 && (!initialized || previous_core != current_core))
       {
-         core_peek(core_info_list[current_core].file_name, &current_core_info, core_options);
+         core_load(core_info_list[current_core].file_name, &current_core_info, core_options, true);
          previous_core = current_core;
       }
 
@@ -120,8 +133,8 @@ void gui_render(struct nk_context *ctx)
       nk_checkbox_bool(ctx, "Block extraction of archives", &current_core_info.block_extract);
       nk_group_end(ctx);
 
-      nk_layout_row_dynamic(ctx, 280, 1);
-      nk_group_begin(ctx, "Core Options", NK_WINDOW_TITLE | NK_WINDOW_ROM);
+      nk_layout_row_dynamic(ctx, 240, 1);
+      nk_group_begin(ctx, "Core options", NK_WINDOW_TITLE | NK_WINDOW_ROM);
       for (unsigned i = 0; i < core_option_count(); i++)
       {
          struct string_list *list = string_split(core_options[i].values, "|");

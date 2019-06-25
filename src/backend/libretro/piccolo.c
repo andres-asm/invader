@@ -9,7 +9,6 @@
 
 static const char *tag = "[core]";
 
-bool supports_no_game;
 piccolo_t piccolo = {0};
 
 struct retro_game_info   piccolo_game_info   = {0};
@@ -58,33 +57,67 @@ static void piccolo_set_variables(void *data)
    }
 }
 
-bool piccolo_set_environment(unsigned cmd, void *data)
+static bool piccolo_set_environment(unsigned cmd, void *data)
 {
    switch(cmd)
    {
       case RETRO_ENVIRONMENT_SET_SUPPORT_NO_GAME:
       {
-         supports_no_game = (bool*)data;
-         logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_SET_SUPPORT_NO_GAME: %s\n", PRINT_BOOLEAN(supports_no_game));
+         logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_SET_SUPPORT_NO_GAME: %s\n", PRINT_BOOLEAN(*(bool*)data));
+         piccolo.core_info->supports_no_game = *(bool*)data;
          break;
       }
       case RETRO_ENVIRONMENT_SET_VARIABLES:
       {
-         logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_SET_VARIABLES: %s\n", PRINT_BOOLEAN(supports_no_game));
+         logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_SET_VARIABLES:\n");
          piccolo.set_variables(data);
          break;
       }
+      case RETRO_ENVIRONMENT_SET_PIXEL_FORMAT:
+         logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_SET_PIXEL_FORMAT: %s\n", PRINT_PIXFMT(*(int*)data));
+         piccolo.core_info->pixel_format = *(int*)data;
+         break;
       default:
          logger(LOG_DEBUG, tag, "unknown command: %d\n", cmd);
    }
    return true;
 }
 
-void core_peek(const char *in, core_info_t *info, core_option_t *options)
+static void piccolo_set_av_info(struct retro_system_av_info *info)
 {
-   supports_no_game = false;
+
+}
+
+static void piccolo_video_refresh(const void *data, unsigned width, unsigned height, size_t pitch)
+{
+   return;
+}
+
+static void piccolo_input_poll()
+{
+   return;
+}
+
+static int16_t piccolo_input_state(unsigned port, unsigned device, unsigned index, unsigned id)
+{
+   return 0;
+}
+
+static void piccolo_audio_sample(int16_t left, int16_t right)
+{
+   return;
+}
+
+static size_t piccolo_audio_sample_batch(const int16_t *data, size_t frames)
+{
+   return 0;
+}
+
+void core_load(const char *in, core_info_t *info, core_option_t *options, bool peek)
+{
    piccolo.core_options = options;
    piccolo.core_info = info;
+   piccolo.core_info->supports_no_game = false;
 
    void (*set_environment)(retro_environment_t) = NULL;
    void (*set_video_refresh)(retro_video_refresh_t) = NULL;
@@ -126,17 +159,13 @@ void core_peek(const char *in, core_info_t *info, core_option_t *options)
 #endif
 
    set_environment(piccolo_set_environment);
-   piccolo.core_info->supports_no_game = supports_no_game;
 
-   dylib_close(piccolo.handle);
-}
+   if (peek)
+   {
+      dylib_close(piccolo.handle);
+      return;
+   }
 
-unsigned core_option_count()
-{
-   return piccolo.core_option_count;
-}
-
-/*
    load_retro_sym(retro_init);
    load_retro_sym(retro_deinit);
    load_retro_sym(retro_get_system_av_info);
@@ -152,21 +181,61 @@ unsigned core_option_count()
    load_retro_sym(retro_serialize_size);
    load_retro_sym(retro_unserialize);
 
-   piccolo.retro_get_system_info(&piccolo_system_info);
-
-   load_sym(set_environment, retro_set_environment);
    load_sym(set_video_refresh, retro_set_video_refresh);
    load_sym(set_input_poll, retro_set_input_poll);
    load_sym(set_input_state, retro_set_input_state);
    load_sym(set_audio_sample, retro_set_audio_sample);
    load_sym(set_audio_sample_batch, retro_set_audio_sample_batch);
 
-   set_environment(core_environment);
-   set_video_refresh(core_video_refresh);
-   set_input_poll(core_input_poll);
-   set_input_state(core_input_state);
-   set_audio_sample(core_audio_sample);
-   set_audio_sample_batch(core_audio_sample_batch);
+   set_video_refresh(piccolo_video_refresh);
+   set_input_poll(piccolo_input_poll);
+   set_input_state(piccolo_input_state);
+   set_audio_sample(piccolo_audio_sample);
+   set_audio_sample_batch(piccolo_audio_sample_batch);
+
+   piccolo.retro_get_system_av_info(&piccolo.av_info);
+#if 0
+struct retro_game_geometry
+{
+   unsigned base_width;    /* Nominal video width of game. */
+   unsigned base_height;   /* Nominal video height of game. */
+   unsigned max_width;     /* Maximum possible width of game. */
+   unsigned max_height;    /* Maximum possible height of game. */
+
+   float    aspect_ratio;  /* Nominal aspect ratio of game. If
+                            * aspect_ratio is <= 0.0, an aspect ratio
+                            * of base_width / base_height is assumed.
+                            * A frontend could override this setting,
+                            * if desired. */
+};
+
+struct retro_system_timing
+{
+   double fps;             /* FPS of video content. */
+   double sample_rate;     /* Sampling rate of audio. */
+};
+
+struct retro_system_av_info
+{
+   struct retro_game_geometry geometry;
+   struct retro_system_timing timing;
+};
+#endif
+
+   logger(LOG_DEBUG, tag, "geometry: %ux%d/%ux%d %f\n", 
+      piccolo.av_info.geometry.base_width, piccolo.av_info.geometry.base_height, piccolo.av_info.geometry.max_width, piccolo.av_info.geometry.max_height, piccolo.av_info.geometry.aspect_ratio);
+   logger(LOG_DEBUG, tag, "timing: %ffps %fHz", piccolo.av_info.timing.fps, piccolo.av_info.timing.sample_rate);
+   //piccolo.retro_init();
+   piccolo.initialized = true;
+}
+
+unsigned core_option_count()
+{
+   return piccolo.core_option_count;
+}
+
+/*
+
    piccolo.initialized = true;
 */
 

@@ -25,6 +25,8 @@ struct core_info
    bool supports_no_game;
    bool block_extract;
    bool full_path;
+
+   unsigned pixel_format;
 } typedef core_info_t;
 
 struct core_option
@@ -60,7 +62,9 @@ struct piccolo
    size_t (*retro_get_memory_size)(unsigned id);
 
    void (*set_variables)(void *data);
+
    struct retro_system_info system_info;
+   struct retro_system_av_info av_info;
 
    core_option_t *core_options;
    core_info_t *core_info;
@@ -69,7 +73,7 @@ struct piccolo
 
 } typedef piccolo_t;
 
-void core_peek(const char *in, core_info_t *out, core_option_t *opts);
+void core_load(const char *in, core_info_t *info, core_option_t *options, bool peek);
 
 unsigned core_option_count();
 #endif
