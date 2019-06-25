@@ -41,7 +41,7 @@ bool core_list_init(const char* in)
 #else
    get_file_list(in, list, ".so");
 #endif
-
+   logger(LOG_DEBUG, tag, "core count: %d\n", list->file_count);
    for (unsigned i = 0; i < list->file_count; i++)
    {
       strlcpy(core_info[i].file_name, list->file_names[i], sizeof(core_info[i].file_name));
@@ -97,7 +97,7 @@ void gui_render(struct nk_context *ctx)
 
       current_core = nk_combo(ctx, core_entries, core_count, current_core, 30, nk_vec2(200,200));
 
-      if (!initialized || previous_core != current_core)
+      if (core_count !=0 && (!initialized || previous_core != current_core))
       {
          core_peek(core_info[current_core].file_name, &current_core_info, current_core_options);
          previous_core = current_core;

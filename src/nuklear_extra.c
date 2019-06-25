@@ -12,6 +12,7 @@
 
 #include "invader.h"
 #include "config.h"
+#include "nuklear_extra.h"
 
 bool nk_checkbox_bool(struct nk_context* ctx, const char* label, bool *active)
 {
