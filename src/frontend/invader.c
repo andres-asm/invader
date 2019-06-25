@@ -20,6 +20,8 @@ core_info_t current_core_info;
 unsigned core_count;
 unsigned current_core;
 
+core_option_t *current_core_options;
+
 static const char* tag = "[invader]";
 
 /* Initialize configuration */
@@ -34,19 +36,24 @@ bool core_list_init(const char* in)
    char buf[PATH_MAX_LENGTH];
    file_list_t *list;
    list = (file_list_t *)calloc(1, sizeof(file_list_t));
+#ifdef _WIN32
    get_file_list(in, list, ".dll");
+#else
+   get_file_list(in, list, ".so");
+#endif
 
    for (unsigned i = 0; i < list->file_count; i++)
    {
       strlcpy(core_info[i].file_name, list->file_names[i], sizeof(core_info[i].file_name));
       snprintf(buf, sizeof(buf), "%s/%s", in, list->file_names[i]);
-      core_peek(buf, &core_info[i]);
+      core_peek(buf, &core_info[i], current_core_options);
       core_info[i].core_id = i;
 
+#ifdef DEBUG
       logger(LOG_DEBUG, tag, "core name: %s\n", core_info[i].core_name);
       logger(LOG_DEBUG, tag, "core version: %s\n", core_info[i].core_version);
       logger(LOG_DEBUG, tag, "valid extensions: %s\n", core_info[i].extensions);
-
+#endif
       core_count++;
    }
 
@@ -84,7 +91,6 @@ void gui_render(struct nk_context *ctx)
       nk_layout_row_dynamic(ctx, 30, 1);
       nk_label(ctx, "Core:", NK_TEXT_ALIGN_CENTERED | NK_TEXT_LEFT);
 
-      //NK_API int nk_combo(struct nk_context*, const char **items, int count, int selected, int item_height, struct nk_vec2 size);
       char* core_entries[100];
       for (unsigned i = 0; i < core_count; i++)
          core_entries[i] = core_info[i].core_name;
@@ -93,7 +99,7 @@ void gui_render(struct nk_context *ctx)
 
       if (!initialized || previous_core != current_core)
       {
-         core_peek(core_info[current_core].file_name, &current_core_info);
+         core_peek(core_info[current_core].file_name, &current_core_info, current_core_options);
          previous_core = current_core;
       }
 

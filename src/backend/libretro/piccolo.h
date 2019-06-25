@@ -15,6 +15,14 @@ struct core_info
    bool supports_no_game;
 } typedef core_info_t;
 
+struct core_option
+{
+   char key[100];
+   char description[100];
+   char value[100];
+   char values[PATH_MAX_LENGTH];
+} typedef core_option_t;
+
 struct {
    void   *handle;
    bool initialized;
@@ -39,5 +47,5 @@ struct {
    size_t (*retro_get_memory_size)(unsigned id);
 } piccolo;
 
-void core_peek(const char *in, core_info_t *out);
+void core_peek(const char *in, core_info_t *out, core_option_t *opts);
 #endif

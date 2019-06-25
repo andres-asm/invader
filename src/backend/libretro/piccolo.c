@@ -19,6 +19,50 @@ static bool supports_no_game;
 static struct retro_system_info piccolo_system_info = {0};
 static struct retro_game_info   piccolo_game_info   = {0};
 
+core_option_t *core_options;
+
+static void piccolo_set_variables(void *data)
+{
+   char buf[PATH_MAX_LENGTH];
+   unsigned options;
+   const char *values;
+   const char *value;
+
+   struct retro_variable *vars = (struct retro_variable*)data;
+
+   /* pointer to count and iterate over options */
+   struct retro_variable *count = vars;
+
+   /* count core options */
+   while (count->key)
+   {
+      count++;
+      options++;
+   }
+
+   core_options = (core_option_t*) calloc(options, sizeof(core_option_t));
+   logger(LOG_DEBUG, tag, "variables: %u\n", options);
+   for (unsigned i = 0; i < options; i++)
+   {
+      unsigned j = 0;
+      strlcpy(core_options[i].key, vars[i].key, sizeof(core_options[i].key));
+
+      values = strstr(vars[i].value, "; ");
+      value = values;
+
+      while(values[j] != '|' && values[j])
+      {
+         value++;
+         j++;
+      }
+
+      strlcpy(core_options[i].description, vars[i].value, values + 1 - vars[i].value);
+      strlcpy(core_options[i].values, values + 2, sizeof(core_options[i].values));
+      strlcpy(core_options[i].value, values + 2, value - values - 1);
+      logger(LOG_DEBUG, tag, "key: %s description: %s values: %s default: %s\n",
+         core_options[i].key, core_options[i].description, core_options[i].values, core_options[i].value);
+   }
+}
 
 static bool piccolo_set_environment(unsigned cmd, void *data)
 {
@@ -27,7 +71,13 @@ static bool piccolo_set_environment(unsigned cmd, void *data)
       case RETRO_ENVIRONMENT_SET_SUPPORT_NO_GAME:
       {
          supports_no_game = (bool*)data;
-         logger(LOG_DEBUG, tag, "RETRO_ENVIRONMENT_SET_SUPPORT_NO_GAME: %s\n", PRINT_BOOLEAN(supports_no_game));
+         logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_SET_SUPPORT_NO_GAME: %s\n", PRINT_BOOLEAN(supports_no_game));
+         break;
+      }
+      case RETRO_ENVIRONMENT_SET_VARIABLES:
+      {
+         logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_SET_VARIABLES: %s\n", PRINT_BOOLEAN(supports_no_game));
+         piccolo_set_variables(data);
          break;
       }
       default:
@@ -63,9 +113,10 @@ static size_t core_audio_sample_batch(const int16_t *data, size_t frames)
 }
 */
 
-void core_peek(const char *in, core_info_t *out)
+void core_peek(const char *in, core_info_t *out, core_option_t *opts)
 {
    supports_no_game = false;
+   core_options = opts;
 
    void (*set_environment)(retro_environment_t) = NULL;
    void (*set_video_refresh)(retro_video_refresh_t) = NULL;
