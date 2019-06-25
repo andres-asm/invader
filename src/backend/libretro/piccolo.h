@@ -23,6 +23,8 @@ struct core_info
    char extensions[PATH_MAX_LENGTH];
 
    bool supports_no_game;
+   bool block_extract;
+   bool full_path;
 } typedef core_info_t;
 
 struct core_option
@@ -57,9 +59,11 @@ struct piccolo
    void* (*retro_get_memory_data)(unsigned id);
    size_t (*retro_get_memory_size)(unsigned id);
 
-   core_option_t *core_options;
    void (*set_variables)(void *data);
    struct retro_system_info system_info;
+
+   core_option_t *core_options;
+   core_info_t *core_info;
 
 } typedef piccolo_t;
 

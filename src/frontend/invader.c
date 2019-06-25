@@ -72,7 +72,7 @@ void gui_render(struct nk_context *ctx)
       core_list_init(setting_get_string("directory_cores"));
 
    /* GUI */
-   if (nk_begin(ctx, "Obviously not the final GUI", nk_rect(50, 50, 300, 300),
+   if (nk_begin(ctx, "Obviously not the final GUI", nk_rect(50, 50, 400, 600),
          NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_SCALABLE|
          NK_WINDOW_MINIMIZABLE|NK_WINDOW_TITLE))
    {
@@ -109,9 +109,11 @@ void gui_render(struct nk_context *ctx)
       nk_label(ctx, "Core version:", NK_TEXT_ALIGN_CENTERED | NK_TEXT_LEFT);
       nk_label(ctx, current_core_info.core_version, NK_TEXT_ALIGN_CENTERED | NK_TEXT_LEFT);
       nk_label(ctx, "Valid extensions:", NK_TEXT_ALIGN_CENTERED | NK_TEXT_LEFT);
-      nk_label(ctx, current_core_info.extensions, NK_TEXT_ALIGN_CENTERED | NK_TEXT_LEFT);
+      nk_label_wrap(ctx, current_core_info.extensions);
       nk_layout_row_dynamic(ctx, 30, 1);
       nk_checkbox_bool(ctx, "Supports running without game", &current_core_info.supports_no_game);
+      nk_checkbox_bool(ctx, "Requires game full path", &current_core_info.full_path);
+      nk_checkbox_bool(ctx, "Block extraction of archives", &current_core_info.block_extract);
    }
    nk_end(ctx);
 

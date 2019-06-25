@@ -79,10 +79,11 @@ bool piccolo_set_environment(unsigned cmd, void *data)
    return true;
 }
 
-void core_peek(const char *in, core_info_t *out, core_option_t *options)
+void core_peek(const char *in, core_info_t *info, core_option_t *options)
 {
    supports_no_game = false;
    piccolo.core_options = options;
+   piccolo.core_info = info;
 
    void (*set_environment)(retro_environment_t) = NULL;
    void (*set_video_refresh)(retro_video_refresh_t) = NULL;
@@ -109,10 +110,12 @@ void core_peek(const char *in, core_info_t *out, core_option_t *options)
 
    piccolo.retro_get_system_info(&piccolo.system_info);
 
-   strlcpy(out->file_name, in, sizeof(out->file_name));
-   strlcpy(out->core_name, piccolo.system_info.library_name, sizeof(out->core_name));
-   strlcpy(out->core_version, piccolo.system_info.library_version, sizeof(out->core_version));
-   strlcpy(out->extensions, piccolo.system_info.valid_extensions, sizeof(out->extensions));
+   strlcpy(piccolo.core_info->file_name, in, sizeof(piccolo.core_info->file_name));
+   strlcpy(piccolo.core_info->core_name, piccolo.system_info.library_name, sizeof(piccolo.core_info->core_name));
+   strlcpy(piccolo.core_info->core_version, piccolo.system_info.library_version, sizeof(piccolo.core_info->core_version));
+   strlcpy(piccolo.core_info->extensions, piccolo.system_info.valid_extensions, sizeof(piccolo.core_info->extensions));
+   piccolo.core_info->full_path = piccolo.system_info.need_fullpath;
+   piccolo.core_info->block_extract = piccolo.system_info.block_extract;
 
 #ifndef DEBUG
    logger(LOG_DEBUG, tag, "retro api version: %d\n", piccolo.retro_api_version());
@@ -122,7 +125,7 @@ void core_peek(const char *in, core_info_t *out, core_option_t *options)
 #endif
 
    set_environment(piccolo_set_environment);
-   out->supports_no_game = supports_no_game;
+   piccolo.core_info->supports_no_game = supports_no_game;
 
    dylib_close(piccolo.handle);
 }
