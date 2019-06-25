@@ -3,7 +3,27 @@ include Makefile.common
 BIN = invader_sdl2
 
 # Flags
-CFLAGS += -std=c99 -O0 -DEBUG -pedantic
+CFLAGS += -std=c99
+
+ifeq ($(DEBUG),1)
+ifneq ($(OS),Windows_NT)
+   CFLAGS += -g -O0 -DDEBUG -pedantic -D_GNU_SOURCE
+   LIBS += -g
+else
+   CFLAGS += -g -O0 -DDEBUG -pedantic
+endif
+else
+ifneq ($(OS),Windows_NT)
+   CFLAGS += -O3 -pedantic -D_GNU_SOURCE
+else
+   CFLAGS += -O3 -pedantic
+endif
+endif
+
+ifneq ($(SANITIZER),)
+   CFLAGS   := -fsanitize=$(SANITIZER) $(CFLAGS)
+   LIBS  := -fsanitize=$(SANITIZER) $(LIBS)
+endif
 
 OBJ = $(SRC:.c=.o)
 
