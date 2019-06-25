@@ -10,10 +10,15 @@
 static const char *tag = "[core]";
 static bool supports_no_game;
 
-#define load_sym(V, S) do {\
-   if (!(V = dylib_proc(piccolo.handle, #S))) \
-      logger(LOG_ERROR, tag, "failed to load symbol '" #S "'': %s"); \
-   } while (0)
+piccolo_t piccolo = {0};
+
+ #define load_sym(V, S) do {\
+   function_t func = dylib_proc(piccolo.handle, #S); \
+   memcpy(&V, &func, sizeof(func)); \
+   if (!func) \
+       logger(LOG_ERROR, tag, "failed to load symbol '" #S "'': %s"); \
+    } while (0)
+
 
 #define load_retro_sym(S) load_sym(piccolo.S, S)
 
@@ -78,7 +83,7 @@ static bool piccolo_set_environment(unsigned cmd, void *data)
       case RETRO_ENVIRONMENT_SET_VARIABLES:
       {
          logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_SET_VARIABLES: %s\n", PRINT_BOOLEAN(supports_no_game));
-         piccolo_set_variables(data);
+         piccolo.set_variables(data);
          break;
       }
       default:
@@ -126,9 +131,8 @@ void core_peek(const char *in, core_info_t *out, core_option_t *opts)
    void (*set_audio_sample)(retro_audio_sample_t) = NULL;
    void (*set_audio_sample_batch)(retro_audio_sample_batch_t) = NULL;
 
-   memset(&piccolo, 0, sizeof(piccolo));
    piccolo.handle = dylib_load(in);
-
+   piccolo.set_variables = piccolo_set_variables;
 
    void (*proc)(struct retro_system_info*);
 

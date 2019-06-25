@@ -23,7 +23,8 @@ struct core_option
    char values[PATH_MAX_LENGTH];
 } typedef core_option_t;
 
-struct {
+struct piccolo
+{
    void   *handle;
    bool initialized;
    void (*retro_init)(void);
@@ -45,7 +46,10 @@ struct {
    //unsigned retro_get_region(void);
    void* (*retro_get_memory_data)(unsigned id);
    size_t (*retro_get_memory_size)(unsigned id);
-} piccolo;
+
+   core_option_t *core_options;
+   void (*set_variables)(void *data);
+} typedef piccolo_t;
 
 void core_peek(const char *in, core_info_t *out, core_option_t *opts);
 #endif
