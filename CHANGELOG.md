@@ -10,3 +10,12 @@
 - add libretro function pointers
 - add core loading
 - add core selector
+
+## 0.1.1
+- add environment callback
+- hookup set variables to piccolo
+- hookup set variables to gui
+- move members into piccolo struct for convenience
+- fix all warnings, add asan, add debug builds (bparker)
+- expose full path, block extract
+

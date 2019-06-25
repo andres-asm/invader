@@ -9,13 +9,14 @@
 #include <limits.h>
 #include <time.h>
 #include <compat/strl.h>
+#include <lists/string_list.h>
 
 #include "invader.h"
 #include "config.h"
 #include "util.h"
 #include "libretro/piccolo.h"
 
-core_info_t core_info[100];
+core_info_t core_info_list[100];
 core_option_t core_options[100];
 
 core_info_t current_core_info;
@@ -46,15 +47,15 @@ bool core_list_init(const char* in)
    logger(LOG_DEBUG, tag, "core count: %d\n", list->file_count);
    for (unsigned i = 0; i < list->file_count; i++)
    {
-      strlcpy(core_info[i].file_name, list->file_names[i], sizeof(core_info[i].file_name));
+      strlcpy(core_info_list[i].file_name, list->file_names[i], sizeof(core_info_list[i].file_name));
       snprintf(buf, sizeof(buf), "%s/%s", in, list->file_names[i]);
-      core_peek(buf, &core_info[i], core_options);
-      core_info[i].core_id = i;
+      core_peek(buf, &core_info_list[i], core_options);
+      core_info_list[i].core_id = i;
 
 #ifdef DEBUG
-      logger(LOG_DEBUG, tag, "core name: %s\n", core_info[i].core_name);
-      logger(LOG_DEBUG, tag, "core version: %s\n", core_info[i].core_version);
-      logger(LOG_DEBUG, tag, "valid extensions: %s\n", core_info[i].extensions);
+      logger(LOG_DEBUG, tag, "core name: %s\n", core_info_list[i].core_name);
+      logger(LOG_DEBUG, tag, "core version: %s\n", core_info_list[i].core_version);
+      logger(LOG_DEBUG, tag, "valid extensions: %s\n", core_info_list[i].extensions);
 #endif
       core_count++;
    }
@@ -72,7 +73,7 @@ void gui_render(struct nk_context *ctx)
       core_list_init(setting_get_string("directory_cores"));
 
    /* GUI */
-   if (nk_begin(ctx, "Obviously not the final GUI", nk_rect(50, 50, 400, 600),
+   if (nk_begin(ctx, "Just a placeholder GUI", nk_rect(10, 10, 500, 700),
          NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_SCALABLE|
          NK_WINDOW_MINIMIZABLE|NK_WINDOW_TITLE))
    {
@@ -95,13 +96,13 @@ void gui_render(struct nk_context *ctx)
 
       const char* core_entries[100];
       for (unsigned i = 0; i < core_count; i++)
-         core_entries[i] = core_info[i].core_name;
+         core_entries[i] = core_info_list[i].core_name;
 
       current_core = nk_combo(ctx, core_entries, core_count, current_core, 30, nk_vec2(200,200));
 
       if (core_count !=0 && (!initialized || previous_core != current_core))
       {
-         core_peek(core_info[current_core].file_name, &current_core_info, core_options);
+         core_peek(core_info_list[current_core].file_name, &current_core_info, core_options);
          previous_core = current_core;
       }
 
@@ -110,10 +111,27 @@ void gui_render(struct nk_context *ctx)
       nk_label(ctx, current_core_info.core_version, NK_TEXT_ALIGN_CENTERED | NK_TEXT_LEFT);
       nk_label(ctx, "Valid extensions:", NK_TEXT_ALIGN_CENTERED | NK_TEXT_LEFT);
       nk_label_wrap(ctx, current_core_info.extensions);
+
+      nk_layout_row_dynamic(ctx, 160, 1);
+      nk_group_begin(ctx, "Core flags", NK_WINDOW_TITLE | NK_WINDOW_ROM);
       nk_layout_row_dynamic(ctx, 30, 1);
       nk_checkbox_bool(ctx, "Supports running without game", &current_core_info.supports_no_game);
       nk_checkbox_bool(ctx, "Requires game full path", &current_core_info.full_path);
       nk_checkbox_bool(ctx, "Block extraction of archives", &current_core_info.block_extract);
+      nk_group_end(ctx);
+
+      nk_layout_row_dynamic(ctx, 280, 1);
+      nk_group_begin(ctx, "Core Options", NK_WINDOW_TITLE | NK_WINDOW_ROM);
+      for (unsigned i = 0; i < core_option_count(); i++)
+      {
+         struct string_list *list = string_split(core_options[i].values, "|");
+         nk_layout_row_dynamic(ctx, 30, 1);
+         nk_label(ctx, core_options[i].description, NK_TEXT_ALIGN_CENTERED | NK_TEXT_LEFT);
+         nk_layout_row_dynamic(ctx, 30, 1);
+         /* To-Do: set return value */
+         nk_combo_string_list(ctx, list, 0, 30, nk_vec2(200,200));
+      }
+      nk_group_end(ctx);
    }
    nk_end(ctx);
 

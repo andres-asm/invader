@@ -31,4 +31,9 @@ make -f Makefile.sdl2
 - [ ] everything
 
 ## Screenshots
+
+### 0.1.0
 ![img](docs/images/0.1.0.png)
+
+### 0.1.1
+![img](docs/images/0.1.1.png)

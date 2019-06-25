@@ -17,9 +17,10 @@ struct retro_game_info   piccolo_game_info   = {0};
 static void piccolo_set_variables(void *data)
 {
    char buf[PATH_MAX_LENGTH];
-   unsigned options = 0;
    const char *values;
    const char *value;
+
+   piccolo.core_option_count = 0;
 
    struct retro_variable *vars = (struct retro_variable*)data;
 
@@ -30,12 +31,12 @@ static void piccolo_set_variables(void *data)
    while (count->key)
    {
       count++;
-      options++;
+      piccolo.core_option_count++;
    }
    core_option_t * core_options = piccolo.core_options;
 
-   logger(LOG_DEBUG, tag, "variables: %u\n", options);
-   for (unsigned i = 0; i < options; i++)
+   logger(LOG_DEBUG, tag, "variables: %u\n", piccolo.core_option_count);
+   for (unsigned i = 0; i < piccolo.core_option_count; i++)
    {
       unsigned j = 0;
       strlcpy(core_options[i].key, vars[i].key, sizeof(core_options[i].key));
@@ -128,6 +129,11 @@ void core_peek(const char *in, core_info_t *info, core_option_t *options)
    piccolo.core_info->supports_no_game = supports_no_game;
 
    dylib_close(piccolo.handle);
+}
+
+unsigned core_option_count()
+{
+   return piccolo.core_option_count;
 }
 
 /*

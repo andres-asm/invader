@@ -65,7 +65,11 @@ struct piccolo
    core_option_t *core_options;
    core_info_t *core_info;
 
+   unsigned core_option_count;
+
 } typedef piccolo_t;
 
 void core_peek(const char *in, core_info_t *out, core_option_t *opts);
+
+unsigned core_option_count();
 #endif
