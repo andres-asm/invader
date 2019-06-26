@@ -10,6 +10,8 @@
 
 #include "util.h"
 
+static const char* tag = "[util]";
+
 void logger(int level, const char *tag, const char *fmt, ...)
 {
    va_list va;
@@ -29,8 +31,6 @@ void get_file_list(const char *in, file_list_t *out, const char *filter)
 {
    DIR *dir;
    struct dirent *entry;
-   static const char* tag = "[dir]";
-
    unsigned i = 0;
 
    out->file_count = 0;

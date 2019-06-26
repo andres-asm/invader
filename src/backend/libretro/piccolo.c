@@ -74,6 +74,23 @@ static void piccolo_set_variables(void *data)
    }
 }
 
+void piccolo_get_variables(void *data) {
+   if (piccolo.core_option_count== 0)
+      return;
+
+   struct retro_variable *var = (struct retro_variable*)data;
+   var->value = NULL;
+
+
+   for (int i = 0; i < piccolo.core_option_count; i++)
+   {
+      if (!strcmp(var->key, piccolo.core_options[i].key))
+      {
+         var->value = piccolo.core_options[i].value;
+      }
+   }
+}
+
 static bool piccolo_set_environment(unsigned cmd, void *data)
 {
    switch(cmd)
@@ -90,6 +107,13 @@ static bool piccolo_set_environment(unsigned cmd, void *data)
          piccolo.set_variables(data);
          break;
       }
+      case RETRO_ENVIRONMENT_GET_VARIABLE:
+      {
+         struct retro_variable *var = (struct retro_variable*)data;
+         logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_VARIABLE: %s\n", var->key);
+         piccolo_get_variables(data);
+         break;
+      }
       case RETRO_ENVIRONMENT_SET_PIXEL_FORMAT:
          logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_SET_PIXEL_FORMAT: %s\n", PRINT_PIXFMT(*(int*)data));
          piccolo.core_info->pixel_format = *(int*)data;
@@ -102,17 +126,28 @@ static bool piccolo_set_environment(unsigned cmd, void *data)
          break;
       }
       case RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY:
+      {
+         logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY\n", "./");
+         *(const char**)data = "C:\\";
+         break;
+      }
       case RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY:
       {
-         logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY\n");
+         logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY %s\n", "./");
          *(const char**)data = "C:\\";
          break;
       }
       case RETRO_ENVIRONMENT_GET_CAN_DUPE:
-         *(const bool**)data = true;
+         *(bool*)data = true;
+         break;
+      case RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS:
+         logger(LOG_WARN, tag, "RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS unhandled\n");
+         break;
+      case RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL:
+         logger(LOG_WARN, tag, "RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL unhandled\n");
          break;
       default:
-         logger(LOG_DEBUG, tag, "unknown command: %d\n", cmd);
+         logger(LOG_WARN, tag, "unknown command: %d\n", cmd);
    }
    return true;
 }
@@ -273,7 +308,10 @@ bool core_load_game(const char* filename)
          info.data = NULL;
          info.size = 0;
          info.path = filename;
-         piccolo.retro_load_game(&info);
+         if (!piccolo.retro_load_game(&info))
+            logger(LOG_ERROR, tag, "core error while opening file %s\n", filename);
+         else
+            return true;
       }
       else
       {
@@ -290,6 +328,8 @@ bool core_load_game(const char* filename)
             logger(LOG_ERROR, tag, "error reading file %s\n", filename);
          if(!piccolo.retro_load_game(&info))
             logger(LOG_ERROR, tag, "core error while opening file %s\n", filename);
+         else
+            return true;
       }
    }
 
