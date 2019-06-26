@@ -105,13 +105,12 @@ static bool piccolo_set_environment(unsigned cmd, void *data)
    return true;
 }
 
-static void piccolo_set_av_info(struct retro_system_av_info *info)
-{
-
-}
-
 static void piccolo_video_refresh(const void *data, unsigned width, unsigned height, size_t pitch)
 {
+   piccolo.video_data->data = data;
+   piccolo.video_data->width = width;
+   piccolo.video_data->height = height;
+   piccolo.video_data->pitch = pitch;
    return;
 }
 
@@ -170,7 +169,10 @@ void core_load(const char *in, core_info_t *info, core_option_t *options, bool p
    strlcpy(piccolo.core_info->file_name, in, sizeof(piccolo.core_info->file_name));
    strlcpy(piccolo.core_info->core_name, piccolo.system_info.library_name, sizeof(piccolo.core_info->core_name));
    strlcpy(piccolo.core_info->core_version, piccolo.system_info.library_version, sizeof(piccolo.core_info->core_version));
-   strlcpy(piccolo.core_info->extensions, piccolo.system_info.valid_extensions, sizeof(piccolo.core_info->extensions));
+   if (piccolo.system_info.valid_extensions)
+      strlcpy(piccolo.core_info->extensions, piccolo.system_info.valid_extensions, sizeof(piccolo.core_info->extensions));
+   else
+      strlcpy(piccolo.core_info->extensions, "N/A", sizeof(piccolo.core_info->extensions));
    piccolo.core_info->full_path = piccolo.system_info.need_fullpath;
    piccolo.core_info->block_extract = piccolo.system_info.block_extract;
 
@@ -218,6 +220,12 @@ void core_load(const char *in, core_info_t *info, core_option_t *options, bool p
 
    piccolo.retro_get_system_av_info(&piccolo.av_info);
 
+   piccolo.core_info->av_info.geometry.base_width    = piccolo.av_info.geometry.base_width;
+   piccolo.core_info->av_info.geometry.base_height   = piccolo.av_info.geometry.base_height;
+   piccolo.core_info->av_info.geometry.max_width     = piccolo.av_info.geometry.max_width;
+   piccolo.core_info->av_info.geometry.max_height    = piccolo.av_info.geometry.max_height;
+   piccolo.core_info->av_info.geometry.aspect_ratio  = piccolo.av_info.geometry.aspect_ratio;
+
    logger(LOG_DEBUG, tag, "geometry: %ux%d/%ux%d %f\n",
       piccolo.av_info.geometry.base_width, piccolo.av_info.geometry.base_height,
       piccolo.av_info.geometry.max_width, piccolo.av_info.geometry.max_height,
@@ -226,6 +234,31 @@ void core_load(const char *in, core_info_t *info, core_option_t *options, bool p
       piccolo.av_info.timing.fps, piccolo.av_info.timing.sample_rate);
    piccolo.retro_init();
    piccolo.initialized = true;
+}
+
+bool core_load_game(const char* filename)
+{
+   /* No content code path */
+   if (!filename)
+   {
+      if (piccolo.retro_load_game(NULL))
+      {
+         logger(LOG_DEBUG, tag, "loading without content\n");
+         return true;
+      }
+      else
+      {
+         logger(LOG_DEBUG, tag, "loading failed\n");
+         return false;
+      }
+   }
+   return false;
+}
+
+void core_run(core_frame_buffer_t *video_data)
+{
+   piccolo.video_data = video_data;
+   piccolo.retro_run();
 }
 
 unsigned core_option_count()

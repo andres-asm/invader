@@ -14,6 +14,14 @@
 
 #define load_retro_sym(S) load_sym(piccolo.S, S)
 
+struct core_frame_buffer
+{
+   void *data;
+   unsigned width;
+   unsigned height;
+   unsigned pitch;
+} typedef core_frame_buffer_t;
+
 struct core_info
 {
    unsigned core_id;
@@ -27,6 +35,8 @@ struct core_info
    bool full_path;
 
    unsigned pixel_format;
+
+   struct retro_system_av_info av_info;
 } typedef core_info_t;
 
 struct core_option
@@ -69,11 +79,17 @@ struct piccolo
    core_option_t *core_options;
    core_info_t *core_info;
 
+   core_frame_buffer_t *video_data;
+
    unsigned core_option_count;
 
 } typedef piccolo_t;
 
 void core_load(const char *in, core_info_t *info, core_option_t *options, bool peek);
+
+bool core_load_game(const char* filename);
+
+void core_run();
 
 unsigned core_option_count();
 #endif
