@@ -66,18 +66,17 @@ bool core_list_init(const char* in)
    return true;
 }
 
-static struct nk_image compose_framebuffer()
+GLuint tex;
+static struct nk_image compose_framebuffer(void *data, unsigned width, unsigned height, unsigned pitch)
 {
-   GLuint tex;
-   unsigned char *data = frame_buffer.data;
-
-   glGenTextures(1, &tex);
+   if (!tex)
+      glGenTextures(1, &tex);
    glBindTexture(GL_TEXTURE_2D, tex);
    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_NEAREST);
    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, frame_buffer.width, frame_buffer.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_BGRA, GL_UNSIGNED_BYTE, data);
    glGenerateMipmap(GL_TEXTURE_2D);
 
    return nk_image_id((int)tex);
@@ -136,6 +135,10 @@ void gui_render(struct nk_context *ctx)
       if (nk_button_label(ctx, "Load content"))
       {
          core_load(core_info_list[current_core].file_name, &current_core_info, core_options, false);
+         if(core_load_game("rom.md"))
+         {
+            running = true;
+         }
       }
 
       if (core_count !=0 && (!initialized || previous_core != current_core))
@@ -182,7 +185,7 @@ void gui_render(struct nk_context *ctx)
             NK_WINDOW_MINIMIZABLE|NK_WINDOW_TITLE))
          {
             nk_layout_row_dynamic(ctx, frame_buffer.height, 1);
-            nk_image(ctx, compose_framebuffer());
+            nk_image(ctx, compose_framebuffer(frame_buffer.data, frame_buffer.width, frame_buffer.height, frame_buffer.pitch));
          }
          nk_end(ctx);
    }

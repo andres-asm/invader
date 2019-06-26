@@ -67,8 +67,10 @@ static void piccolo_set_variables(void *data)
       strlcpy(core_options[i].description, vars[i].value, values + 1 - vars[i].value);
       strlcpy(core_options[i].values, values + 2, sizeof(core_options[i].values));
       strlcpy(core_options[i].value, values + 2, value - values - 1);
+#ifdef DEBUG
       logger(LOG_DEBUG, tag, "key: %s description: %s values: %s default: %s\n",
          core_options[i].key, core_options[i].description, core_options[i].values, core_options[i].value);
+#endif
    }
 }
 
@@ -99,6 +101,16 @@ static bool piccolo_set_environment(unsigned cmd, void *data)
          callback->log = piccolo_logger;
          break;
       }
+      case RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY:
+      case RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY:
+      {
+         logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY\n");
+         *(const char**)data = "C:\\";
+         break;
+      }
+      case RETRO_ENVIRONMENT_GET_CAN_DUPE:
+         *(const bool**)data = true;
+         break;
       default:
          logger(LOG_DEBUG, tag, "unknown command: %d\n", cmd);
    }
@@ -176,7 +188,7 @@ void core_load(const char *in, core_info_t *info, core_option_t *options, bool p
    piccolo.core_info->full_path = piccolo.system_info.need_fullpath;
    piccolo.core_info->block_extract = piccolo.system_info.block_extract;
 
-#ifndef DEBUG
+#ifdef DEBUG
    logger(LOG_DEBUG, tag, "retro api version: %d\n", piccolo.retro_api_version());
    logger(LOG_DEBUG, tag, "core name: %s\n", piccolo.system_info.library_name);
    logger(LOG_DEBUG, tag, "core version: %s\n", piccolo.system_info.library_version);
@@ -252,6 +264,35 @@ bool core_load_game(const char* filename)
          return false;
       }
    }
+   else
+   {
+      logger(LOG_DEBUG, tag, "loading file %s\n", filename);
+      if (piccolo.core_info->full_path)
+      {
+         struct retro_game_info info;
+         info.data = NULL;
+         info.size = 0;
+         info.path = filename;
+         piccolo.retro_load_game(&info);
+      }
+      else
+      {
+         struct retro_game_info info;
+         FILE *file = fopen(filename, "rb");
+         if (!file)
+            logger(LOG_ERROR, tag, "error opening file %s\n", filename);
+         fseek(file, 0, SEEK_END);
+         info.size = ftell(file);
+         rewind(file);
+
+         info.data = malloc(info.size);
+         if (!info.data || !fread((void*)info.data, info.size, 1, file))
+            logger(LOG_ERROR, tag, "error reading file %s\n", filename);
+         if(!piccolo.retro_load_game(&info))
+            logger(LOG_ERROR, tag, "core error while opening file %s\n", filename);
+      }
+   }
+
    return false;
 }
 

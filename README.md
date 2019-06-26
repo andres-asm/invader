@@ -21,9 +21,9 @@ make -f Makefile.sdl2
 # Current Progress
 ## Backend
 - [X] core loading
-- [ ] core initialization
+- [X] core initialization
 - [ ] content loading
-- [ ] video rendering
+- [X] video rendering
 - [ ] audio rendering
 - [ ] input processing
 
@@ -37,3 +37,6 @@ make -f Makefile.sdl2
 
 ### 0.1.1
 ![img](docs/images/0.1.1.png)
+
+### 0.1.2
+![img](docs/images/0.1.2.png)
