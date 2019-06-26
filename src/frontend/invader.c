@@ -73,14 +73,13 @@ static struct nk_image compose_framebuffer(void *data, unsigned width, unsigned 
       glGenTextures(1, &tex);
 
    glBindTexture(GL_TEXTURE_2D, tex);
-   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
    glPixelStorei(GL_UNPACK_ROW_LENGTH, pitch / sizeof(uint32_t));
-   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, data);
-   glGenerateMipmap(GL_TEXTURE_2D);
+   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, width, height, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, data);
 
    return nk_image_id((int)tex);
 }
@@ -138,7 +137,7 @@ void gui_render(struct nk_context *ctx)
       if (nk_button_label(ctx, "Load content"))
       {
          core_load(core_info_list[current_core].file_name, &current_core_info, core_options, false);
-         if(core_load_game("rom.md"))
+         if(core_load_game("rom.nes"))
          {
             running = true;
          }
@@ -165,7 +164,8 @@ void gui_render(struct nk_context *ctx)
       nk_group_end(ctx);
 
       nk_layout_row_dynamic(ctx, 240, 1);
-      nk_group_begin(ctx, "Core options", NK_WINDOW_TITLE | NK_WINDOW_ROM);
+      int flags = running ? NK_WINDOW_TITLE : NK_WINDOW_TITLE | NK_WINDOW_ROM;
+      nk_group_begin(ctx, "Core options", flags);
       for (unsigned i = 0; i < core_option_count(); i++)
       {
          struct string_list *list = string_split(core_options[i].values, "|");
@@ -183,14 +183,15 @@ void gui_render(struct nk_context *ctx)
    if (running)
    {
       core_run(&frame_buffer);
-         if (nk_begin(ctx, "Video output", nk_rect(520, 10, current_core_info.av_info.geometry.base_width, current_core_info.av_info.geometry.base_height),
+         if (nk_begin(ctx, "Video output", nk_rect(520, 10, 664, 700),
             NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_SCALABLE|
             NK_WINDOW_MINIMIZABLE|NK_WINDOW_TITLE))
          {
-            nk_layout_row_dynamic(ctx, frame_buffer.height, 1);
+            nk_layout_space_begin(ctx, NK_STATIC,400, INT_MAX);
+            nk_layout_space_push(ctx, nk_rect(0, 0, 640, 480));
             nk_image(ctx, compose_framebuffer(frame_buffer.data, frame_buffer.width, frame_buffer.height, frame_buffer.pitch));
+            nk_layout_space_end(ctx);
          }
          nk_end(ctx);
    }
 }
-
