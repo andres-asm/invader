@@ -16,7 +16,7 @@
 
 struct core_frame_buffer
 {
-   void *data;
+   const void *data;
    unsigned width;
    unsigned height;
    unsigned pitch;

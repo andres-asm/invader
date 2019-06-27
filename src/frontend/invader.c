@@ -67,7 +67,7 @@ bool core_list_init(const char* in)
 }
 
 GLuint tex;
-static struct nk_image compose_framebuffer(void *data, unsigned width, unsigned height, unsigned pitch)
+static struct nk_image compose_framebuffer(const void *data, unsigned width, unsigned height, unsigned pitch)
 {
    if (!tex)
       glGenTextures(1, &tex);
