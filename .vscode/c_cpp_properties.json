@@ -149,7 +149,7 @@
             "limitSymbolsToIncludedHeaders": true,
             "databaseFilename": ""
          }
-      },
+      }
    ],
    "version": 4
 }
