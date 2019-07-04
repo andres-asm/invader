@@ -151,7 +151,7 @@ void gui_render(struct nk_context *ctx)
       if (nk_button_label(ctx, "Load content"))
       {
          core_load(core_info_list[current_core].file_name, &current_core_info, core_options, false);
-         if(core_load_game("rom.md"))
+         if(core_load_game("rom.gb"))
          {
             running = true;
          }
