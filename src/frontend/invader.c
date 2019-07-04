@@ -66,6 +66,7 @@ bool core_list_init(const char* in)
    return true;
 }
 
+/* To-Do: Move this code elsewhere, GL specific code has no place here */
 GLuint tex;
 static struct nk_image compose_framebuffer(const void *data, unsigned width, unsigned height, unsigned pitch)
 {
@@ -78,8 +79,21 @@ static struct nk_image compose_framebuffer(const void *data, unsigned width, uns
    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-   glPixelStorei(GL_UNPACK_ROW_LENGTH, pitch / sizeof(uint32_t));
-   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, width, height, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, data);
+   switch (current_core_info.pixel_format)
+   {
+      case RETRO_PIXEL_FORMAT_XRGB8888:
+         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, width, height, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, data);
+         glPixelStorei(GL_UNPACK_ROW_LENGTH, pitch / sizeof(uint32_t));
+         break;
+      case RETRO_PIXEL_FORMAT_RGB565:
+         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+         glPixelStorei(GL_UNPACK_ROW_LENGTH, pitch / sizeof(uint16_t));
+         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB565, width, height, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, data);
+         break;
+      default:
+         logger(LOG_DEBUG, tag, "pixel format: %s (%d) unhandled\n", PRINT_PIXFMT(current_core_info.pixel_format), current_core_info.pixel_format);
+
+   }
 
    return nk_image_id((int)tex);
 }
@@ -137,7 +151,7 @@ void gui_render(struct nk_context *ctx)
       if (nk_button_label(ctx, "Load content"))
       {
          core_load(core_info_list[current_core].file_name, &current_core_info, core_options, false);
-         if(core_load_game("rom.nes"))
+         if(core_load_game("rom.md"))
          {
             running = true;
          }

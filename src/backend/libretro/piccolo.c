@@ -325,7 +325,7 @@ bool core_load_game(const char* filename)
 
          info.path = filename;
          info.data = malloc(info.size);
-         fread((void*)info.data, info.size, 1, file);
+
          if (!info.data || !fread((void*)info.data, info.size, 1, file))
             logger(LOG_ERROR, tag, "error reading file %s\n", filename);
          if(!piccolo.retro_load_game(&info))
