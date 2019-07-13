@@ -26,6 +26,38 @@
 
 static const char* tag = "[glfw]";
 
+GLuint texture;
+
+struct nk_image compose_framebuffer(const void *data, unsigned width, unsigned height, unsigned pitch, unsigned pixel_format)
+{
+   if (!texture)
+      glGenTextures(1, &texture);
+
+   glBindTexture(GL_TEXTURE_2D, texture);
+   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+   switch (pixel_format)
+   {
+      case RETRO_PIXEL_FORMAT_XRGB8888:
+         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, width, height, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, data);
+         glPixelStorei(GL_UNPACK_ROW_LENGTH, pitch / sizeof(uint32_t));
+         break;
+      case RETRO_PIXEL_FORMAT_RGB565:
+         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+         glPixelStorei(GL_UNPACK_ROW_LENGTH, pitch / sizeof(uint16_t));
+         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB565, width, height, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, data);
+         break;
+      default:
+         logger(LOG_DEBUG, tag, "pixel format: %s (%d) unhandled\n", PRINT_PIXFMT(pixel_format), pixel_format);
+
+   }
+
+   return nk_image_id((int)texture);
+}
+
 static void error_callback(int e, const char *d)
 {
    logger(LOG_ERROR, tag, "error: %d description: %s\n", e, d);

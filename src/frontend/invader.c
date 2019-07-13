@@ -66,38 +66,6 @@ bool core_list_init(const char* in)
    return true;
 }
 
-/* To-Do: Move this code elsewhere, GL specific code has no place here */
-GLuint tex;
-static struct nk_image compose_framebuffer(const void *data, unsigned width, unsigned height, unsigned pitch)
-{
-   if (!tex)
-      glGenTextures(1, &tex);
-
-   glBindTexture(GL_TEXTURE_2D, tex);
-   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-   switch (current_core_info.pixel_format)
-   {
-      case RETRO_PIXEL_FORMAT_XRGB8888:
-         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, width, height, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, data);
-         glPixelStorei(GL_UNPACK_ROW_LENGTH, pitch / sizeof(uint32_t));
-         break;
-      case RETRO_PIXEL_FORMAT_RGB565:
-         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-         glPixelStorei(GL_UNPACK_ROW_LENGTH, pitch / sizeof(uint16_t));
-         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB565, width, height, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, data);
-         break;
-      default:
-         logger(LOG_DEBUG, tag, "pixel format: %s (%d) unhandled\n", PRINT_PIXFMT(current_core_info.pixel_format), current_core_info.pixel_format);
-
-   }
-
-   return nk_image_id((int)tex);
-}
-
 /* Render the main interface */
 void gui_render(struct nk_context *ctx)
 {
@@ -203,7 +171,7 @@ void gui_render(struct nk_context *ctx)
          {
             nk_layout_space_begin(ctx, NK_STATIC,400, INT_MAX);
             nk_layout_space_push(ctx, nk_rect(0, 0, 640, 480));
-            nk_image(ctx, compose_framebuffer(frame_buffer.data, frame_buffer.width, frame_buffer.height, frame_buffer.pitch));
+            nk_image(ctx, compose_framebuffer(frame_buffer.data, frame_buffer.width, frame_buffer.height, frame_buffer.pitch, current_core_info.pixel_format));
             nk_layout_space_end(ctx);
          }
          nk_end(ctx);
