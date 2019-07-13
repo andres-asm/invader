@@ -41,6 +41,9 @@ static const char* tag = "[sdl]";
 
 GLuint texture;
 
+SDL_AudioSpec want, have;
+SDL_AudioDeviceID device;
+
 struct nk_image render_framebuffer(const void *data, unsigned width, unsigned height, unsigned pitch, unsigned pixel_format)
 {
    if (!texture)
@@ -69,6 +72,44 @@ struct nk_image render_framebuffer(const void *data, unsigned width, unsigned he
    }
 
    return nk_image_id((int)texture);
+}
+
+void sdl_audio_callback(void *data, Uint8* stream, int len)
+{
+   logger(LOG_INFO, tag, "playing audio frames %d\n", 0);
+}
+
+bool init_audio_device()
+{
+   int devices = SDL_GetNumAudioDevices(0);
+
+   logger(LOG_INFO, tag, "audio devices: %d\n", devices);
+
+   for(unsigned i = 0; i < devices; i++)
+      logger(LOG_INFO, tag, "device %d: %s\n", i, SDL_GetAudioDeviceName(i, 0));
+
+   SDL_zero(want);
+
+   want.freq = 48000;
+   want.format = AUDIO_S16LSB;
+   want.channels = 2;
+   want.samples = 4096;
+   want.callback = sdl_audio_callback;
+
+   logger(LOG_INFO, tag, "want - frequency: %d format: f %d s %d be %d sz %d channels: %d samples: %d\n",
+      want.freq, SDL_AUDIO_ISFLOAT(want.format), SDL_AUDIO_ISSIGNED(want.format), SDL_AUDIO_ISBIGENDIAN(want.format), SDL_AUDIO_BITSIZE(want.format), want.channels, want.samples);
+   device = SDL_OpenAudioDevice(NULL, 0, &want, &have, SDL_AUDIO_ALLOW_ANY_CHANGE);
+   if(!device) {
+      logger(LOG_ERROR, tag, "failed to open audio device: %s\n", SDL_GetError());
+      SDL_Quit();
+      return false;
+   }
+   else
+      logger(LOG_ERROR, tag, "opened audio device: %s\n", SDL_GetAudioDeviceName(0, 0));
+
+   logger(LOG_INFO, tag, "have - frequency: %d format: f %d s %d be %d sz %d channels: %d samples: %d\n",
+      have.freq, SDL_AUDIO_ISFLOAT(have.format), SDL_AUDIO_ISSIGNED(have.format), SDL_AUDIO_ISBIGENDIAN(have.format), SDL_AUDIO_BITSIZE(have.format), have.channels, have.samples);
+   return true;
 }
 
 int main(int argc, char *argv[])

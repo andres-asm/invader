@@ -338,9 +338,10 @@ bool core_load_game(const char* filename)
    return false;
 }
 
-void core_run(core_frame_buffer_t *video_data)
+void core_run(core_frame_buffer_t *video_data, core_audio_buffer_t *audio_data)
 {
    piccolo.video_data = video_data;
+   piccolo.audio_data = audio_data;
    piccolo.retro_run();
 }
 

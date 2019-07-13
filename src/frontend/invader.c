@@ -26,6 +26,7 @@ unsigned core_count;
 unsigned current_core;
 
 core_frame_buffer_t frame_buffer;
+core_audio_buffer_t audio_buffer;
 
 
 static const char* tag = "[invader]";
@@ -164,7 +165,7 @@ void gui_render(struct nk_context *ctx)
    initialized = true;
    if (running)
    {
-      core_run(&frame_buffer);
+      core_run(&frame_buffer, &audio_buffer);
          if (nk_begin(ctx, "Video output", nk_rect(520, 10, 664, 700),
             NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_SCALABLE|
             NK_WINDOW_MINIMIZABLE|NK_WINDOW_TITLE))
