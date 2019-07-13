@@ -171,7 +171,7 @@ void gui_render(struct nk_context *ctx)
          {
             nk_layout_space_begin(ctx, NK_STATIC,400, INT_MAX);
             nk_layout_space_push(ctx, nk_rect(0, 0, 640, 480));
-            nk_image(ctx, compose_framebuffer(frame_buffer.data, frame_buffer.width, frame_buffer.height, frame_buffer.pitch, current_core_info.pixel_format));
+            nk_image(ctx, render_framebuffer(frame_buffer.data, frame_buffer.width, frame_buffer.height, frame_buffer.pitch, current_core_info.pixel_format));
             nk_layout_space_end(ctx);
          }
          nk_end(ctx);

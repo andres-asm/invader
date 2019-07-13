@@ -28,7 +28,7 @@ static const char* tag = "[glfw]";
 
 GLuint texture;
 
-struct nk_image compose_framebuffer(const void *data, unsigned width, unsigned height, unsigned pitch, unsigned pixel_format)
+struct nk_image render_framebuffer(const void *data, unsigned width, unsigned height, unsigned pitch, unsigned pixel_format)
 {
    if (!texture)
       glGenTextures(1, &texture);
