@@ -96,6 +96,9 @@ void gui_render(struct nk_context *ctx)
       nk_edit_string(ctx, NK_EDIT_SIMPLE, string, &len, size, nk_filter_default);
 
       nk_layout_row_dynamic(ctx, 30, 1);
+      nk_checkbox_bool(ctx, setting_get("video_vsync")->desc, setting_get_bool("video_vsync"));
+      nk_checkbox_bool(ctx, setting_get("video_fullscreen")->desc, setting_get_bool("video_fullscreen"));
+
       nk_label(ctx, "Core:", NK_TEXT_ALIGN_CENTERED | NK_TEXT_LEFT);
 
       const char* core_entries[100];

@@ -20,6 +20,8 @@ struct config_main
 {
    setting directory_cores;
    setting directory_games;
+   setting video_vsync;
+   setting video_fullscreen;
 };
 
 struct config

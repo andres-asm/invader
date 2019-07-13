@@ -31,6 +31,7 @@
 #include <SDL2/SDL_opengl.h>
 
 #include "invader.h"
+#include "config.h"
 #include "util.h"
 #include "nuklear_sdl_gl3.h"
 
@@ -120,31 +121,39 @@ int main(int argc, char *argv[])
    int win_width, win_height;
    int running = 1;
 
+   /* Configuration setup */
+   cfg_load();
+
    /* SDL setup */
    SDL_SetHint(SDL_HINT_VIDEO_HIGHDPI_DISABLED, "0");
-   SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER|SDL_INIT_EVENTS);
+   if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER|SDL_INIT_EVENTS|SDL_INIT_AUDIO) == -1)
+         logger(LOG_ERROR, tag, SDL_GetError());
    SDL_GL_SetAttribute (SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
    SDL_GL_SetAttribute (SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+
+   uint32_t flags = SDL_WINDOW_OPENGL|SDL_WINDOW_SHOWN|SDL_WINDOW_ALLOW_HIGHDPI;
+   *setting_get_bool("video_vsync") ? flags |= SDL_WINDOW_FULLSCREEN_DESKTOP : true;
+
    win = SDL_CreateWindow("invader SDL2",
       SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-      WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_OPENGL|SDL_WINDOW_SHOWN|SDL_WINDOW_ALLOW_HIGHDPI);
+      WINDOW_WIDTH, WINDOW_HEIGHT, flags);
    glContext = SDL_GL_CreateContext(win);
    SDL_GetWindowSize(win, &win_width, &win_height);
+   SDL_GL_SetSwapInterval(*setting_get_bool("video_vsync") ? 1 : 0);
 
    /* OpenGL setup */
    glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
    glewExperimental = 1;
    if (glewInit() != GLEW_OK)
    {
-      logger(LOG_ERROR, tag, "error: failed to setup GLEW\n");
+      logger(LOG_ERROR, tag, "failed to setup GLEW\n");
       exit(1);
    }
 
-   /* Configuration setup */
-   cfg_load();
+   logger(LOG_INFO, tag, "audio driver: %s\n", SDL_GetCurrentAudioDriver());
 
    ctx = nk_sdl_init(win);
    /* Load Fonts: if none of these are loaded a default font will be used  */

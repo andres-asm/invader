@@ -32,6 +32,15 @@ void setting_init_string(setting *s, char* name, char* desc)
    strlcpy(s->desc, desc, sizeof(s->desc));
 }
 
+void setting_init_bool(setting *s, char* name, char* desc)
+{
+   s->type = SETTING_BOOL;
+   s->size = sizeof(bool);
+   s->data = (char *)calloc(s->size, sizeof(bool));
+   strlcpy(s->name, name, sizeof(s->name));
+   strlcpy(s->desc, desc, sizeof(s->desc));
+}
+
 void config_init()
 {
    cfg = (config*)calloc(1, sizeof(config));
@@ -53,6 +62,14 @@ void config_init()
 
    s = &cfg->config_main.directory_cores;
    setting_init_string(s, "directory_games", "Game Directory");
+   setting_array[index++] = *s;
+
+   s = &cfg->config_main.video_vsync;
+   setting_init_bool(s, "video_vsync", "Vertical Sync");
+   setting_array[index++] = *s;
+
+   s = &cfg->config_main.video_fullscreen;
+   setting_init_bool(s, "video_fullscreen", "Fullscreen");
    setting_array[index++] = *s;
 }
 
