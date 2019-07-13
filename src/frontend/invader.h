@@ -3,10 +3,12 @@
 #define INVADER_H_
 
 #include "common.h"
+#include "libretro/piccolo.h"
 
 void cfg_load();
 void gui_render(struct nk_context *ctx);
 
-struct nk_image render_framebuffer(const void *data, unsigned width, unsigned height, unsigned pitch, unsigned pixel_format);
+struct nk_image render_framebuffer(const core_frame_buffer_t *data, unsigned pixel_format);
+//void render_audio(const )
 
 #endif

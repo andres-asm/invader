@@ -178,7 +178,9 @@ static void piccolo_audio_sample(int16_t left, int16_t right)
 
 static size_t piccolo_audio_sample_batch(const int16_t *data, size_t frames)
 {
-   return 0;
+   piccolo.audio_data->data = data;
+   piccolo.audio_data->frames = frames;
+   return frames;
 }
 
 void core_load(const char *in, core_info_t *info, core_option_t *options, bool peek)

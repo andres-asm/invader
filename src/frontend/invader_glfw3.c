@@ -28,7 +28,7 @@ static const char* tag = "[glfw]";
 
 GLuint texture;
 
-struct nk_image render_framebuffer(const void *data, unsigned width, unsigned height, unsigned pitch, unsigned pixel_format)
+struct nk_image render_framebuffer(const core_frame_buffer_t *frame_buffer, unsigned pixel_format)
 {
    if (!texture)
       glGenTextures(1, &texture);
@@ -42,13 +42,13 @@ struct nk_image render_framebuffer(const void *data, unsigned width, unsigned he
    switch (pixel_format)
    {
       case RETRO_PIXEL_FORMAT_XRGB8888:
-         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, width, height, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, data);
-         glPixelStorei(GL_UNPACK_ROW_LENGTH, pitch / sizeof(uint32_t));
+         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, frame_buffer->width, frame_buffer->height, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, frame_buffer->data);
+         glPixelStorei(GL_UNPACK_ROW_LENGTH, frame_buffer->pitch / sizeof(uint32_t));
          break;
       case RETRO_PIXEL_FORMAT_RGB565:
          glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-         glPixelStorei(GL_UNPACK_ROW_LENGTH, pitch / sizeof(uint16_t));
-         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB565, width, height, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, data);
+         glPixelStorei(GL_UNPACK_ROW_LENGTH, frame_buffer->pitch / sizeof(uint16_t));
+         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB565, frame_buffer->width, frame_buffer->height, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, frame_buffer->data);
          break;
       default:
          logger(LOG_DEBUG, tag, "pixel format: %s (%d) unhandled\n", PRINT_PIXFMT(pixel_format), pixel_format);
