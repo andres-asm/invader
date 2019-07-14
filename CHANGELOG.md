@@ -19,8 +19,9 @@
 - fix all warnings, add asan, add debug builds (bparker)
 - expose full path, block extract
 
-## 0.1.1
+## 0.1.2
 - add start core for contentless cores
 - add load content for cores that require content
 - add video rendering
+- add audio playback
 
