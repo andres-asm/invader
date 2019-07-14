@@ -24,11 +24,8 @@ struct core_frame_buffer
 
 struct audio_buffer
 {
-   const int16_t* data;
+   int16_t samples[4096];
    size_t frames;
-
-   int16_t left;
-   int16_t right;
 } typedef core_audio_buffer_t;
 
 struct core_info

@@ -147,7 +147,7 @@ static bool piccolo_set_environment(unsigned cmd, void *data)
          logger(LOG_WARN, tag, "RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL unhandled\n");
          break;
       default:
-         logger(LOG_WARN, tag, "unknown command: %d\n", cmd);
+         logger(LOG_DEBUG, tag, "unknown command: %d\n", cmd);
    }
    return true;
 }
@@ -178,8 +178,13 @@ static void piccolo_audio_sample(int16_t left, int16_t right)
 
 static size_t piccolo_audio_sample_batch(const int16_t *data, size_t frames)
 {
-   piccolo.audio_data->data = data;
-   piccolo.audio_data->frames = frames;
+   for (unsigned i = 0; i < frames; i++)
+   {
+      piccolo.audio_data->samples[i + piccolo.audio_data->frames] = data[i];
+      piccolo.audio_data->samples[i + 1 + piccolo.audio_data->frames] = data[i + 1];
+   }
+   piccolo.audio_data->frames += frames;
+
    return frames;
 }
 

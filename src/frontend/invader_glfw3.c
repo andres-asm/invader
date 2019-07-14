@@ -58,6 +58,11 @@ struct nk_image render_framebuffer(const core_frame_buffer_t *frame_buffer, unsi
    return nk_image_id((int)texture);
 }
 
+void render_audio(const core_audio_buffer_t *data)
+{
+   return;
+}
+
 static void error_callback(int e, const char *d)
 {
    logger(LOG_ERROR, tag, "error: %d description: %s\n", e, d);

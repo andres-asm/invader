@@ -75,10 +75,18 @@ struct nk_image render_framebuffer(const core_frame_buffer_t *frame_buffer, unsi
    return nk_image_id((int)texture);
 }
 
-void sdl_audio_callback(void *data, Uint8* stream, int len)
+/* test code */
+void render_audio(const core_audio_buffer_t *data)
+{
+   SDL_QueueAudio(device, data->samples, data->frames);
+   return;
+}
+
+void sdl_audio_callback(void *data, uint8_t* stream, int len)
 {
    logger(LOG_INFO, tag, "playing audio frames %d\n", 0);
 }
+
 
 bool init_audio_device()
 {
@@ -92,14 +100,14 @@ bool init_audio_device()
    SDL_zero(want);
 
    want.freq = 48000;
-   want.format = AUDIO_S16LSB;
+   want.format = AUDIO_S16;
    want.channels = 2;
    want.samples = 4096;
-   want.callback = sdl_audio_callback;
+   want.callback = NULL;
 
    logger(LOG_INFO, tag, "want - frequency: %d format: f %d s %d be %d sz %d channels: %d samples: %d\n",
       want.freq, SDL_AUDIO_ISFLOAT(want.format), SDL_AUDIO_ISSIGNED(want.format), SDL_AUDIO_ISBIGENDIAN(want.format), SDL_AUDIO_BITSIZE(want.format), want.channels, want.samples);
-   device = SDL_OpenAudioDevice(NULL, 0, &want, &have, SDL_AUDIO_ALLOW_ANY_CHANGE);
+   device = SDL_OpenAudioDevice(0, 0, &want, &have, 0);
    if(!device) {
       logger(LOG_ERROR, tag, "failed to open audio device: %s\n", SDL_GetError());
       SDL_Quit();
@@ -110,8 +118,16 @@ bool init_audio_device()
 
    logger(LOG_INFO, tag, "have - frequency: %d format: f %d s %d be %d sz %d channels: %d samples: %d\n",
       have.freq, SDL_AUDIO_ISFLOAT(have.format), SDL_AUDIO_ISSIGNED(have.format), SDL_AUDIO_ISBIGENDIAN(have.format), SDL_AUDIO_BITSIZE(have.format), have.channels, have.samples);
+
+   /* test code */
+   Uint32 wavLength;
+   Uint8 *wavBuffer;
+   logger(LOG_ERROR, tag, "load wav %d\n", SDL_LoadWAV("test.wav", &have, &wavBuffer, &wavLength));
+   logger(LOG_ERROR, tag, "queue audio %d\n", SDL_QueueAudio(device, wavBuffer, wavLength));
+   SDL_PauseAudioDevice(device, 0);
    return true;
 }
+
 
 int main(int argc, char *argv[])
 {
@@ -135,7 +151,7 @@ int main(int argc, char *argv[])
    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
    uint32_t flags = SDL_WINDOW_OPENGL|SDL_WINDOW_SHOWN|SDL_WINDOW_ALLOW_HIGHDPI;
-   *setting_get_bool("video_vsync") ? flags |= SDL_WINDOW_FULLSCREEN_DESKTOP : true;
+   *setting_get_bool("video_fullscreen") ? flags |= SDL_WINDOW_FULLSCREEN_DESKTOP : true;
 
    win = SDL_CreateWindow("invader SDL2",
       SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
@@ -154,6 +170,7 @@ int main(int argc, char *argv[])
    }
 
    logger(LOG_INFO, tag, "audio driver: %s\n", SDL_GetCurrentAudioDriver());
+   init_audio_device();
 
    ctx = nk_sdl_init(win);
    /* Load Fonts: if none of these are loaded a default font will be used  */
