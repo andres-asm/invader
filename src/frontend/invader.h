@@ -9,6 +9,6 @@ void cfg_load();
 void gui_render(struct nk_context *ctx);
 
 struct nk_image render_framebuffer(const core_frame_buffer_t *data, unsigned pixel_format);
-void render_audio(const core_audio_buffer_t *data);
+size_t render_audio(const int16_t *data, size_t frames);
 
 #endif

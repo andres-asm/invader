@@ -76,10 +76,10 @@ struct nk_image render_framebuffer(const core_frame_buffer_t *frame_buffer, unsi
 }
 
 /* test code */
-void render_audio(const core_audio_buffer_t *data)
+size_t render_audio(const int16_t *data, size_t frames)
 {
-   SDL_QueueAudio(device, data->samples, data->frames);
-   return;
+   SDL_QueueAudio(device, data, 4 * frames);
+   return frames;
 }
 
 void sdl_audio_callback(void *data, uint8_t* stream, int len)

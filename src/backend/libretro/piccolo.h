@@ -22,11 +22,7 @@ struct core_frame_buffer
    unsigned pitch;
 } typedef core_frame_buffer_t;
 
-struct audio_buffer
-{
-   int16_t samples[4096];
-   size_t frames;
-} typedef core_audio_buffer_t;
+typedef size_t (*audio_cb_t)(const int16_t *, size_t);
 
 struct core_info
 {
@@ -86,7 +82,7 @@ struct piccolo
    core_info_t *core_info;
 
    core_frame_buffer_t *video_data;
-   core_audio_buffer_t *audio_data;
+   audio_cb_t audio_callback;
 
    unsigned core_option_count;
 
@@ -96,7 +92,7 @@ void core_load(const char *in, core_info_t *info, core_option_t *options, bool p
 
 bool core_load_game(const char* filename);
 
-void core_run(core_frame_buffer_t *video_data, core_audio_buffer_t *audio_data);
+void core_run(core_frame_buffer_t *video_data, audio_cb_t cb);
 
 unsigned core_option_count();
 #endif

@@ -178,14 +178,7 @@ static void piccolo_audio_sample(int16_t left, int16_t right)
 
 static size_t piccolo_audio_sample_batch(const int16_t *data, size_t frames)
 {
-   for (unsigned i = 0; i < frames; i++)
-   {
-      piccolo.audio_data->samples[i + piccolo.audio_data->frames] = data[i];
-      piccolo.audio_data->samples[i + 1 + piccolo.audio_data->frames] = data[i + 1];
-   }
-   piccolo.audio_data->frames += frames;
-
-   return frames;
+   return piccolo.audio_callback(data, frames);
 }
 
 void core_load(const char *in, core_info_t *info, core_option_t *options, bool peek)
@@ -345,10 +338,10 @@ bool core_load_game(const char* filename)
    return false;
 }
 
-void core_run(core_frame_buffer_t *video_data, core_audio_buffer_t *audio_data)
+void core_run(core_frame_buffer_t *video_data, audio_cb_t cb)
 {
    piccolo.video_data = video_data;
-   piccolo.audio_data = audio_data;
+   piccolo.audio_callback = cb;
    piccolo.retro_run();
 }
 
@@ -356,10 +349,4 @@ unsigned core_option_count()
 {
    return piccolo.core_option_count;
 }
-
-/*
-
-   piccolo.initialized = true;
-*/
-
 
