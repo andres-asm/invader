@@ -1,10 +1,10 @@
 CFLAGS += -DHAVE_DYNAMIC
 
-SRC = ./src/frontend/invader.c \
+SRC = ./src/frontend/kami.c \
       ./src/frontend/config.c \
       ./src/backend/libretro/piccolo.c \
       ./src/util.c \
-      ./src/nuklear_extra.c \
+      ./src/frontend/nuklear/nuklear_extra.c \
       ./deps/libretro/compat/compat_strl.c \
       ./deps/libretro/compat/compat_posix_string.c \
       ./deps/libretro/encodings/encoding_utf.c \

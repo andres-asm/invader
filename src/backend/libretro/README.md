@@ -26,7 +26,7 @@ I still need to re-organize both piccolo and invader somewhat to be able to prov
 As far as implementation details a basic outline is the following:
 
 ```C
-#include "invader.h"
+#include "piccolo.h"
 core_option_t core_options[100];
 core_info_t core_info;
 core_frame_buffer_t frame_buffer;

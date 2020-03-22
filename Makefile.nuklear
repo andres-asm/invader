@@ -1,6 +1,6 @@
 # Install
 include Makefile.common
-BIN = invader_sdl2
+BIN = invader_nuklear_sdl2
 
 # Flags
 CFLAGS += -std=c99
@@ -27,7 +27,8 @@ endif
 
 OBJ = $(SRC:.c=.o)
 
-SRC += ./src/frontend/invader_sdl2.c
+SRC += ./src/frontend/nuklear/kami_nuklear_sdl2.c
+INCLUDE += -I./src/frontend/nuklear
 
 ifeq ($(OS),Windows_NT)
 BIN := $(BIN).exe

@@ -30,7 +30,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 
-#include "invader.h"
+#include "kami.h"
 #include "config.h"
 #include "util.h"
 #include "nuklear_sdl_gl3.h"
@@ -45,7 +45,7 @@ GLuint texture;
 SDL_AudioSpec want, have;
 SDL_AudioDeviceID device;
 
-struct nk_image render_framebuffer(const core_frame_buffer_t *frame_buffer, unsigned pixel_format)
+int render_framebuffer(const core_frame_buffer_t *frame_buffer, unsigned pixel_format)
 {
    if (!texture)
       glGenTextures(1, &texture);
@@ -72,7 +72,7 @@ struct nk_image render_framebuffer(const core_frame_buffer_t *frame_buffer, unsi
 
    }
 
-   return nk_image_id((int)texture);
+   return ((int)texture);
 }
 
 /* test code */

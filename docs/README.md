@@ -6,7 +6,7 @@ invader is an experimental implementation of the libretro API.
 
 It's split in two parts:
 - piccolo as the libretro player implementation
-- kami as the GUI frontend, currently it uses nuklear, and has both SDL2 and GLFW3 implementations
+- kami as the GUI frontend, currently it uses nuklear, and uses SDL2 as it's backend
 
 As for the goals, nothing concrete so far, we'll see how it goes.
 
@@ -16,7 +16,7 @@ As for the goals, nothing concrete so far, we'll see how it goes.
 git clone git@git.retromods.org:dev/invader.git
 cd invader
 git submodule update --init
-make -f Makefile.sdl2
+make
 ```
 # Current Progress
 ## Backend
@@ -33,10 +33,10 @@ make -f Makefile.sdl2
 ## Screenshots
 
 ### 0.1.0
-![img](docs/images/0.1.0.png)
+![img](images/0.1.0.png)
 
 ### 0.1.1
-![img](docs/images/0.1.1.png)
+![img](images/0.1.1.png)
 
 ### 0.1.2
-![img](docs/images/0.1.2.png)
+![img](images/0.1.2.png)

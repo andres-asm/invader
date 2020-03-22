@@ -1,1 +1,1 @@
-include Makefile.sdl2
+include Makefile.nuklear

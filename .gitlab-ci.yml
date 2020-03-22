@@ -4,5 +4,4 @@ before_script:
   - git clean -xdf
 build:
   script:
-    - make -j2 -f Makefile.sdl2
-    - make -j2 -f Makefile.glfw3
+    - make -j2 -f Makefile
