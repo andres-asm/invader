@@ -1,10 +1,10 @@
 CFLAGS += -DHAVE_DYNAMIC
 
-SRC = ./src/frontend/kami.c \
+SOURCES_C = \
+      ./src/frontend/kami.c \
       ./src/frontend/config.c \
       ./src/backend/libretro/piccolo.c \
       ./src/util.c \
-      ./src/frontend/nuklear/nuklear_extra.c \
       ./deps/libretro/compat/compat_strl.c \
       ./deps/libretro/compat/compat_posix_string.c \
       ./deps/libretro/encodings/encoding_utf.c \
@@ -12,4 +12,11 @@ SRC = ./src/frontend/kami.c \
       ./deps/libretro/lists/string_list.c \
       ./deps/inih/ini.c
 
-INCLUDE = -I./deps/nuklear -I./include/nuklear -I./deps/inih -I./deps/libretro/include -I./src/ -I./src/backend/ -I./src/frontend/
+ifeq ($(WITH_GUI), nuklear)
+   SOURCES_C += \
+         ./src/frontend/nuklear/nuklear_extra.c \
+         ./src/frontend/nuklear/kami_nuklear_sdl2.c
+   INCLUDE = -I./deps/nuklear -I./include/nuklear -I./src/frontend/nuklear
+endif
+
+INCLUDE += -I./deps/inih -I./deps/libretro/include -I./src/ -I./src/backend/ -I./src/frontend/
