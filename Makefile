@@ -45,13 +45,13 @@ OBJ = $(SRC:.c=.o)
 
 ifeq ($(OS),Windows_NT)
    TARGET := $(TARGET).exe
-   LIBS = -lmingw32 -lSDL2main -lSDL2 -lopengl32 -lm -lGLU32 -lGLEW32
+   LIBS += -lmingw32 -lSDL2main -lSDL2 -lopengl32 -lm -lGLU32 -lGLEW32
 else
    UNAME_S := $(shell uname -s)
    ifeq ($(UNAME_S),Darwin)
-      LIBS = -lSDL2 -framework OpenGL -lm -lGLEW
+      LIBS += -lSDL2 -framework OpenGL -lm -lGLEW
    else
-      LIBS = -lSDL2 -lGL -lm -lGLU -lGLEW -ldl
+      LIBS += -lSDL2 -lGL -lm -lGLU -lGLEW -ldl
    endif
 endif
 
@@ -59,18 +59,18 @@ all: $(TARGET)
 $(TARGET): $(OBJECTS)
 
 ifeq ($(STATIC_LINKING), 1)
-   $(AR) rcs $@ $(OBJECTS)
+	$(AR) rcs $@ $(OBJECTS)
 else
 	$(CXX) -o $@ $(OBJECTS) $(LIBS)
 endif
 
 %.o: %.c
-   $(CC) $(INCLUDE) $(CFLAGS) -c $^ -o $@
+	$(CC) $(INCLUDE) $(CFLAGS) -c $^ -o $@
 
 %.o: %.cpp
-   $(CXX) $(INCLUDE) $(CXXFLAGS) -c $^ -o $@
+	$(CXX) $(INCLUDE) $(CXXFLAGS) -c $^ -o $@
 
 clean:
-   rm -f $(OBJECTS) $(TARGET)
+	rm -f $(OBJECTS) $(TARGET)
 
 .PHONY: clean install uninstall

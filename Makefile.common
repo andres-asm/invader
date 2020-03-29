@@ -17,6 +17,13 @@ ifeq ($(WITH_GUI), nuklear)
          ./src/frontend/nuklear/nuklear_extra.c \
          ./src/frontend/nuklear/kami_nuklear_sdl2.c
    INCLUDE = -I./deps/nuklear -I./include/nuklear -I./src/frontend/nuklear
+else ifeq ($(WITH_GUI), imgui)
+   SOURCES_C += \
+         ./src/frontend/imgui/kami_imgui_sdl2.c
+   SOURCES_CXX += \
+          ./deps/cimgui/cimgui.cpp
+   INCLUDE = -I./deps/nuklear -I./include/nuklear -I./src/frontend/nuklear -I./deps/
+   LIBS += -lcimgui
 endif
 
 INCLUDE += -I./deps/inih -I./deps/libretro/include -I./src/ -I./src/backend/ -I./src/frontend/
