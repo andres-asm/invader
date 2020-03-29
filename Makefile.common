@@ -21,9 +21,12 @@ else ifeq ($(WITH_GUI), imgui)
    SOURCES_C += \
          ./src/frontend/imgui/kami_imgui_sdl2.c
    SOURCES_CXX += \
-          ./deps/cimgui/cimgui.cpp
-   INCLUDE = -I./deps/nuklear -I./include/nuklear -I./src/frontend/nuklear -I./deps/
+          ./deps/cimgui/imgui/examples/imgui_impl_opengl3.cpp \
+          ./deps/cimgui/imgui/examples/imgui_impl_sdl.cpp
+   INCLUDE += -I./deps/ -I./deps/cimgui -I./deps/cimgui/imgui -I./deps/cimgui/imgui/examples
    LIBS += -lcimgui
+   CFLAGS += -DIMGUI_IMPL_API="extern \"C\""
+   CXXFLAGS += -DIMGUI_IMPL_API="extern \"C\"" -DIMGUI_IMPL_OPENGL_LOADER_GLEW
 endif
 
 INCLUDE += -I./deps/inih -I./deps/libretro/include -I./src/ -I./src/backend/ -I./src/frontend/

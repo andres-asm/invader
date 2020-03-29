@@ -5,7 +5,7 @@ INCLUDE	:=
 SOURCES_C   :=
 SOURCES_CXX :=
 
-CFLAGS   := -std=c99
+CFLAGS   :=
 CXXFLAGS :=
 LIBS  :=
 
@@ -30,9 +30,9 @@ else
 endif
 else
 ifneq ($(OS),Windows_NT)
-   CFLAGS += -O3 -pedantic -D_GNU_SOURCE
+   CFLAGS += -O3 -fpermissive -D_GNU_SOURCE
 else
-   CFLAGS += -O3 -pedantic
+   CFLAGS += -O3 -fpermissive
 endif
 endif
 
@@ -64,11 +64,11 @@ else
 	$(CXX) -o $@ $(OBJECTS) $(LIBS)
 endif
 
-%.o: %.c
-	$(CC) $(INCLUDE) $(CFLAGS) -c $^ -o $@
-
 %.o: %.cpp
-	$(CXX) $(INCLUDE) $(CXXFLAGS) -c $^ -o $@
+	$(CXX) $(INCLUDE) $(DEFINES) $(CXXFLAGS) -c $^ -o $@
+
+%.o: %.c
+	$(CXX) $(INCLUDE) $(DEFINES) $(CFLAGS) -c $^ -o $@
 
 clean:
 	rm -f $(OBJECTS) $(TARGET)

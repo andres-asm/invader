@@ -30,8 +30,6 @@ struct config
 }
 typedef config;
 
-config *cfg;
-
 /* initialize configuration */
 void config_init();
 

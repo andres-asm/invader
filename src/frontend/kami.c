@@ -11,8 +11,6 @@
 #include <compat/strl.h>
 #include <lists/string_list.h>
 
-#include <GL/glew.h>
-
 #include "kami.h"
 #include "config.h"
 #include "util.h"

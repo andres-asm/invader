@@ -12,6 +12,8 @@
 setting *setting_array;
 size_t setting_array_size;
 
+config *cfg;
+
 static const char* tag = "[config]";
 
 enum setting_type
