@@ -1,17 +1,25 @@
+DEBUG := 0
+GIT_VERSION := " $(shell git rev-parse --short HEAD)"
 
+INCLUDE	:=
+SOURCES_C   :=
+SOURCES_CXX :=
+
+CFLAGS   := -std=c99
+CXXFLAGS :=
+LIBS  :=
 
 ifeq ($(WITH_GUI), nuklear)
-   BIN = invader_nuklear_sdl2
+   TARGET = invader_nuklear_sdl2
    WITH_GUI := nuklear
 else ifeq ($(WITH_GUI), imgui)
-   BIN = invader_imgui_sdl2
+   TARGET = invader_imgui_sdl2
    WITH_GUI := imgui
 endif
 
 include Makefile.common
 
-# Flags
-CFLAGS += -std=c99
+OBJECTS  = $(SOURCES_CXX:.cpp=.o) $(SOURCES_C:.c=.o)
 
 ifeq ($(DEBUG),1)
 ifneq ($(OS),Windows_NT)
@@ -29,14 +37,14 @@ endif
 endif
 
 ifneq ($(SANITIZER),)
-   CFLAGS   := -fsanitize=$(SANITIZER) $(CFLAGS)
-   LIBS  := -fsanitize=$(SANITIZER) $(LIBS)
+   CFLAGS += -fsanitize=$(SANITIZER) $(CFLAGS)
+   LIBS += -fsanitize=$(SANITIZER) $(LIBS)
 endif
 
 OBJ = $(SRC:.c=.o)
 
 ifeq ($(OS),Windows_NT)
-   BIN := $(BIN).exe
+   TARGET := $(TARGET).exe
    LIBS = -lmingw32 -lSDL2main -lSDL2 -lopengl32 -lm -lGLU32 -lGLEW32
 else
    UNAME_S := $(shell uname -s)
@@ -47,10 +55,22 @@ else
    endif
 endif
 
-$(BIN):
-	@mkdir -p obj
-	rm -f obj/$(BIN) $(OBJS)
-	$(CC) $(SOURCES_C) $(CFLAGS) -o $(BIN) $(LIBS) $(INCLUDE)
+all: $(TARGET)
+$(TARGET): $(OBJECTS)
 
+ifeq ($(STATIC_LINKING), 1)
+   $(AR) rcs $@ $(OBJECTS)
+else
+	$(CXX) -o $@ $(OBJECTS) $(LIBS)
+endif
 
+%.o: %.c
+   $(CC) $(INCLUDE) $(CFLAGS) -c $^ -o $@
 
+%.o: %.cpp
+   $(CXX) $(INCLUDE) $(CXXFLAGS) -c $^ -o $@
+
+clean:
+   rm -f $(OBJECTS) $(TARGET)
+
+.PHONY: clean install uninstall
