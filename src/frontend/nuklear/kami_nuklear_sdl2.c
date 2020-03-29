@@ -18,6 +18,20 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 
+#define NK_INCLUDE_FIXED_TYPES
+#define NK_INCLUDE_STANDARD_IO
+#define NK_INCLUDE_STANDARD_VARARGS
+#define NK_INCLUDE_DEFAULT_ALLOCATOR
+#define NK_INCLUDE_VERTEX_BUFFER_OUTPUT
+#define NK_INCLUDE_FONT_BAKING
+#define NK_INCLUDE_DEFAULT_FONT
+
+struct nk_context *ctx;
+struct nk_colorf bg;
+
+#include "nuklear.h"
+#include "nuklear_extra.h"
+
 #include "kami.h"
 #include "config.h"
 #include "util.h"
@@ -32,6 +46,31 @@ GLuint texture;
 
 SDL_AudioSpec want, have;
 SDL_AudioDeviceID device;
+
+
+#include <compat/strl.h>
+bool nk_checkbox_bool(struct nk_context* ctx, const char* label, bool *active)
+{
+   int    x = *active;
+   bool ret = nk_checkbox_label(ctx, label, &x);
+   *active  = x;
+
+   return ret;
+}
+
+/* This is probable very bad for performance */
+int nk_combo_string_list(struct nk_context *ctx, struct string_list *list, int selected, int item_height, struct nk_vec2 size)
+{
+   int ret = 0;
+   const char **entries = calloc(list->size, sizeof (char *));
+   for (unsigned i = 0; i < list->size; i++)
+   {
+      entries[i] = list->elems[i].data;
+   }
+
+   ret = nk_combo(ctx, entries, list->size, selected, item_height, size);
+   free(entries);
+}
 
 int render_framebuffer(const core_frame_buffer_t *frame_buffer, unsigned pixel_format)
 {
