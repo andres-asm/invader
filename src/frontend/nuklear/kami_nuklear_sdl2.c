@@ -33,6 +33,7 @@ struct nk_colorf bg;
 #include "nuklear_extra.h"
 
 #include "kami.h"
+#include "common.h"
 #include "config.h"
 #include "util.h"
 #include "nuklear_sdl_gl3.h"
@@ -40,7 +41,8 @@ struct nk_colorf bg;
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
 
-static const char* tag = "[sdl]";
+static const char* tag = "[kami]";
+static const char* app_name = "invader";
 
 GLuint texture;
 
@@ -273,47 +275,23 @@ void gui_render(struct nk_context *ctx)
 int main(int argc, char *argv[])
 {
    /* Platform */
-   SDL_Window *win;
-   SDL_GLContext glContext;
    int win_width, win_height;
    int running = 1;
 
    /* Configuration setup */
    cfg_load();
 
-   /* SDL setup */
-   SDL_SetHint(SDL_HINT_VIDEO_HIGHDPI_DISABLED, "0");
-   if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER|SDL_INIT_EVENTS|SDL_INIT_AUDIO) == -1)
-         logger(LOG_ERROR, tag, SDL_GetError());
-   SDL_GL_SetAttribute (SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
-   SDL_GL_SetAttribute (SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-   uint32_t flags = SDL_WINDOW_OPENGL|SDL_WINDOW_SHOWN|SDL_WINDOW_ALLOW_HIGHDPI;
-   *setting_get_bool("video_fullscreen") ? flags |= SDL_WINDOW_FULLSCREEN_DESKTOP : true;
+   create_window(app_name, WINDOW_WIDTH, WINDOW_HEIGHT);
+   SDL_Window *window = get_window();
+   SDL_GLContext context = get_context();
 
-   win = SDL_CreateWindow("invader SDL2",
-      SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-      WINDOW_WIDTH, WINDOW_HEIGHT, flags);
-   glContext = SDL_GL_CreateContext(win);
-   SDL_GetWindowSize(win, &win_width, &win_height);
-   SDL_GL_SetSwapInterval(*setting_get_bool("video_vsync") ? 1 : 0);
-
-   /* OpenGL setup */
-   glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-   glewExperimental = 1;
-   if (glewInit() != GLEW_OK)
-   {
-      logger(LOG_ERROR, tag, "failed to setup GLEW\n");
-      exit(1);
-   }
+   const char* glsl_version = get_glsl_version();
 
    logger(LOG_INFO, tag, "audio driver: %s\n", SDL_GetCurrentAudioDriver());
    init_audio_device();
 
-   ctx = nk_sdl_init(win);
+   ctx = nk_sdl_init(window);
    /* Load Fonts: if none of these are loaded a default font will be used  */
    /* Load Cursor: if you uncomment cursor loading please hide the cursor */
    {
@@ -339,7 +317,7 @@ int main(int argc, char *argv[])
          nk_input_end(ctx);
 
          /* Draw */
-         SDL_GetWindowSize(win, &win_width, &win_height);
+         SDL_GetWindowSize(window, &win_width, &win_height);
          glViewport(0, 0, win_width, win_height);
          glClear(GL_COLOR_BUFFER_BIT);
          glClearColor(bg.r, bg.g, bg.b, bg.a);
@@ -349,13 +327,13 @@ int main(int argc, char *argv[])
           * Make sure to either a.) save and restore or b.) reset your own state after
           * rendering the UI. */
          nk_sdl_render(NK_ANTI_ALIASING_ON, MAX_VERTEX_MEMORY, MAX_ELEMENT_MEMORY);
-         SDL_GL_SwapWindow(win);
+         SDL_GL_SwapWindow(window);
       }
 
 cleanup:
       nk_sdl_shutdown();
-      SDL_GL_DeleteContext(glContext);
-      SDL_DestroyWindow(win);
+      SDL_GL_DeleteContext(context);
+      SDL_DestroyWindow(window);
       SDL_Quit();
       return 0;
 }

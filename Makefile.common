@@ -3,6 +3,7 @@ CFLAGS += -DHAVE_DYNAMIC
 SOURCES_C = \
       ./src/frontend/kami.c \
       ./src/frontend/config.c \
+      ./src/frontend/common.c \
       ./src/backend/libretro/piccolo.c \
       ./src/util.c \
       ./deps/libretro/compat/compat_strl.c \

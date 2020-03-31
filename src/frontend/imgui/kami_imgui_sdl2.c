@@ -3,77 +3,31 @@
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_opengl3.h"
 
-#include <GL/glew.h>
+#include "kami.h"
+#include "common.h"
+#include "config.h"
+#include "util.h"
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_opengl.h>
-
-SDL_Window *window = NULL;
+static const char* tag = "[kami]";
+static const char* app_name = "invader";
 
 int main(int argc, char* argv[])
 {
-   if (SDL_Init(SDL_INIT_VIDEO) < 0)
-   {
-      SDL_Log("failed to init: %s", SDL_GetError());
-      return -1;
-   }
 
-  // Decide GL+GLSL versions
-#if __APPLE__
-   // GL 3.2 Core + GLSL 150
-   const char* glsl_version = "#version 150";
-   SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG); // Always required on Mac
-   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
-#else
-   // GL 3.0 + GLSL 130
-   const char* glsl_version = "#version 130";
-   SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
-   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-#endif
+   create_window(app_name, WINDOW_WIDTH, WINDOW_HEIGHT);
+   SDL_Window *window = get_window();
+   SDL_GLContext context = get_context();
 
-  // and prepare OpenGL stuff
-   SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
-   SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-   SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
-   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-   SDL_DisplayMode current;
-   SDL_GetCurrentDisplayMode(0, &current);
+   const char* glsl_version = get_glsl_version();
 
-   window = SDL_CreateWindow(
-      "Hello", 100, 100, 1024, 768,
-      SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE
-      );
-   if (window == NULL) {
-      SDL_Log("Failed to create window: %s", SDL_GetError());
-      return -1;
-   }
-
-   SDL_GLContext gl_context = SDL_GL_CreateContext(window);
-   SDL_GL_SetSwapInterval(1);  // enable vsync
-
-   // check opengl version sdl uses
-   //SDL_Log("opengl version: %s", (char*)glGetString(GL_VERSION));
-
-   bool err = glewInit() != GLEW_OK;
-
-   if (err)
-   {
-      SDL_Log("Failed to initialize OpenGL loader!");
-      return 1;
-   }
-
-   // setup imgui
+   /* setup imgui */
    igCreateContext(NULL);
    ImGuiIO io = *igGetIO();
-   ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
+   ImGui_ImplSDL2_InitForOpenGL(window, context);
    ImGui_ImplOpenGL3_Init(glsl_version);
 
    igStyleColorsDark(NULL);
-   //ImFontAtlas_AddFontDefault(io.Fonts, NULL);
+   ImFontAtlas_AddFontDefault(io.Fonts, NULL);
 
    bool quit = false;
    bool showDemoWindow = true;
@@ -88,8 +42,6 @@ int main(int argc, char* argv[])
    {
       SDL_Event e;
 
-      // we need to call SDL_PollEvent to let window rendered, otherwise
-      // no window will be shown
       while (SDL_PollEvent(&e) != 0)
       {
          ImGui_ImplSDL2_ProcessEvent(&e);
@@ -99,7 +51,7 @@ int main(int argc, char* argv[])
             quit = true;
       }
 
-      // start imgui frame
+      /* start imgui frame */
       ImGui_ImplOpenGL3_NewFrame();
       ImGui_ImplSDL2_NewFrame(window);
       igNewFrame();
@@ -107,7 +59,6 @@ int main(int argc, char* argv[])
       if (showDemoWindow)
          igShowDemoWindow(&showDemoWindow);
 
-      // show a simple window that we created ourselves.
       {
          static float f = 0.0f;
          static int counter = 0;
@@ -145,9 +96,9 @@ int main(int argc, char* argv[])
          igEnd();
       }
 
-      // render
+      /* render */
       igRender();
-      SDL_GL_MakeCurrent(window, gl_context);
+      SDL_GL_MakeCurrent(window, context);
       glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
       glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
       glClear(GL_COLOR_BUFFER_BIT);
@@ -155,12 +106,12 @@ int main(int argc, char* argv[])
       SDL_GL_SwapWindow(window);
    }
 
-   // clean up
+   /* clean up */
    ImGui_ImplOpenGL3_Shutdown();
    ImGui_ImplSDL2_Shutdown();
    igDestroyContext(NULL);
 
-   SDL_GL_DeleteContext(gl_context);
+   SDL_GL_DeleteContext(get_context());
    if (window != NULL)
    {
       SDL_DestroyWindow(window);
