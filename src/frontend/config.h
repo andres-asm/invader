@@ -9,6 +9,9 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+#include <libintl.h>
+#include <locale.h>
+
 struct setting
 {
    void*    data;

@@ -45,7 +45,7 @@ OBJ = $(SRC:.c=.o)
 
 ifeq ($(OS),Windows_NT)
    TARGET := $(TARGET).exe
-   LIBS += -lmingw32 -lSDL2main -lSDL2 -lopengl32 -lm -lGLU32 -lGLEW32
+   LIBS += -lmingw32 -lSDL2main -lSDL2 -lopengl32 -lm -lGLU32 -lGLEW32 -lintl
 else
    UNAME_S := $(shell uname -s)
    ifeq ($(UNAME_S),Darwin)
@@ -66,6 +66,10 @@ endif
 
 %.o: %.c
 	$(CC) $(INCLUDE) $(DEFINES) $(CFLAGS) -c $^ -o $@
+	xgettext -k__ -j -lC -c -s -o intl/invader.pot -c $^
+	mkdir -p intl/en/LC_MESSAGES
+	msgmerge --update intl/en/invader.po intl/invader.pot
+	msgfmt --output-file=intl/en/LC_MESSAGES/invader.mo intl/en/invader.po
 
 %.o: %.cpp
 	$(CXX) $(INCLUDE) $(DEFINES) $(CXXFLAGS) -c $^ -o $@
