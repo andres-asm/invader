@@ -14,7 +14,8 @@ static const char* app_name = "invader";
 int main(int argc, char* argv[])
 {
 
-   create_window(app_name, WINDOW_WIDTH, WINDOW_HEIGHT);
+   if (!create_window(app_name, WINDOW_WIDTH, WINDOW_HEIGHT))
+      return -1;
    SDL_Window *window = get_window();
    SDL_GLContext context = get_context();
 
