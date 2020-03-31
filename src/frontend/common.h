@@ -31,6 +31,7 @@
 #define MAX_ELEMENT_BUFFER 128 * 1024
 
 bool create_window(const char* app_name, unsigned width, unsigned height);
+void destroy_window();
 
 SDL_GLContext get_context();
 SDL_Window* get_window();

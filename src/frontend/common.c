@@ -77,6 +77,17 @@ bool create_window(const char *app_name, unsigned width, unsigned height)
    return true;
 }
 
+void destroy_window()
+{
+   SDL_GL_DeleteContext(context);
+   if (window != NULL)
+   {
+      SDL_DestroyWindow(window);
+      window = NULL;
+   }
+   SDL_Quit();
+}
+
 SDL_GLContext get_context()
 {
    return context;

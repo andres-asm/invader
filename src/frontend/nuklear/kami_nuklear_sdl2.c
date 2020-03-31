@@ -333,9 +333,7 @@ int main(int argc, char *argv[])
 
 cleanup:
       nk_sdl_shutdown();
-      SDL_GL_DeleteContext(context);
-      SDL_DestroyWindow(window);
-      SDL_Quit();
+      destroy_window();
       return 0;
 }
 
