@@ -39,6 +39,86 @@ int main(int argc, char* argv[])
    clearColor.z = 0.60f;
    clearColor.w = 1.00f;
 
+
+
+
+    ImGuiStyle *style = igGetStyle();
+
+   ImVec2 windowPadding;
+   windowPadding.x = 15;
+   windowPadding.y = 15;
+
+   ImVec2 framePadding;
+   framePadding.x = 5;
+   framePadding.y = 5;
+
+   ImVec2 itemSpacing;
+   itemSpacing.x = 12;
+   itemSpacing.y = 8;
+
+   ImVec2 innerItemSpacing;
+   itemSpacing.x = 8;
+   itemSpacing.y = 6;
+
+   style->WindowPadding = *ImVec2_ImVec2Float(15, 15);
+   style->WindowRounding = 0.0f;
+   style->FramePadding = *ImVec2_ImVec2Float(5, 5);
+   style->FrameRounding = 0.0f;
+   style->ItemSpacing = *ImVec2_ImVec2Float(12, 8);
+   style->ItemInnerSpacing = *ImVec2_ImVec2Float(8, 6);
+   style->IndentSpacing = 25.0f;
+   style->ScrollbarSize = 10.0f;
+   style->ScrollbarRounding = 0.0f;
+   style->GrabMinSize = 10.0f;
+   style->GrabRounding = 0.0f;
+   style->TabRounding = 0.0f;
+
+   style->Colors[ImGuiCol_Text] = *ImVec4_ImVec4Float(0.80f, 0.80f, 0.83f, 1.00f);
+   style->Colors[ImGuiCol_TextDisabled] = *ImVec4_ImVec4Float(0.24f, 0.23f, 0.29f, 1.00f);
+   style->Colors[ImGuiCol_Border] = *ImVec4_ImVec4Float(0.16f, 0.15f, 0.17f, 1.00f);
+   style->Colors[ImGuiCol_WindowBg] = *ImVec4_ImVec4Float(0.16f, 0.15f, 0.17f, 1.00f);
+   style->Colors[ImGuiCol_ChildBg] = *ImVec4_ImVec4Float(0.07f, 0.07f, 0.09f, 1.00f);
+   style->Colors[ImGuiCol_PopupBg] = *ImVec4_ImVec4Float(0.07f, 0.07f, 0.09f, 1.00f);
+   style->Colors[ImGuiCol_Border] = *ImVec4_ImVec4Float(0.80f, 0.80f, 0.83f, 0.88f);
+   style->Colors[ImGuiCol_BorderShadow] = *ImVec4_ImVec4Float(0.92f, 0.91f, 0.88f, 0.00f);
+   style->Colors[ImGuiCol_FrameBg] = *ImVec4_ImVec4Float(0.10f, 0.09f, 0.12f, 1.00f);
+   style->Colors[ImGuiCol_FrameBgHovered] = *ImVec4_ImVec4Float(0.24f, 0.23f, 0.29f, 1.00f);
+   style->Colors[ImGuiCol_FrameBgActive] = *ImVec4_ImVec4Float(0.56f, 0.56f, 0.58f, 1.00f);
+   style->Colors[ImGuiCol_TitleBg] = *ImVec4_ImVec4Float(0.10f, 0.09f, 0.12f, 1.00f);
+   style->Colors[ImGuiCol_TitleBgCollapsed] = *ImVec4_ImVec4Float(1.00f, 0.98f, 0.95f, 0.75f);
+   style->Colors[ImGuiCol_TitleBgActive] = *ImVec4_ImVec4Float(0.07f, 0.07f, 0.09f, 1.00f);
+   style->Colors[ImGuiCol_MenuBarBg] = *ImVec4_ImVec4Float(0.10f, 0.09f, 0.12f, 1.00f);
+   style->Colors[ImGuiCol_ScrollbarBg] = *ImVec4_ImVec4Float(0.10f, 0.09f, 0.12f, 1.00f);
+   style->Colors[ImGuiCol_ScrollbarGrab] = *ImVec4_ImVec4Float(0.80f, 0.80f, 0.83f, 0.31f);
+   style->Colors[ImGuiCol_ScrollbarGrabHovered] = *ImVec4_ImVec4Float(0.56f, 0.56f, 0.58f, 1.00f);
+   style->Colors[ImGuiCol_ScrollbarGrabActive] = *ImVec4_ImVec4Float(0.06f, 0.05f, 0.07f, 1.00f);
+   style->Colors[ImGuiCol_PopupBg] = *ImVec4_ImVec4Float(0.19f, 0.18f, 0.21f, 1.00f);
+   style->Colors[ImGuiCol_CheckMark] = *ImVec4_ImVec4Float(0.80f, 0.80f, 0.83f, 0.31f);
+   style->Colors[ImGuiCol_SliderGrab] = *ImVec4_ImVec4Float(0.80f, 0.80f, 0.83f, 0.31f);
+   style->Colors[ImGuiCol_SliderGrabActive] = *ImVec4_ImVec4Float(0.06f, 0.05f, 0.07f, 1.00f);
+   style->Colors[ImGuiCol_Button] = *ImVec4_ImVec4Float(0.10f, 0.09f, 0.12f, 1.00f);
+   style->Colors[ImGuiCol_ButtonHovered] = *ImVec4_ImVec4Float(0.24f, 0.23f, 0.29f, 1.00f);
+   style->Colors[ImGuiCol_ButtonActive] = *ImVec4_ImVec4Float(0.56f, 0.56f, 0.58f, 1.00f);
+   style->Colors[ImGuiCol_Header] = *ImVec4_ImVec4Float(0.10f, 0.09f, 0.12f, 1.00f);
+   style->Colors[ImGuiCol_HeaderHovered] = *ImVec4_ImVec4Float(0.56f, 0.56f, 0.58f, 1.00f);
+   style->Colors[ImGuiCol_HeaderActive] = *ImVec4_ImVec4Float(0.06f, 0.05f, 0.07f, 1.00f);
+   style->Colors[ImGuiCol_Separator] = *ImVec4_ImVec4Float(0.56f, 0.56f, 0.58f, 1.00f);
+   style->Colors[ImGuiCol_SeparatorHovered] = *ImVec4_ImVec4Float(0.24f, 0.23f, 0.29f, 1.00f);
+   style->Colors[ImGuiCol_SeparatorActive] = *ImVec4_ImVec4Float(0.56f, 0.56f, 0.58f, 1.00f);
+   style->Colors[ImGuiCol_ResizeGrip] = *ImVec4_ImVec4Float(0.00f, 0.00f, 0.00f, 0.00f);
+   style->Colors[ImGuiCol_ResizeGripHovered] = *ImVec4_ImVec4Float(0.56f, 0.56f, 0.58f, 1.00f);
+   style->Colors[ImGuiCol_ResizeGripActive] = *ImVec4_ImVec4Float(0.06f, 0.05f, 0.07f, 1.00f);
+   style->Colors[ImGuiCol_PlotLines] = *ImVec4_ImVec4Float(0.40f, 0.39f, 0.38f, 0.63f);
+   style->Colors[ImGuiCol_PlotLinesHovered] = *ImVec4_ImVec4Float(0.25f, 1.00f, 0.00f, 1.00f);
+   style->Colors[ImGuiCol_PlotHistogram] = *ImVec4_ImVec4Float(0.40f, 0.39f, 0.38f, 0.63f);
+   style->Colors[ImGuiCol_PlotHistogramHovered] = *ImVec4_ImVec4Float(0.25f, 1.00f, 0.00f, 1.00f);
+   style->Colors[ImGuiCol_TextSelectedBg] = *ImVec4_ImVec4Float(0.25f, 1.00f, 0.00f, 0.43f);
+   style->Colors[ImGuiCol_ModalWindowDimBg] = *ImVec4_ImVec4Float(1.00f, 0.98f, 0.95f, 0.73f);
+   style->Colors[ImGuiCol_Tab] = *ImVec4_ImVec4Float(0.10f, 0.09f, 0.12f, 1.00f);
+   style->Colors[ImGuiCol_TabHovered] = *ImVec4_ImVec4Float(0.24f, 0.23f, 0.29f, 1.00f);
+   style->Colors[ImGuiCol_TabActive] = *ImVec4_ImVec4Float(0.56f, 0.56f, 0.58f, 1.00f);
+
+
    while (!quit)
    {
       SDL_Event e;
