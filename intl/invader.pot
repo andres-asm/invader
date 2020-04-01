@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-01 00:59-0500\n"
+"POT-Creation-Date: 2020-04-01 18:53-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,60 +17,58 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/localization.c:17
-msgid "directory_cores_desc"
-msgstr ""
-
-#. settings
-#. directory_cores
-#: src/localization.c:16
-msgid "directory_cores_label"
-msgstr ""
-
-#: src/localization.c:21
-msgid "directory_games_desc"
-msgstr ""
-
-#. directory_games
-#: src/localization.c:20
-msgid "directory_games_label"
-msgstr ""
-
-#: src/localization.c:11
-msgid "setting_categories_audio"
-msgstr ""
-
-#: src/localization.c:9
-msgid "setting_categories_general"
-msgstr ""
-
-#: src/localization.c:12
-msgid "setting_categories_input"
-msgstr ""
-
-#. categories
-#: src/localization.c:8
+#: src/frontend/intl/settings.def.c:8
 msgid "setting_categories_none"
 msgstr ""
 
-#: src/localization.c:10
+#: src/frontend/intl/settings.def.c:9
+msgid "setting_categories_general"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:10
 msgid "setting_categories_video"
 msgstr ""
 
-#: src/localization.c:29
-msgid "video_fullscreen_desc"
+#: src/frontend/intl/settings.def.c:11
+msgid "setting_categories_audio"
 msgstr ""
 
-#. video_fullscreen
-#: src/localization.c:28
-msgid "video_fullscreen_label"
+#: src/frontend/intl/settings.def.c:12
+msgid "setting_categories_input"
 msgstr ""
 
-#: src/localization.c:25
+#: src/frontend/intl/settings.def.c:13
+msgid "setting_categories_paths"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:17
+msgid "directory_cores_label"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:18
+msgid "directory_cores_desc"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:21
+msgid "directory_games_label"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:22
+msgid "directory_games_desc"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:25
+msgid "video_vsync_label"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:26
 msgid "video_vsync_desc"
 msgstr ""
 
-#. video_vsync
-#: src/localization.c:24
-msgid "video_vsync_label"
+#: src/frontend/intl/settings.def.c:29
+msgid "video_fullscreen_label"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:30
+msgid "video_fullscreen_desc"
 msgstr ""

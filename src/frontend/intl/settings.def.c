@@ -10,6 +10,7 @@ static void localization_strings()
    __("setting_categories_video");
    __("setting_categories_audio");
    __("setting_categories_input");
+   __("setting_categories_paths");
 
    /* settings */
    /* directory_cores */

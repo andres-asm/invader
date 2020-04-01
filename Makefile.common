@@ -1,18 +1,17 @@
 CFLAGS += -DHAVE_DYNAMIC
 
 SOURCES_C = \
-      ./src/frontend/kami.c \
-      ./src/frontend/config.c \
-      ./src/frontend/common.c \
-      ./src/backend/libretro/piccolo.c \
-      ./src/util.c \
-      ./src/localization.c \
-      ./deps/libretro/compat/compat_strl.c \
+      ./deps/inih/ini.c \
       ./deps/libretro/compat/compat_posix_string.c \
-      ./deps/libretro/encodings/encoding_utf.c \
+      ./deps/libretro/compat/compat_strl.c \
       ./deps/libretro/dynamic/dylib.c \
+      ./deps/libretro/encodings/encoding_utf.c \
       ./deps/libretro/lists/string_list.c \
-      ./deps/inih/ini.c
+      ./src/backend/libretro/piccolo.c \
+      ./src/frontend/common.c \
+      ./src/frontend/config.c \
+      ./src/frontend/kami.c \
+      ./src/util.c
 
 ifeq ($(WITH_GUI), nuklear)
    SOURCES_C += \
@@ -29,5 +28,8 @@ else ifeq ($(WITH_GUI), imgui)
    CFLAGS += -DIMGUI_IMPL_API=""
    CXXFLAGS += -DIMGUI_IMPL_API="extern \"C\"" -DIMGUI_IMPL_OPENGL_LOADER_GLEW -DINI_CALL_HANDLER_ON_NEW_SECTION=1
 endif
+
+SOURCES_LOCALIZATION = \
+      ./src/frontend/intl/settings.def.c
 
 INCLUDE += -I./deps/inih -I./deps/libretro/include -I./src/ -I./src/backend/ -I./src/frontend/

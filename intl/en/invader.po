@@ -1,76 +1,55 @@
-# English translations for PACKAGE package.
-# Copyright (C) 2020 THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# <EMAIL@ADDRESS>, 2020.
-#
-msgid ""
-msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-01 00:53-0500\n"
-"PO-Revision-Date: 2020-03-31 17:54-0500\n"
-"Last-Translator: <EMAIL@ADDRESS>\n"
-"Language-Team: English\n"
-"Language: en\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CP1252\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#: src/localization.c:17
-msgid "directory_cores_desc"
-msgstr "Directory were your cores are stored"
-
-#. settings
-#. directory_cores
-#: src/localization.c:16
-msgid "directory_cores_label"
-msgstr "Core directory"
-
-#: src/localization.c:21
-msgid "directory_games_desc"
-msgstr "Directory were your games are stored by default"
-
-#. directory_games
-#: src/localization.c:20
-msgid "directory_games_label"
-msgstr "Game directory"
-
-#: src/localization.c:11
-msgid "setting_categories_audio"
-msgstr "Audio"
-
-#: src/localization.c:9
-msgid "setting_categories_general"
-msgstr "General"
-
-#: src/localization.c:12
-msgid "setting_categories_input"
-msgstr "Input"
-
-#. categories
-#: src/localization.c:8
+#: src/frontend/intl/settings.def.c:8
 msgid "setting_categories_none"
 msgstr "Uncategorized"
 
-#: src/localization.c:10
+#: src/frontend/intl/settings.def.c:9
+msgid "setting_categories_general"
+msgstr "General"
+
+#: src/frontend/intl/settings.def.c:10
 msgid "setting_categories_video"
 msgstr "Video"
 
-#: src/localization.c:29
-msgid "video_fullscreen_desc"
-msgstr "Enable or disable fullscreen mode"
+#: src/frontend/intl/settings.def.c:11
+msgid "setting_categories_audio"
+msgstr "Audio"
 
-#. video_fullscreen
-#: src/localization.c:28
-msgid "video_fullscreen_label"
-msgstr "Fullscreen mode"
+#: src/frontend/intl/settings.def.c:12
+msgid "setting_categories_input"
+msgstr "Input"
 
-#: src/localization.c:25
+#: src/frontend/intl/settings.def.c:13
+msgid "setting_categories_paths"
+msgstr "Paths"
+
+#: src/frontend/intl/settings.def.c:17
+msgid "directory_cores_label"
+msgstr "Core directory"
+
+#: src/frontend/intl/settings.def.c:18
+msgid "directory_cores_desc"
+msgstr "The directory that contains your core files"
+
+#: src/frontend/intl/settings.def.c:21
+msgid "directory_games_label"
+msgstr "Game directory"
+
+#: src/frontend/intl/settings.def.c:22
+msgid "directory_games_desc"
+msgstr "The directory that contains your game files by default"
+
+#: src/frontend/intl/settings.def.c:25
+msgid "video_vsync_label"
+msgstr "Vertical syncronization"
+
+#: src/frontend/intl/settings.def.c:26
 msgid "video_vsync_desc"
 msgstr "Enable or disable vertical syncronization"
 
-#. video_vsync
-#: src/localization.c:24
-msgid "video_vsync_label"
-msgstr "Vertical syncronization"
+#: src/frontend/intl/settings.def.c:29
+msgid "video_fullscreen_label"
+msgstr "Fullscreen mode"
+
+#: src/frontend/intl/settings.def.c:30
+msgid "video_fullscreen_desc"
+msgstr "Enable or disable fullscreen mode"

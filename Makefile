@@ -20,6 +20,7 @@ endif
 include Makefile.common
 
 OBJECTS  = $(SOURCES_CXX:.cpp=.o) $(SOURCES_C:.c=.o)
+LOCALIZATION = $(SOURCES_LOCALIZATION:.c=.po)
 
 ifeq ($(DEBUG),1)
 ifneq ($(OS),Windows_NT)
@@ -56,7 +57,7 @@ else
 endif
 
 all: $(TARGET)
-$(TARGET): $(OBJECTS)
+$(TARGET): $(OBJECTS) $(LOCALIZATION)
 
 ifeq ($(STATIC_LINKING), 1)
 	$(AR) rcs $@ $(OBJECTS)
@@ -64,12 +65,15 @@ else
 	$(CXX) -o $@ $(OBJECTS) $(LIBS)
 endif
 
-%.o: %.c
-	$(CC) $(INCLUDE) $(DEFINES) $(CFLAGS) -c $^ -o $@
-	xgettext -k__ -j -lC -c -s -o intl/invader.pot -c $^
+%.po: %.c
+
+	xgettext -k__ -j -lC -o intl/invader.pot $^
 	mkdir -p intl/en/LC_MESSAGES
 	msgmerge --update intl/en/invader.po intl/invader.pot
 	msgfmt --output-file=intl/en/LC_MESSAGES/invader.mo intl/en/invader.po
+
+%.o: %.c
+	$(CC) $(INCLUDE) $(DEFINES) $(CFLAGS) -c $^ -o $@
 
 %.o: %.cpp
 	$(CXX) $(INCLUDE) $(DEFINES) $(CXXFLAGS) -c $^ -o $@
