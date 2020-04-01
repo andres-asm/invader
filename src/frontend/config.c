@@ -5,6 +5,9 @@
 #include <stdlib.h>
 #include <compat/strl.h>
 
+#include <libintl.h>
+#include <locale.h>
+
 #include "util.h"
 
 #define MATCH(s, n) strcmp(section, s) == 0 && strcmp(name, n) == 0
@@ -25,22 +28,26 @@ enum setting_type
    SETTING_BOOL
 };
 
-void setting_init_string(setting *s, char* name, char* desc)
+void strings()
+{
+   __("directory_cores_label");
+   __("directory_cores_desc");
+}
+
+void setting_init_string(setting *s, char* name)
 {
    s->type = SETTING_STRING;
    s->size = 256;
    s->data = (char *)calloc(s->size, sizeof(char));
    strlcpy(s->name, name, sizeof(s->name));
-   strlcpy(s->desc, desc, sizeof(s->desc));
 }
 
-void setting_init_bool(setting *s, char* name, char* desc)
+void setting_init_bool(setting *s, char* name)
 {
    s->type = SETTING_BOOL;
    s->size = sizeof(bool);
    s->data = (char *)calloc(s->size, sizeof(bool));
    strlcpy(s->name, name, sizeof(s->name));
-   strlcpy(s->desc, desc, sizeof(s->desc));
 }
 
 void config_init()
@@ -59,23 +66,21 @@ void config_init()
 
    /* config_main */
    s = &cfg->config_main.directory_cores;
-   setting_init_string(s, "directory_cores", "Core Directory");
+   setting_init_string(s, "directory_cores");
    setting_array[index++] = *s;
 
    s = &cfg->config_main.directory_cores;
-   setting_init_string(s, "directory_games", "Game Directory");
+   setting_init_string(s, "directory_games");
    setting_array[index++] = *s;
 
    s = &cfg->config_main.video_vsync;
-   setting_init_bool(s, "video_vsync", "Vertical Sync");
+   setting_init_bool(s, "video_vsync");
    setting_array[index++] = *s;
 
    s = &cfg->config_main.video_fullscreen;
-   setting_init_bool(s, "video_fullscreen", "Fullscreen");
+   setting_init_bool(s, "video_fullscreen");
    setting_array[index++] = *s;
 }
-
-static int i;
 
 static int config_load_handler(void* c, const char* section,
    const char* name, const char* value)
@@ -101,12 +106,34 @@ static int config_load_handler(void* c, const char* section,
          break;
       case SETTING_STRING:
          strlcpy(s->data, value, s->size);
-         logger(LOG_DEBUG, tag, "settings %s value: %s size: %d\n", s->name, s->data, s->size);
+         logger(LOG_DEBUG, tag, "settings %s label: %s\n", s->name, setting_get_label(s));
+         logger(LOG_DEBUG, tag, "settings %s description: %s\n", s->name, setting_get_desc(s));
+         logger(LOG_INFO, tag, "settings %s value: %s size: %d\n", s->name, s->data, s->size);
          break;
       default:
          logger(LOG_DEBUG, tag, "settings %s unknown\n", s->name);
    }
    return true;
+}
+
+const char* setting_get_label(setting* s)
+{
+   char label[60];
+
+   strlcpy(label, s->name, sizeof(label));
+   strlcat(label, "_label", sizeof(label));
+
+   return __(label);
+}
+
+const char* setting_get_desc(setting* s)
+{
+   char desc[60];
+
+   strlcpy(desc, s->name, sizeof(desc));
+   strlcat(desc, "_desc", sizeof(desc));
+
+   return __(desc);
 }
 
 setting* setting_get(char* s)
@@ -118,22 +145,22 @@ setting* setting_get(char* s)
    }
 }
 
-unsigned* setting_get_uint(char* s)
+unsigned* setting_uint_val(char* s)
 {
    return ((unsigned*)setting_get(s)->data);
 }
 
-float* setting_get_float(char* s)
+float* setting_float_val(char* s)
 {
    return ((float*)setting_get(s)->data);
 }
 
-bool* setting_get_bool(char* s)
+bool* setting_bool_val(char* s)
 {
    return ((bool*)setting_get(s)->data);
 }
 
-char* setting_get_string(char* s)
+char* setting_string_val(char* s)
 {
    return ((char*)setting_get(s)->data);
 }
@@ -141,7 +168,7 @@ char* setting_get_string(char* s)
 bool config_load(char* file)
 {
    setting *s;
-   i = 0;
+
    logger(LOG_INFO, tag, "loading config file: %s\n", file);
    if (ini_parse(file, config_load_handler, cfg) < 0)
    {

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-31 17:55-0500\n"
+"POT-Creation-Date: 2020-03-31 18:37-0500\n"
 "PO-Revision-Date: 2020-03-31 17:54-0500\n"
 "Last-Translator: <EMAIL@ADDRESS>\n"
 "Language-Team: English\n"
@@ -17,16 +17,22 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/frontend/imgui/kami_imgui_sdl2.c:37
-#: src/frontend/imgui/kami_imgui_sdl2.c:39
+#: src/frontend/imgui/kami_imgui_sdl2.c:35
 msgid "chao\n"
 msgstr "bye\n"
 
-#: src/frontend/imgui/kami_imgui_sdl2.c:38
+#: src/frontend/config.c:34
+msgid "directory_cores_desc"
+msgstr "The directory that contains your core files"
+
+#: src/frontend/config.c:33
+msgid "directory_cores_label"
+msgstr "Core directory"
+
+#: src/frontend/imgui/kami_imgui_sdl2.c:36
 msgid "hasta luego\n"
 msgstr "later\n"
 
-#: src/frontend/imgui/kami_imgui_sdl2.c:36
-#: src/frontend/imgui/kami_imgui_sdl2.c:38
+#: src/frontend/imgui/kami_imgui_sdl2.c:34
 msgid "hola\n"
-msgstr "hola\n"
+msgstr "hello\n"

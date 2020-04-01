@@ -12,19 +12,28 @@
 
 static const char* tag = "[util]";
 
+static int log_level = 0;
+
+void logger_set_level(int level)
+{
+   log_level = level;
+}
+
 void logger(int level, const char *tag, const char *fmt, ...)
 {
-   va_list va;
-   char buffer[4096] = {0};
-   static const char *level_char = "diwe";
+   if (level >= log_level)
+   {
+      va_list va;
+      char buffer[4096] = {0};
+      static const char *level_char = "diwe";
 
-   va_start(va, fmt);
-   vsnprintf(buffer, sizeof(buffer), fmt, va);
-   va_end(va);
+      va_start(va, fmt);
+      vsnprintf(buffer, sizeof(buffer), fmt, va);
+      va_end(va);
 
-   fprintf(stderr, "[%c] --- %s %s", level_char[level], tag, buffer);
-   fflush(stderr);
-
+      fprintf(stderr, "[%c] --- %s %s", level_char[level], tag, buffer);
+      fflush(stderr);
+   }
 }
 
 void get_file_list(const char *in, file_list_t *out, const char *filter)

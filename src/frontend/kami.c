@@ -17,13 +17,6 @@
 
 static const char* tag = "[invader]";
 
-/* Initialize configuration */
-void cfg_load()
-{
-   config_init();
-   config_load("invader.cfg");
-}
-
 bool core_list_init(const char* in)
 {
    char buf[PATH_MAX_LENGTH];

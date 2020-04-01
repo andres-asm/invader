@@ -12,13 +12,16 @@
 #include <libintl.h>
 #include <locale.h>
 
+#define __(str) gettext(str)
+
 struct setting
 {
    void*    data;
    char     name[50];
    unsigned type;
    size_t   size;
-   char     desc[100];
+   char     label[100];
+   char     help[100];
 
 } typedef setting;
 
@@ -46,15 +49,21 @@ bool config_load(char* file);
 setting* setting_get(char* s);
 
 /* get an unsigner setting value */
-unsigned* setting_get_uint(char* s);
+unsigned* setting_uint_val(char* s);
 
 /* get an boolean setting value */
-bool* setting_get_bool(char* s);
+bool* setting_bool_val(char* s);
 
 /* get an float setting value */
-float* setting_get_float(char* s);
+float* setting_float_val(char* s);
 
 /* get an string setting value */
-char* setting_get_string(char* s);
+char* setting_string_val(char* s);
+
+/* get a setting label */
+const char* setting_get_label(setting* setting);
+
+/* get a setting description */
+const char* setting_get_desc(setting* setting);
 
 #endif

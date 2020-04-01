@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-31 17:57-0500\n"
+"POT-Creation-Date: 2020-03-31 19:08-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,16 +17,22 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/frontend/imgui/kami_imgui_sdl2.c:37
-#: src/frontend/imgui/kami_imgui_sdl2.c:39
+#: src/frontend/imgui/kami_imgui_sdl2.c:35
 msgid "chao\n"
 msgstr ""
 
-#: src/frontend/imgui/kami_imgui_sdl2.c:38
-msgid "hasta luego\n"
+#: src/frontend/config.c:34
+msgid "directory_cores_desc"
+msgstr ""
+
+#: src/frontend/config.c:33
+msgid "directory_cores_label"
 msgstr ""
 
 #: src/frontend/imgui/kami_imgui_sdl2.c:36
-#: src/frontend/imgui/kami_imgui_sdl2.c:38
+msgid "hasta luego\n"
+msgstr ""
+
+#: src/frontend/imgui/kami_imgui_sdl2.c:34
 msgid "hola\n"
 msgstr ""

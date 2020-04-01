@@ -22,6 +22,8 @@ struct file_list
    char     file_names[100][PATH_MAX_LENGTH];
 } typedef file_list_t;
 
+void logger_set_level(int level);
+
 void logger(int level, const char *tag, const char *fmt, ...);
 
 void get_file_list(const char *in, file_list_t *out, const char *filter);

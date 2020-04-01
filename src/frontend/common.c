@@ -1,4 +1,5 @@
 #include "common.h"
+#include "config.h"
 #include "util.h"
 
 
@@ -101,4 +102,11 @@ SDL_Window* get_window()
 const char* get_glsl_version()
 {
    return glsl_version;
+}
+
+/* Initialize configuration */
+void common_config_load()
+{
+   config_init();
+   config_load("invader.cfg");
 }

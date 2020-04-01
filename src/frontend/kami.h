@@ -5,8 +5,6 @@
 #include "common.h"
 #include "libretro/piccolo.h"
 
-void cfg_load();
-
 bool core_list_init(const char* in);
 
 int render_framebuffer(const core_frame_buffer_t *data, unsigned pixel_format);

@@ -38,4 +38,6 @@ SDL_Window* get_window();
 
 const char* get_glsl_version();
 
+void common_config_load();
+
 #endif
