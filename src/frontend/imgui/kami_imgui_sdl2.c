@@ -24,20 +24,11 @@ SDL_GLContext context;
 
 ImGuiIO io;
 
-static void strings()
+static void init_localization()
 {
-
    setlocale (LC_ALL, "");
    bindtextdomain ("invader", "./intl/");
    textdomain ("invader");
-
-   const char* str1 = __("hola\n");
-   const char* str2 = __("chao\n");
-   const char* str3 = __("hasta luego\n");
-   logger(LOG_DEBUG, tag, gettext(str2));
-   logger(LOG_DEBUG, tag, __(str1));
-   logger(LOG_DEBUG, tag, __(str2));
-   logger(LOG_DEBUG, tag, __(str3));
 }
 
 static void imgui_shutdown()
@@ -195,7 +186,7 @@ static void imgui_draw_frame()
 int main(int argc, char* argv[])
 {
    logger_set_level(LOG_DEBUG);
-   strings();
+   init_localization();
    common_config_load();
    if (!create_window(app_name, WINDOW_WIDTH, WINDOW_HEIGHT))
       return -1;

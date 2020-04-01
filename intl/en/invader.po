@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-31 18:37-0500\n"
+"POT-Creation-Date: 2020-04-01 00:53-0500\n"
 "PO-Revision-Date: 2020-03-31 17:54-0500\n"
 "Last-Translator: <EMAIL@ADDRESS>\n"
 "Language-Team: English\n"
@@ -17,22 +17,60 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/frontend/imgui/kami_imgui_sdl2.c:35
-msgid "chao\n"
-msgstr "bye\n"
-
-#: src/frontend/config.c:34
+#: src/localization.c:17
 msgid "directory_cores_desc"
-msgstr "The directory that contains your core files"
+msgstr "Directory were your cores are stored"
 
-#: src/frontend/config.c:33
+#. settings
+#. directory_cores
+#: src/localization.c:16
 msgid "directory_cores_label"
 msgstr "Core directory"
 
-#: src/frontend/imgui/kami_imgui_sdl2.c:36
-msgid "hasta luego\n"
-msgstr "later\n"
+#: src/localization.c:21
+msgid "directory_games_desc"
+msgstr "Directory were your games are stored by default"
 
-#: src/frontend/imgui/kami_imgui_sdl2.c:34
-msgid "hola\n"
-msgstr "hello\n"
+#. directory_games
+#: src/localization.c:20
+msgid "directory_games_label"
+msgstr "Game directory"
+
+#: src/localization.c:11
+msgid "setting_categories_audio"
+msgstr "Audio"
+
+#: src/localization.c:9
+msgid "setting_categories_general"
+msgstr "General"
+
+#: src/localization.c:12
+msgid "setting_categories_input"
+msgstr "Input"
+
+#. categories
+#: src/localization.c:8
+msgid "setting_categories_none"
+msgstr "Uncategorized"
+
+#: src/localization.c:10
+msgid "setting_categories_video"
+msgstr "Video"
+
+#: src/localization.c:29
+msgid "video_fullscreen_desc"
+msgstr "Enable or disable fullscreen mode"
+
+#. video_fullscreen
+#: src/localization.c:28
+msgid "video_fullscreen_label"
+msgstr "Fullscreen mode"
+
+#: src/localization.c:25
+msgid "video_vsync_desc"
+msgstr "Enable or disable vertical syncronization"
+
+#. video_vsync
+#: src/localization.c:24
+msgid "video_vsync_label"
+msgstr "Vertical syncronization"

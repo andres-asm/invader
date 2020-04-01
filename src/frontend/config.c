@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <compat/strl.h>
+#include <string/stdstring.h>
 
 #include <libintl.h>
 #include <locale.h>
@@ -28,11 +29,14 @@ enum setting_type
    SETTING_BOOL
 };
 
-void strings()
-{
-   __("directory_cores_label");
-   __("directory_cores_desc");
-}
+const char* setting_category_labels[] =   {
+                                             "setting_categories_none",
+                                             "setting_categories_general",
+                                             "setting_categories_video",
+                                             "setting_categories_audio",
+                                             "setting_categories_input",
+                                             "setting_categories_paths",
+                                          };
 
 void setting_init_string(setting *s, char* name)
 {
@@ -85,34 +89,47 @@ void config_init()
 static int config_load_handler(void* c, const char* section,
    const char* name, const char* value)
 {
-   setting *s = setting_get((char *)name);
-   switch(s->type)
+   if (string_is_empty(section))
    {
-      case SETTING_INT:
-      case SETTING_UINT:
-         *((unsigned*)s->data) = atoi(value);
-         logger(LOG_DEBUG, tag, "settings %s value: %d\n", s->name, *((unsigned*)s->data));
-         break;
-      case SETTING_FLOAT:
-         *((float*)s->data) = atof(value);
-         logger(LOG_DEBUG, tag, "settings %s value: %d\n", s->name, *((float*)s->data));
-         break;
-      case SETTING_BOOL:
-         if (!strcmp(value, "true"))
-            *((bool*)s->data) = true;
-         else
-            *((bool*)s->data) = false;
-         logger(LOG_DEBUG, tag, "settings %s value: %s\n", s->name, *((bool*)s->data) ? "true" : "false");
-         break;
-      case SETTING_STRING:
-         strlcpy(s->data, value, s->size);
-         logger(LOG_DEBUG, tag, "settings %s label: %s\n", s->name, setting_get_label(s));
-         logger(LOG_DEBUG, tag, "settings %s description: %s\n", s->name, setting_get_desc(s));
-         logger(LOG_INFO, tag, "settings %s value: %s size: %d\n", s->name, s->data, s->size);
-         break;
-      default:
-         logger(LOG_DEBUG, tag, "settings %s unknown\n", s->name);
+      setting *s = setting_get((char *)name);
+      logger(LOG_DEBUG, tag, "settings %s label: %s\n", s->name, setting_get_label(s));
+      logger(LOG_DEBUG, tag, "settings %s description: %s\n", s->name, setting_get_desc(s));
+
+      switch(s->type)
+      {
+         case SETTING_INT:
+         case SETTING_UINT:
+            *((unsigned*)s->data) = atoi(value);
+            logger(LOG_DEBUG, tag, "settings %s value: %d\n", s->name, *((unsigned*)s->data));
+            break;
+         case SETTING_FLOAT:
+            *((float*)s->data) = atof(value);
+            logger(LOG_DEBUG, tag, "settings %s value: %d\n", s->name, *((float*)s->data));
+            break;
+         case SETTING_BOOL:
+            if (!strcmp(value, "true"))
+               *((bool*)s->data) = true;
+            else
+               *((bool*)s->data) = false;
+            logger(LOG_DEBUG, tag, "settings %s value: %s\n", s->name, *((bool*)s->data) ? "true" : "false");
+            break;
+         case SETTING_STRING:
+            strlcpy(s->data, value, s->size);
+            logger(LOG_INFO, tag,  "settings %s value: %s size: %d\n", s->name, s->data, s->size);
+            break;
+         default:
+            logger(LOG_DEBUG, tag, "settings %s unknown\n", s->name);
+      }
    }
+   else if(string_is_equal(section, "categories"))
+   {
+      setting *s = setting_get((char *)name);
+      s->categories = atoi(value);
+      logger(LOG_DEBUG, tag, "setting %s category: %s\n", s->name, category_label(s->categories));
+
+   }
+   else
+      logger(LOG_DEBUG, tag, "category %s unknown\n", name);
    return true;
 }
 
@@ -134,6 +151,11 @@ const char* setting_get_desc(setting* s)
    strlcat(desc, "_desc", sizeof(desc));
 
    return __(desc);
+}
+
+const char* category_label(unsigned category)
+{
+   return __(setting_category_labels[category]);
 }
 
 setting* setting_get(char* s)

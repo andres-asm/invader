@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-31 19:08-0500\n"
+"POT-Creation-Date: 2020-04-01 00:55-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,22 +17,60 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/frontend/imgui/kami_imgui_sdl2.c:35
-msgid "chao\n"
-msgstr ""
-
-#: src/frontend/config.c:34
+#: src/localization.c:17
 msgid "directory_cores_desc"
 msgstr ""
 
-#: src/frontend/config.c:33
+#. settings
+#. directory_cores
+#: src/localization.c:16
 msgid "directory_cores_label"
 msgstr ""
 
-#: src/frontend/imgui/kami_imgui_sdl2.c:36
-msgid "hasta luego\n"
+#: src/localization.c:21
+msgid "directory_games_desc"
 msgstr ""
 
-#: src/frontend/imgui/kami_imgui_sdl2.c:34
-msgid "hola\n"
+#. directory_games
+#: src/localization.c:20
+msgid "directory_games_label"
+msgstr ""
+
+#: src/localization.c:11
+msgid "setting_categories_audio"
+msgstr ""
+
+#: src/localization.c:9
+msgid "setting_categories_general"
+msgstr ""
+
+#: src/localization.c:12
+msgid "setting_categories_input"
+msgstr ""
+
+#. categories
+#: src/localization.c:8
+msgid "setting_categories_none"
+msgstr ""
+
+#: src/localization.c:10
+msgid "setting_categories_video"
+msgstr ""
+
+#: src/localization.c:29
+msgid "video_fullscreen_desc"
+msgstr ""
+
+#. video_fullscreen
+#: src/localization.c:28
+msgid "video_fullscreen_label"
+msgstr ""
+
+#: src/localization.c:25
+msgid "video_vsync_desc"
+msgstr ""
+
+#. video_vsync
+#: src/localization.c:24
+msgid "video_vsync_label"
 msgstr ""

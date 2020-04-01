@@ -6,6 +6,7 @@ SOURCES_C = \
       ./src/frontend/common.c \
       ./src/backend/libretro/piccolo.c \
       ./src/util.c \
+      ./src/localization.c \
       ./deps/libretro/compat/compat_strl.c \
       ./deps/libretro/compat/compat_posix_string.c \
       ./deps/libretro/encodings/encoding_utf.c \
@@ -26,7 +27,7 @@ else ifeq ($(WITH_GUI), imgui)
    INCLUDE += -I./deps/ -I./deps/cimgui -I./deps/cimgui/imgui
    LIBS += -lcimgui
    CFLAGS += -DIMGUI_IMPL_API=""
-   CXXFLAGS += -DIMGUI_IMPL_API="extern \"C\"" -DIMGUI_IMPL_OPENGL_LOADER_GLEW
+   CXXFLAGS += -DIMGUI_IMPL_API="extern \"C\"" -DIMGUI_IMPL_OPENGL_LOADER_GLEW -DINI_CALL_HANDLER_ON_NEW_SECTION=1
 endif
 
 INCLUDE += -I./deps/inih -I./deps/libretro/include -I./src/ -I./src/backend/ -I./src/frontend/
