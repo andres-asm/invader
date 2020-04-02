@@ -25,10 +25,15 @@ else ifeq ($(WITH_GUI), imgui)
    SOURCES_C += \
          ./src/frontend/imgui/kami_imgui_sdl2.c
    SOURCES_CXX += \
+         ./deps/cimgui/cimgui.cpp \
+         ./deps/cimgui/imgui/imgui.cpp \
+         ./deps/cimgui/imgui/imgui_draw.cpp \
+         ./deps/cimgui/imgui/imgui_demo.cpp \
+         ./deps/cimgui/imgui/imgui_widgets.cpp \
          ./src/frontend/imgui/imgui_impl_opengl3.cpp \
          ./src/frontend/imgui/imgui_impl_sdl.cpp
    INCLUDE += -I./deps/ -I./deps/cimgui -I./deps/cimgui/imgui
-   LIBS += -lcimgui
+   LIBS +=
    CFLAGS += -DIMGUI_IMPL_API=""
    CXXFLAGS += -DIMGUI_IMPL_API="extern \"C\"" -DIMGUI_IMPL_OPENGL_LOADER_GLEW -DINI_CALL_HANDLER_ON_NEW_SECTION=1
 endif

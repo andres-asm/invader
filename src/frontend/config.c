@@ -61,7 +61,7 @@ void setting_init_bool(setting *s, char* name)
 static int setting_definitions_handler(void* c, const char* section,
    const char* name, const char* value)
 {
-   static char previous_section[50] = "";
+   static char setting_name[50] = "";
 
    static unsigned type;
    static unsigned flags;
@@ -73,7 +73,7 @@ static int setting_definitions_handler(void* c, const char* section,
 
    if (!string_is_empty(section))
    {
-      if (string_is_empty(previous_section) || string_is_equal(section, previous_section))
+      if (string_is_empty(setting_name) || string_is_equal(section, setting_name))
       {
          if(string_is_equal(name, "type"))
             type = atoi(value);
@@ -90,27 +90,20 @@ static int setting_definitions_handler(void* c, const char* section,
       }
       else
       {
-         logger(LOG_DEBUG, tag, "creating setting: %s\n", previous_section);
-         logger(LOG_DEBUG, tag, "setting type: %d\n", type);
-         logger(LOG_DEBUG, tag, "setting size: %d\n", size);
-         logger(LOG_DEBUG, tag, "setting categories: %d\n", categories);
-         logger(LOG_DEBUG, tag, "setting min: %d\n", min);
-         logger(LOG_DEBUG, tag, "setting min: %d\n", max);
-         logger(LOG_DEBUG, tag, "setting min: %d\n", step);
-
+         logger(LOG_DEBUG, tag, "creating setting: %s\n", setting_name);
          static int index = 0;
          setting *s = &setting_array[index];
          switch(type)
          {
             case SETTING_BOOL:
                {
-                  setting_init_bool(s, previous_section);
+                  setting_init_bool(s, setting_name);
                   setting_array[index++] = *s;
                }
                break;
             case SETTING_STRING:
                {
-                  setting_init_string(s, previous_section);
+                  setting_init_string(s, setting_name);
                   setting_array[index++] = *s;
                }
                break;
@@ -119,7 +112,7 @@ static int setting_definitions_handler(void* c, const char* section,
          }
       }
 
-      strlcpy(previous_section, section, sizeof(previous_section));
+      strlcpy(setting_name, section, sizeof(setting_name));
    }
    else
       logger(LOG_DEBUG, tag, "empty sections unsupported on definitions file\n", name);
