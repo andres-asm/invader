@@ -14,6 +14,35 @@
 
 #define __(str) gettext(str)
 
+enum setting_type
+{
+   SETTING_UINT,
+   SETTING_INT,
+   SETTING_FLOAT,
+   SETTING_STRING,
+   SETTING_BOOL
+};
+
+enum setting_flags
+{
+   FLAG_NONE           = 0,
+   FLAG_ALLOW_EMPTY    = (1 << 0),
+   FLAG_HAS_RANGE      = (1 << 1),
+   FLAG_ALLOW_INPUT    = (1 << 2),
+   FLAG_DEFERRED       = (1 << 3),
+   FLAG_ADVANCED       = (1 << 4)
+};
+
+enum setting_categories
+{
+   CAT_NONE     = 0,
+   CAT_GENERAL  = 1,
+   CAT_VIDEO    = 2,
+   CAT_AUDIO    = 3,
+   CAT_INPUT    = 4,
+   CAT_PATHS    = 5
+};
+
 struct setting
 {
    /* setting name */
@@ -80,5 +109,11 @@ const char* setting_get_desc(setting* setting);
 
 /* get category labels */
 const char* category_label(unsigned category);
+
+/* get settings array */
+setting* settings_get_array();
+
+/* get settings count */
+int settings_get_count();
 
 #endif

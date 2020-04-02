@@ -1,55 +1,99 @@
-#: src/frontend/intl/settings.def.c:8
-msgid "setting_categories_none"
-msgstr "Uncategorized"
+#: src/frontend/intl/settings.def.c:30
+msgid "audio_enable_desc"
+msgstr ""
 
-#: src/frontend/intl/settings.def.c:9
-msgid "setting_categories_general"
-msgstr "General"
+#: src/frontend/intl/settings.def.c:29
+msgid "audio_enable_label"
+msgstr "Audio enable"
 
-#: src/frontend/intl/settings.def.c:10
-msgid "setting_categories_video"
-msgstr "Video"
+#: src/frontend/intl/settings.def.c:34 src/frontend/intl/settings.def.c:38
+msgid "audio_sync_desc"
+msgstr ""
 
-#: src/frontend/intl/settings.def.c:11
-msgid "setting_categories_audio"
-msgstr "Audio"
-
-#: src/frontend/intl/settings.def.c:12
-msgid "setting_categories_input"
-msgstr "Input"
-
-#: src/frontend/intl/settings.def.c:13
-msgid "setting_categories_paths"
-msgstr "Paths"
-
-#: src/frontend/intl/settings.def.c:17
-msgid "directory_cores_label"
-msgstr "Core directory"
+#: src/frontend/intl/settings.def.c:33 src/frontend/intl/settings.def.c:37
+msgid "audio_sync_label"
+msgstr "Audio sync"
 
 #: src/frontend/intl/settings.def.c:18
 msgid "directory_cores_desc"
-msgstr "The directory that contains your core files"
+msgstr ""
 
-#: src/frontend/intl/settings.def.c:21
-msgid "directory_games_label"
-msgstr "Game directory"
+#: src/frontend/intl/settings.def.c:17
+msgid "directory_cores_label"
+msgstr ""
 
 #: src/frontend/intl/settings.def.c:22
 msgid "directory_games_desc"
-msgstr "The directory that contains your game files by default"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:21
+msgid "directory_games_label"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:11
+msgid "setting_categories_audio"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:9
+msgid "setting_categories_general"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:12
+msgid "setting_categories_input"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:8
+msgid "setting_categories_none"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:13
+msgid "setting_categories_paths"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:10
+msgid "setting_categories_video"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:45 src/frontend/intl/settings.def.c:49
+msgid "settings_window_title"
+msgstr "Settings"
+
+#: src/frontend/intl/settings.def.c:34
+msgid "test2_desc"
+msgstr "test"
+
+#: src/frontend/intl/settings.def.c:33
+msgid "test2_label"
+msgstr "test2"
+
+#: src/frontend/intl/settings.def.c:42 src/frontend/intl/settings.def.c:46
+msgid "test3_desc"
+msgstr "test"
+
+#: src/frontend/intl/settings.def.c:41 src/frontend/intl/settings.def.c:45
+msgid "test3_label"
+msgstr "test3"
+
+#: src/frontend/intl/settings.def.c:49 src/frontend/intl/settings.def.c:53
+msgid "test_desc"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:48 src/frontend/intl/settings.def.c:52
+msgid "test_label"
+msgstr "test"
+
+#: src/frontend/intl/settings.def.c:38 src/frontend/intl/settings.def.c:42
+msgid "video_fullscreen_desc"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:37 src/frontend/intl/settings.def.c:41
+msgid "video_fullscreen_label"
+msgstr "Fullscreen mode"
+
+#: src/frontend/intl/settings.def.c:26
+msgid "video_vsync_desc"
+msgstr ""
 
 #: src/frontend/intl/settings.def.c:25
 msgid "video_vsync_label"
 msgstr "Vertical syncronization"
-
-#: src/frontend/intl/settings.def.c:26
-msgid "video_vsync_desc"
-msgstr "Enable or disable vertical syncronization"
-
-#: src/frontend/intl/settings.def.c:29
-msgid "video_fullscreen_label"
-msgstr "Fullscreen mode"
-
-#: src/frontend/intl/settings.def.c:30
-msgid "video_fullscreen_desc"
-msgstr "Enable or disable fullscreen mode"

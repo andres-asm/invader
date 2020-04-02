@@ -1,6 +1,6 @@
 #include "config.h"
 
-/* dummy function, lists all the localization strings */
+
 static void localization_strings()
 {
 
@@ -21,11 +21,34 @@ static void localization_strings()
    __("directory_games_label");
    __("directory_games_desc");
 
-      /* video_vsync */
+   /* video_vsync */
    __("video_vsync_label");
    __("video_vsync_desc");
 
-      /* video_fullscreen */
+   /* audio_enable */
+   __("audio_enable_label");
+   __("audio_enable_desc");
+
+   /* test 2 */
+   __("test2_label");
+   __("test2_desc");
+
+   /* audio_sync */
+   __("audio_sync_label");
+   __("audio_sync_desc");
+
+   /* video_fullscreen */
    __("video_fullscreen_label");
    __("video_fullscreen_desc");
+
+   /* test 3 */
+   __("test3_label");
+   __("test3_desc");
+
+   /* Settings window title */
+   __("settings_window_title");
+
+   /* Test */
+   __("test_label");
+   __("test_desc");
 }

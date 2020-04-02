@@ -3,10 +3,14 @@ CFLAGS += -DHAVE_DYNAMIC
 SOURCES_C = \
       ./deps/inih/ini.c \
       ./deps/libretro/compat/compat_posix_string.c \
+      ./deps/libretro/compat/compat_strcasestr.c \
       ./deps/libretro/compat/compat_strl.c \
+      ./deps/libretro/compat/fopen_utf8.c \
       ./deps/libretro/dynamic/dylib.c \
       ./deps/libretro/encodings/encoding_utf.c \
+      ./deps/libretro/file/file_path.c \
       ./deps/libretro/lists/string_list.c \
+      ./deps/libretro/vfs/vfs_implementation.c \
       ./src/backend/libretro/piccolo.c \
       ./src/frontend/common.c \
       ./src/frontend/config.c \

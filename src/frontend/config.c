@@ -9,25 +9,18 @@
 #include <libintl.h>
 #include <locale.h>
 
+#include <file/file_path.h>
+
 #include "util.h"
 
 #define MATCH(s, n) strcmp(section, s) == 0 && strcmp(name, n) == 0
 
-setting *setting_array;
+setting* setting_array;
 size_t setting_array_size;
 
 config *cfg;
 
 static const char* tag = "[config]";
-
-enum setting_type
-{
-   SETTING_UINT,
-   SETTING_INT,
-   SETTING_FLOAT,
-   SETTING_STRING,
-   SETTING_BOOL
-};
 
 const char* setting_category_labels[] =
 {
@@ -39,25 +32,15 @@ const char* setting_category_labels[] =
    "setting_categories_paths",
 };
 
-enum setting_flags
+setting* settings_get_array()
 {
-   FLAG_NONE           = 0,
-   FLAG_ALLOW_EMPTY    = (1 << 0),
-   FLAG_HAS_RANGE      = (1 << 1),
-   FLAG_ALLOW_INPUT    = (1 << 2),
-   FLAG_IMMEDIATE      = (1 << 3),
-   FLAG_ADVANCED       = (1 << 4)
-};
+   return setting_array;
+}
 
-enum setting_categories
+int settings_get_count()
 {
-   CAT_NONE     = 0,
-   CAT_GENERAL  = 1,
-   CAT_VIDEO    = 2,
-   CAT_AUDIO    = 3,
-   CAT_INPUT    = 4,
-   CAT_PATHS    = 5
-};
+   return setting_array_size;
+}
 
 void setting_init_string(setting *s, char* name)
 {
@@ -75,36 +58,72 @@ void setting_init_bool(setting *s, char* name)
    strlcpy(s->name, name, sizeof(s->name));
 }
 
-void config_init()
+static int setting_definitions_handler(void* c, const char* section,
+   const char* name, const char* value)
 {
-   cfg = (config*)calloc(1, sizeof(config));
+   static char previous_section[50] = "";
 
-   setting_array_size = (
-      sizeof(struct config_main) +
-      0) / sizeof(setting);
-   setting_array = (setting *)calloc(setting_array_size, sizeof(setting));
+   static unsigned type;
+   static unsigned flags;
+   static unsigned categories;
+   static size_t size;
+   static float min, max, step;
 
-   logger(LOG_INFO, tag, "settings found: %d\n", setting_array_size);
+   static unsigned index;
 
-   setting *s;
-   int index = 0;
+   if (!string_is_empty(section))
+   {
+      if (string_is_empty(previous_section) || string_is_equal(section, previous_section))
+      {
+         if(string_is_equal(name, "type"))
+            type = atoi(value);
+         else if(string_is_equal(name, "categories"))
+            categories = atoi(value);
+         else if(string_is_equal(name, "size"))
+            size = atoi(value);
+         else if(string_is_equal(name, "min"))
+            min = atoi(value);
+         else if(string_is_equal(name, "max"))
+            max = atoi(value);
+         else if(string_is_equal(name, "step"))
+            step = atoi(value);
+      }
+      else
+      {
+         logger(LOG_DEBUG, tag, "creating setting: %s\n", previous_section);
+         logger(LOG_DEBUG, tag, "setting type: %d\n", type);
+         logger(LOG_DEBUG, tag, "setting size: %d\n", size);
+         logger(LOG_DEBUG, tag, "setting categories: %d\n", categories);
+         logger(LOG_DEBUG, tag, "setting min: %d\n", min);
+         logger(LOG_DEBUG, tag, "setting min: %d\n", max);
+         logger(LOG_DEBUG, tag, "setting min: %d\n", step);
 
-   /* config_main */
-   s = &cfg->config_main.directory_cores;
-   setting_init_string(s, "directory_cores");
-   setting_array[index++] = *s;
+         static int index = 0;
+         setting *s = &setting_array[index];
+         switch(type)
+         {
+            case SETTING_BOOL:
+               {
+                  setting_init_bool(s, previous_section);
+                  setting_array[index++] = *s;
+               }
+               break;
+            case SETTING_STRING:
+               {
+                  setting_init_string(s, previous_section);
+                  setting_array[index++] = *s;
+               }
+               break;
+            default:
+               break;
+         }
+      }
 
-   s = &cfg->config_main.directory_cores;
-   setting_init_string(s, "directory_games");
-   setting_array[index++] = *s;
-
-   s = &cfg->config_main.video_vsync;
-   setting_init_bool(s, "video_vsync");
-   setting_array[index++] = *s;
-
-   s = &cfg->config_main.video_fullscreen;
-   setting_init_bool(s, "video_fullscreen");
-   setting_array[index++] = *s;
+      strlcpy(previous_section, section, sizeof(previous_section));
+   }
+   else
+      logger(LOG_DEBUG, tag, "empty sections unsupported on definitions file\n", name);
+   return true;
 }
 
 static int config_load_handler(void* c, const char* section,
@@ -142,15 +161,8 @@ static int config_load_handler(void* c, const char* section,
             logger(LOG_DEBUG, tag, "settings %s unknown\n", s->name);
       }
    }
-   else if(string_is_equal(section, "categories"))
-   {
-      setting *s = setting_get((char *)name);
-      s->categories = atoi(value);
-      logger(LOG_DEBUG, tag, "setting %s category: %s\n", s->name, category_label(s->categories));
-
-   }
    else
-      logger(LOG_DEBUG, tag, "category %s unknown\n", name);
+      logger(LOG_DEBUG, tag, "section %s unknown\n", name);
    return true;
 }
 
@@ -211,9 +223,33 @@ char* setting_string_val(char* s)
 bool config_load(char* file)
 {
    setting *s;
+   char definitions[PATH_MAX], buf[PATH_MAX];
+
+   cfg = (config*)calloc(1, sizeof(config));
+   setting_array_size = 6 * sizeof(setting);
+   setting_array = (setting *)calloc(setting_array_size, sizeof(setting));
+
+   for (unsigned i = 0; i < setting_array_size; i++)
+   {
+      setting* s = (setting *)calloc(1, sizeof(setting));
+      strlcpy(s->name, "empty", 5);
+      setting_array[i] = *s;
+   }
+
+   strlcpy(buf, file, sizeof(buf));
+   path_remove_extension(buf);
+   snprintf(definitions, sizeof(definitions), "%s.def", buf);
+
+   logger(LOG_INFO, tag, "loading setting definitions: %s\n", definitions);
+   if (ini_parse(definitions, setting_definitions_handler, NULL) < 0)
+   {
+      logger(LOG_ERROR, tag, "error loading config file: %s\n", definitions);
+      return false;
+   }
+
 
    logger(LOG_INFO, tag, "loading config file: %s\n", file);
-   if (ini_parse(file, config_load_handler, cfg) < 0)
+   if (ini_parse(file, config_load_handler, NULL) < 0)
    {
       logger(LOG_ERROR, tag, "error loading config file: %s\n", file);
       return false;

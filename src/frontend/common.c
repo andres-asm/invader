@@ -107,6 +107,6 @@ const char* get_glsl_version()
 /* Initialize configuration */
 void common_config_load()
 {
-   config_init();
+   //config_init();
    config_load("invader.cfg");
 }

@@ -1,0 +1,67 @@
+[directory_cores]
+name = directory_cores
+type = 3
+size = 2048
+default = ./cores
+categories = 5
+allow_empty = true
+allow_input = true
+deferred = false
+end = 1
+
+[directory_games]
+name = directory_games
+type = 3
+size = 2048
+default = ./games
+categories = 5
+allow_empty = true
+allow_input = true
+deferred = false
+end = 1
+
+[video_fullscreen]
+name = video_fullscreen
+type = 4
+categories = 2
+default = true
+end = 1
+
+[video_vsync]
+name = video_vsync
+type = 4
+categories = 2
+default = false
+
+[audio_enable]
+name = audio_enable
+type = 4
+categories = 3
+default = true
+
+[audio_sync]
+name = audio_sync
+type = 4
+categories = 3
+default = true
+
+[test]
+name = test
+type = 4
+categories = 3
+default = true
+
+[test3]
+name = test3
+type = 4
+categories = 3
+default = true
+
+[test2]
+name = test2
+type = 4
+categories = 3
+default = true
+
+[last]
+last = 1

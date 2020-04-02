@@ -114,6 +114,27 @@ static void imgui_set_default_style()
    clearColor = *ImVec4_ImVec4Float(0.45f, 0.55f, 0.60f, 1.00f);
 }
 
+static void imgui_wnd_settings()
+{
+   int settings_count = settings_get_count();
+   setting  *settings = settings_get_array();
+
+   igBegin(__("settings_window_title"), NULL, 0);
+
+   for (unsigned i = 0; i < settings_count; i++)
+   {
+      setting  s = settings[i];
+      if (s.type == SETTING_BOOL)
+         igCheckbox(__(setting_get_label(&s)), s.data);
+      if (s.type == SETTING_STRING)
+      {
+         igInputText(__(setting_get_label(&s)), s.data, sizeof(s.data), ImGuiInputTextFlags_ReadOnly, NULL, NULL);
+      }
+   }
+
+   igEnd();
+}
+
 static void imgui_draw_frame()
 {
    SDL_Event e;
@@ -135,43 +156,29 @@ static void imgui_draw_frame()
    if (showDemoWindow)
       igShowDemoWindow(&showDemoWindow);
 
-   {
-      static float f = 0.0f;
-      static int counter = 0;
+   imgui_wnd_settings();
+   static float f = 0.0f;
+   static int counter = 0;
 
-      igBegin("Hello, world!", NULL, 0);
-      igText("This is some useful text");
-      igCheckbox("Demo window", &showDemoWindow);
-      igCheckbox("Another window", &showAnotherWindow);
+   igBegin("Hello, world!", NULL, 0);
+   igText("This is some useful text");
+   igCheckbox("Demo window", &showDemoWindow);
+   igCheckbox("Another window", &showAnotherWindow);
 
-      igSliderFloat("Float", &f, 0.0f, 1.0f, "%.3f", 1.0f);
-      igColorEdit3("clear color", (float*)&clearColor, 0);
+   igSliderFloat("Float", &f, 0.0f, 1.0f, "%.3f", 1.0f);
+   igColorEdit3("clear color", (float*)&clearColor, 0);
 
-      ImVec2 buttonSize;
-      buttonSize.x = 0;
-      buttonSize.y = 0;
+   ImVec2 buttonSize;
+   buttonSize.x = 0;
+   buttonSize.y = 0;
 
-      if (igButton("Button", buttonSize))
-            counter++;
-      igSameLine(0.0f, -1.0f);
-      igText("counter = %d", counter);
+   if (igButton("Button", buttonSize))
+      counter++;
+   igSameLine(0.0f, -1.0f);
+   igText("counter = %d", counter);
 
-      igText("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / igGetIO()->Framerate, igGetIO()->Framerate);
-      igEnd();
-   }
-
-   if (showAnotherWindow)
-   {
-      igBegin("imgui Another Window", &showAnotherWindow, 0);
-      igText("Hello from imgui");
-      ImVec2 buttonSize;
-      buttonSize.x = 0; buttonSize.y = 0;
-      if (igButton("Close me", buttonSize))
-      {
-         showAnotherWindow = false;
-      }
-      igEnd();
-   }
+   igText("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / igGetIO()->Framerate, igGetIO()->Framerate);
+   igEnd();
 
    /* render */
    igRender();
