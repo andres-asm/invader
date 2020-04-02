@@ -174,21 +174,21 @@ void gui_render(struct nk_context *ctx)
    {
       nk_layout_row_dynamic(ctx, 30, 2);
 
-      nk_label(ctx, setting_get("directory_cores")->desc, NK_TEXT_ALIGN_CENTERED | NK_TEXT_LEFT);
+      nk_label(ctx, __("directory_cores"), NK_TEXT_ALIGN_CENTERED | NK_TEXT_LEFT);
       char* string = setting_string_val("directory_cores");
       int len = strlen(setting_string_val("directory_cores"));
       int size = setting_get("directory_cores")->size;
       nk_edit_string(ctx, NK_EDIT_SIMPLE, string, &len, size, nk_filter_default);
 
-      nk_label(ctx, setting_get("directory_games")->desc, NK_TEXT_ALIGN_CENTERED | NK_TEXT_LEFT);
+      nk_label(ctx, __("directory_games"), NK_TEXT_ALIGN_CENTERED | NK_TEXT_LEFT);
       string = setting_string_val("directory_games");
       len = strlen(setting_string_val("directory_games"));
       size = setting_get("directory_games")->size;
       nk_edit_string(ctx, NK_EDIT_SIMPLE, string, &len, size, nk_filter_default);
 
       nk_layout_row_dynamic(ctx, 30, 1);
-      nk_checkbox_bool(ctx, setting_get("video_vsync")->desc, setting_bool_val("video_vsync"));
-      nk_checkbox_bool(ctx, setting_get("video_fullscreen")->desc, setting_bool_val("video_fullscreen"));
+      nk_checkbox_bool(ctx, __("video_vsync"), setting_bool_val("video_vsync"));
+      nk_checkbox_bool(ctx, __("video_fullscreen"), setting_bool_val("video_fullscreen"));
 
       nk_label(ctx, "Core:", NK_TEXT_ALIGN_CENTERED | NK_TEXT_LEFT);
 
