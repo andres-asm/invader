@@ -42,10 +42,10 @@ int settings_get_count()
    return setting_array_size;
 }
 
-void setting_init_string(setting *s, char* name)
+void setting_init_string(setting *s, char* name, size_t size)
 {
    s->type = SETTING_STRING;
-   s->size = 256;
+   s->size = size;
    s->data = (char *)calloc(s->size, sizeof(char));
    strlcpy(s->name, name, sizeof(s->name));
 }
@@ -103,7 +103,7 @@ static int setting_definitions_handler(void* c, const char* section,
                break;
             case SETTING_STRING:
                {
-                  setting_init_string(s, setting_name);
+                  setting_init_string(s, setting_name, size);
                   setting_array[index++] = *s;
                }
                break;
@@ -219,7 +219,7 @@ bool config_load(char* file)
    char definitions[PATH_MAX], buf[PATH_MAX];
 
    cfg = (config*)calloc(1, sizeof(config));
-   setting_array_size = 6 * sizeof(setting);
+   setting_array_size = 6;
    setting_array = (setting *)calloc(setting_array_size, sizeof(setting));
 
    for (unsigned i = 0; i < setting_array_size; i++)
