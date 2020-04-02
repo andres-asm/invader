@@ -18,8 +18,6 @@
 setting* setting_array;
 size_t setting_array_size;
 
-config *cfg;
-
 static const char* tag = "[config]";
 
 const char* setting_category_labels[] =
@@ -218,7 +216,6 @@ bool config_load(char* file)
    setting *s;
    char definitions[PATH_MAX], buf[PATH_MAX];
 
-   cfg = (config*)calloc(1, sizeof(config));
    setting_array_size = 6;
    setting_array = (setting *)calloc(setting_array_size, sizeof(setting));
 

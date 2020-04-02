@@ -40,7 +40,8 @@ enum setting_categories
    CAT_VIDEO    = 2,
    CAT_AUDIO    = 3,
    CAT_INPUT    = 4,
-   CAT_PATHS    = 5
+   CAT_PATHS    = 5,
+   CAT_LAST     = 5
 };
 
 struct setting
@@ -64,21 +65,10 @@ struct setting
    float max;
    float step;
 
+   setting* next;
+
 } typedef setting;
 
-struct config_main
-{
-   setting directory_cores;
-   setting directory_games;
-   setting video_vsync;
-   setting video_fullscreen;
-};
-
-struct config
-{
-   struct config_main config_main;
-}
-typedef config;
 
 /* initialize configuration */
 void config_init();
