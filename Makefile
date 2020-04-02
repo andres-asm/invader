@@ -9,6 +9,8 @@ CFLAGS   :=
 CXXFLAGS :=
 LIBS  :=
 
+WITH_GUI := imgui
+
 ifeq ($(WITH_GUI), nuklear)
    TARGET = invader_nuklear_sdl2
    WITH_GUI := nuklear
