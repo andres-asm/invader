@@ -14,7 +14,12 @@
       "*.in": "cpp",
       "imgui_impl_opengl3.h": "c",
       "sdl.h": "c",
-      "glew.h": "c"
+      "glew.h": "c",
+      "*.tcc": "cpp",
+      "istream": "cpp",
+      "ostream": "cpp",
+      "streambuf": "cpp",
+      "*.def": "cpp"
    },
    "C_Cpp.dimInactiveRegions": false,
 }

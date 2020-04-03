@@ -44,7 +44,7 @@ enum setting_categories
    CAT_LAST     = 5
 };
 
-struct setting
+typedef struct setting
 {
    /* setting name */
    char     name[50];
@@ -64,11 +64,14 @@ struct setting
    float min;
    float max;
    float step;
+} setting_t;
 
-   setting* next;
 
-} typedef setting;
-
+typedef struct settings_node
+{
+   setting_t* data;
+   struct settings_node* next;
+} settings_node_t;
 
 /* initialize configuration */
 void config_init();
@@ -77,7 +80,7 @@ void config_init();
 bool config_load(char* file);
 
 /* get a setting */
-setting* setting_get(char* s);
+setting_t* setting_get(char* s);
 
 /* get an unsigner setting value */
 unsigned* setting_uint_val(char* s);
@@ -92,16 +95,16 @@ float* setting_float_val(char* s);
 char* setting_string_val(char* s);
 
 /* get a setting label */
-const char* setting_get_label(setting* setting);
+const char* setting_get_label(setting_t* setting);
 
 /* get a setting description */
-const char* setting_get_desc(setting* setting);
+const char* setting_get_desc(setting_t* setting);
 
 /* get category labels */
 const char* category_label(unsigned category);
 
 /* get settings array */
-setting* settings_get_array();
+setting_t* settings_get_array();
 
 /* get settings count */
 int settings_get_count();

@@ -117,13 +117,13 @@ static void imgui_set_default_style()
 static void imgui_wnd_settings()
 {
    int settings_count = settings_get_count();
-   setting  *settings = settings_get_array();
+   setting_t* settings = settings_get_array();
 
    igBegin(__("settings_window_title"), NULL, 0);
 
    for (unsigned i = 0; i < settings_count; i++)
    {
-      setting  s = settings[i];
+      setting_t s = settings[i];
       if (s.type == SETTING_BOOL)
          igCheckbox(__(setting_get_label(&s)), s.data);
       if (s.type == SETTING_STRING)
