@@ -116,20 +116,18 @@ static void imgui_set_default_style()
 
 static void imgui_wnd_settings()
 {
-   int settings_count = settings_get_count();
-   setting_t* settings = settings_get_array();
+   settings_t* current = settings_get();
 
    igBegin(__("settings_window_title"), NULL, 0);
 
-   for (unsigned i = 0; i < settings_count; i++)
+   while (current->next)
    {
-      setting_t s = settings[i];
-      if (s.type == SETTING_BOOL)
-         igCheckbox(__(setting_get_label(&s)), s.data);
-      if (s.type == SETTING_STRING)
-      {
-         igInputText(__(setting_get_label(&s)), s.data, sizeof(s.data), ImGuiInputTextFlags_ReadOnly, NULL, NULL);
-      }
+      setting_t* s = current->data;
+      if (s->type == SETTING_BOOL)
+         igCheckbox(__(setting_get_label(s)), s->data);
+      if (s->type == SETTING_STRING)
+         igInputText(__(setting_get_label(s)), s->data, sizeof(s->data), ImGuiInputTextFlags_ReadOnly, NULL, NULL);
+      current = current->next;
    }
 
    igEnd();

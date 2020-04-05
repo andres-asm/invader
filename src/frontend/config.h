@@ -71,7 +71,7 @@ typedef struct settings_node
 {
    setting_t* data;
    struct settings_node* next;
-} settings_node_t;
+} settings_t;
 
 /* initialize configuration */
 void config_init();
@@ -104,9 +104,6 @@ const char* setting_get_desc(setting_t* setting);
 const char* category_label(unsigned category);
 
 /* get settings array */
-setting_t* settings_get_array();
-
-/* get settings count */
-int settings_get_count();
+settings_t* settings_get();
 
 #endif

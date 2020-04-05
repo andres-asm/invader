@@ -15,9 +15,6 @@
 
 #define MATCH(s, n) strcmp(section, s) == 0 && strcmp(name, n) == 0
 
-setting_t* setting_array;
-size_t setting_array_size;
-
 static const char* tag = "[config]";
 
 const char* setting_category_labels[] =
@@ -30,15 +27,30 @@ const char* setting_category_labels[] =
    "setting_categories_paths",
 };
 
-setting_t* settings_get_array()
+settings_t* settings_list;
+
+settings_t* settings_get()
 {
-   return setting_array;
+   return settings_list;
 }
 
-int settings_get_count()
-{
-   return setting_array_size;
+void settings_push(settings_t* head, setting_t* new) {
+   settings_t * current = head;
+
+   if (head->data == NULL)
+   {
+      current->data = new;
+      return;
+   }
+   while (current->next != NULL)
+      current = current->next;
+
+   /* now we can add a new variable */
+   current->next = (settings_t *) calloc(1, sizeof(settings_t));
+   current->next->data = new;
+   current->next->next = NULL;
 }
+
 
 void setting_init_string(setting_t* s, char* name, size_t size)
 {
@@ -90,24 +102,19 @@ static int setting_definitions_handler(void* c, const char* section,
       {
          logger(LOG_DEBUG, tag, "creating setting: %s\n", setting_name);
          static int index = 0;
-         setting_t* s = &setting_array[index];
+         setting_t* s = (setting_t *)calloc(1, sizeof(setting_t));;
          switch(type)
          {
             case SETTING_BOOL:
-               {
-                  setting_init_bool(s, setting_name);
-                  setting_array[index++] = *s;
-               }
+               setting_init_bool(s, setting_name);
                break;
             case SETTING_STRING:
-               {
-                  setting_init_string(s, setting_name, size);
-                  setting_array[index++] = *s;
-               }
+               setting_init_string(s, setting_name, size);
                break;
             default:
                break;
          }
+         settings_push(settings_list, s);
       }
 
       strlcpy(setting_name, section, sizeof(setting_name));
@@ -184,11 +191,15 @@ const char* category_label(unsigned category)
 
 setting_t* setting_get(char* s)
 {
-   for (int i = 0; i < setting_array_size; i++)
+   settings_t* current = settings_list;
+   while (current->next)
    {
-      if (!strcmp(setting_array[i].name, s))
-         return &setting_array[i];
+      if (!strcmp(current->data->name, s))
+         return current->data;
+      else
+         current = current->next;
    }
+   return NULL;
 }
 
 unsigned* setting_uint_val(char* s)
@@ -216,15 +227,7 @@ bool config_load(char* file)
    setting_t* s;
    char definitions[PATH_MAX], buf[PATH_MAX];
 
-   setting_array_size = 6;
-   setting_array = (setting_t*)calloc(setting_array_size, sizeof(setting_t));
-
-   for (unsigned i = 0; i < setting_array_size; i++)
-   {
-      setting_t* s = (setting_t*)calloc(1, sizeof(setting_t));
-      strlcpy(s->name, "empty", 5);
-      setting_array[i] = *s;
-   }
+   settings_list = (settings_t *)calloc(1, sizeof(settings_t));
 
    strlcpy(buf, file, sizeof(buf));
    path_remove_extension(buf);

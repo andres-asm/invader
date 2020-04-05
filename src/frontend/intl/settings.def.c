@@ -29,10 +29,6 @@ static void localization_strings()
    __("audio_enable_label");
    __("audio_enable_desc");
 
-   /* test 2 */
-   __("test2_label");
-   __("test2_desc");
-
    /* audio_sync */
    __("audio_sync_label");
    __("audio_sync_desc");
@@ -41,14 +37,5 @@ static void localization_strings()
    __("video_fullscreen_label");
    __("video_fullscreen_desc");
 
-   /* test 3 */
-   __("test3_label");
-   __("test3_desc");
-
    /* Settings window title */
    __("settings_window_title");
-
-   /* Test */
-   __("test_label");
-   __("test_desc");
-}

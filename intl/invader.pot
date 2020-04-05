@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-02 19:14-0500\n"
+"POT-Creation-Date: 2020-04-04 20:47-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,11 +25,11 @@ msgstr ""
 msgid "audio_enable_label"
 msgstr ""
 
-#: src/frontend/intl/settings.def.c:34 src/frontend/intl/settings.def.c:38
+#: src/frontend/intl/settings.def.c:34
 msgid "audio_sync_desc"
 msgstr ""
 
-#: src/frontend/intl/settings.def.c:33 src/frontend/intl/settings.def.c:37
+#: src/frontend/intl/settings.def.c:33
 msgid "audio_sync_label"
 msgstr ""
 
@@ -73,39 +73,15 @@ msgstr ""
 msgid "setting_categories_video"
 msgstr ""
 
-#: src/frontend/intl/settings.def.c:45 src/frontend/intl/settings.def.c:49
+#: src/frontend/intl/settings.def.c:41
 msgid "settings_window_title"
 msgstr ""
 
-#: src/frontend/intl/settings.def.c:34
-msgid "test2_desc"
-msgstr ""
-
-#: src/frontend/intl/settings.def.c:33
-msgid "test2_label"
-msgstr ""
-
-#: src/frontend/intl/settings.def.c:42 src/frontend/intl/settings.def.c:46
-msgid "test3_desc"
-msgstr ""
-
-#: src/frontend/intl/settings.def.c:41 src/frontend/intl/settings.def.c:45
-msgid "test3_label"
-msgstr ""
-
-#: src/frontend/intl/settings.def.c:49 src/frontend/intl/settings.def.c:53
-msgid "test_desc"
-msgstr ""
-
-#: src/frontend/intl/settings.def.c:48 src/frontend/intl/settings.def.c:52
-msgid "test_label"
-msgstr ""
-
-#: src/frontend/intl/settings.def.c:38 src/frontend/intl/settings.def.c:42
+#: src/frontend/intl/settings.def.c:38
 msgid "video_fullscreen_desc"
 msgstr ""
 
-#: src/frontend/intl/settings.def.c:37 src/frontend/intl/settings.def.c:41
+#: src/frontend/intl/settings.def.c:37
 msgid "video_fullscreen_label"
 msgstr ""
 
