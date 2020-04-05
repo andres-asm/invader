@@ -41,7 +41,7 @@ enum setting_categories
    CAT_AUDIO    = 3,
    CAT_INPUT    = 4,
    CAT_PATHS    = 5,
-   CAT_LAST     = 5
+   CAT_LAST     = 6
 };
 
 typedef struct setting

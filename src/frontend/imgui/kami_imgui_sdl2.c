@@ -116,18 +116,26 @@ static void imgui_set_default_style()
 
 static void imgui_wnd_settings()
 {
-   settings_t* current = settings_get();
-
    igBegin(__("settings_window_title"), NULL, 0);
 
-   while (current->next)
+   for (unsigned i = 0; i < CAT_LAST; i++)
    {
-      setting_t* s = current->data;
-      if (s->type == SETTING_BOOL)
-         igCheckbox(__(setting_get_label(s)), s->data);
-      if (s->type == SETTING_STRING)
-         igInputText(__(setting_get_label(s)), s->data, sizeof(s->data), ImGuiInputTextFlags_ReadOnly, NULL, NULL);
-      current = current->next;
+      settings_t* current = settings_get();
+      if(igCollapsingHeaderTreeNodeFlags(category_label(i), ImGuiTreeNodeFlags_None))
+      {
+         while (current->next)
+         {
+            setting_t* s = current->data;
+            if (s->categories == i)
+            {
+               if (s->type == SETTING_BOOL)
+                  igCheckbox(__(setting_get_label(s)), s->data);
+               if (s->type == SETTING_STRING)
+                  igInputText(__(setting_get_label(s)), s->data, sizeof(s->data), ImGuiInputTextFlags_ReadOnly, NULL, NULL);
+            }
+            current = current->next;
+         }
+      }
    }
 
    igEnd();

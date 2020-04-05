@@ -32,27 +32,27 @@ msgstr "Game directory"
 
 #: src/frontend/intl/settings.def.c:11
 msgid "setting_categories_audio"
-msgstr ""
+msgstr "Audio"
 
 #: src/frontend/intl/settings.def.c:9
 msgid "setting_categories_general"
-msgstr ""
+msgstr "General"
 
 #: src/frontend/intl/settings.def.c:12
 msgid "setting_categories_input"
-msgstr ""
+msgstr "Input"
 
 #: src/frontend/intl/settings.def.c:8
 msgid "setting_categories_none"
-msgstr ""
+msgstr "Uncategorized"
 
 #: src/frontend/intl/settings.def.c:13
 msgid "setting_categories_paths"
-msgstr ""
+msgstr "Directories"
 
 #: src/frontend/intl/settings.def.c:10
 msgid "setting_categories_video"
-msgstr ""
+msgstr "Video"
 
 #: src/frontend/intl/settings.def.c:41
 msgid "settings_window_title"

@@ -52,18 +52,20 @@ void settings_push(settings_t* head, setting_t* new) {
 }
 
 
-void setting_init_string(setting_t* s, char* name, size_t size)
+void setting_init_string(setting_t* s, unsigned category, char* name, size_t size)
 {
    s->type = SETTING_STRING;
    s->size = size;
+   s->categories = category;
    s->data = (char *)calloc(s->size, sizeof(char));
    strlcpy(s->name, name, sizeof(s->name));
 }
 
-void setting_init_bool(setting_t* s, char* name)
+void setting_init_bool(setting_t* s, unsigned category, char* name)
 {
    s->type = SETTING_BOOL;
    s->size = sizeof(bool);
+   s->categories = category;
    s->data = (char *)calloc(s->size, sizeof(bool));
    strlcpy(s->name, name, sizeof(s->name));
 }
@@ -106,10 +108,10 @@ static int setting_definitions_handler(void* c, const char* section,
          switch(type)
          {
             case SETTING_BOOL:
-               setting_init_bool(s, setting_name);
+               setting_init_bool(s, categories, setting_name);
                break;
             case SETTING_STRING:
-               setting_init_string(s, setting_name, size);
+               setting_init_string(s, categories, setting_name, size);
                break;
             default:
                break;
