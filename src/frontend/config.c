@@ -66,9 +66,22 @@ void setting_init_bool(setting_t* s, unsigned category, char* name)
    s->type = SETTING_BOOL;
    s->size = sizeof(bool);
    s->categories = category;
-   s->data = (char *)calloc(s->size, sizeof(bool));
+   s->data = (bool *)calloc(s->size, sizeof(bool));
    strlcpy(s->name, name, sizeof(s->name));
 }
+
+void setting_init_int(setting_t* s, unsigned category, char* name, float min, float max, float step)
+{
+   s->type = SETTING_INT;
+   s->size = sizeof(int);
+   s->categories = category;
+   s->data = (int *)calloc(s->size, sizeof(int));
+   s->min = min;
+   s->max = max;
+   s->step = step;
+   strlcpy(s->name, name, sizeof(s->name));
+}
+
 
 static int setting_definitions_handler(void* c, const char* section,
    const char* name, const char* value)
@@ -112,6 +125,10 @@ static int setting_definitions_handler(void* c, const char* section,
                break;
             case SETTING_STRING:
                setting_init_string(s, categories, setting_name, size);
+               break;
+            case SETTING_INT:
+            case SETTING_UINT:
+               setting_init_int(s, categories, setting_name, (int)min, (int)max, (int)step);
                break;
             default:
                break;

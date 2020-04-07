@@ -8,6 +8,9 @@
 #include "config.h"
 #include "util.h"
 
+#include <compat/strl.h>
+#include <string/stdstring.h>
+
 static const char* tag = "[kami]";
 static const char* app_name = "invader";
 
@@ -114,6 +117,19 @@ static void imgui_set_default_style()
    clearColor = *ImVec4_ImVec4Float(0.45f, 0.55f, 0.60f, 1.00f);
 }
 
+static void igHelpMarker(const char* desc)
+{
+    igTextDisabled("(?)");
+    if (igIsItemHovered(0))
+    {
+        igBeginTooltip();
+        igPushTextWrapPos(igGetFontSize() * 35.0f);
+        igTextUnformatted(desc, (const char*)NULL);
+        igPopTextWrapPos();
+        igEndTooltip();
+    }
+}
+
 static void imgui_wnd_settings()
 {
    igBegin(__("settings_window_title"), NULL, 0);
@@ -123,15 +139,43 @@ static void imgui_wnd_settings()
       settings_t* current = settings_get();
       if(igCollapsingHeaderTreeNodeFlags(category_label(i), ImGuiTreeNodeFlags_None))
       {
-         while (current->next)
+         while (current)
          {
             setting_t* s = current->data;
             if (s->categories == i)
             {
-               if (s->type == SETTING_BOOL)
-                  igCheckbox(__(setting_get_label(s)), s->data);
-               if (s->type == SETTING_STRING)
-                  igInputText(__(setting_get_label(s)), s->data, sizeof(s->data), ImGuiInputTextFlags_ReadOnly, NULL, NULL);
+               const char* label = __(setting_get_label(s));
+               const char* desc = __(setting_get_desc(s));
+               switch(s->type)
+               {
+                  case SETTING_BOOL:
+                     igCheckbox(label, s->data);
+                     break;
+                  case SETTING_STRING:
+                     igInputText(label, s->data, sizeof(s->data), ImGuiInputTextFlags_ReadOnly, NULL, NULL);
+                     break;
+                  case SETTING_INT:
+                  case SETTING_UINT:
+                  {
+                     if (string_is_equal(s->name, "log_level"))
+                     {
+                        int* curr = s->data;
+                        const char* value_label = __(logger_get_level_name(*curr));
+
+                        igSliderInt(label, s->data, s->min, s->max, value_label);
+                     }
+                     else
+                        igSliderInt(label, s->data, s->min, s->max, 0);
+                  }
+                     break;
+                  default:
+                     break;
+               }
+               if (!string_is_empty(desc))
+               {
+                  igSameLine(0, 0);
+                  igHelpMarker(desc);
+               }
             }
             current = current->next;
          }

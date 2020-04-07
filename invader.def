@@ -2,30 +2,27 @@
 name = directory_cores
 type = 3
 size = 2048
-default = ./cores
+default = ./invader_data/cores
 categories = 5
 allow_empty = true
 allow_input = true
 deferred = false
-end = 1
 
 [directory_games]
 name = directory_games
 type = 3
 size = 2048
-default = ./games
+default = ./userdata/games
 categories = 5
 allow_empty = true
 allow_input = true
 deferred = false
-end = 1
 
 [video_fullscreen]
 name = video_fullscreen
 type = 4
 categories = 2
 default = true
-end = 1
 
 [video_vsync]
 name = video_vsync
@@ -45,23 +42,45 @@ type = 4
 categories = 3
 default = true
 
-[test]
-name = test
-type = 4
-categories = 3
-default = true
+[directory_saves]
+name = directory_saves
+type = 3
+size = 2048
+default = ./userdata/saves
+categories = 5
+allow_empty = true
+allow_input = true
+deferred = false
 
-[test3]
-name = test3
-type = 4
-categories = 3
-default = true
+[directory_states]
+name = directory_states
+type = 3
+size = 2048
+default = ./userdata/states
+categories = 5
+allow_empty = true
+allow_input = true
+deferred = false
 
-[test2]
-name = test2
-type = 4
-categories = 3
-default = true
+[directory_system]
+name = directory_system
+type = 3
+size = 2048
+default = ./userdata/system
+categories = 5
+allow_empty = true
+allow_input = true
+deferred = false
 
-[last]
-last = 1
+[log_level]
+name = log_level
+type = 1
+default = 0
+categories = 1
+has_range = 1
+min = 0
+max = 3
+step = 1
+
+[dummy]
+name = dummy

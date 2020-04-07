@@ -20,7 +20,7 @@ enum setting_type
    SETTING_INT,
    SETTING_FLOAT,
    SETTING_STRING,
-   SETTING_BOOL
+   SETTING_BOOL,
 };
 
 enum setting_flags
@@ -64,6 +64,8 @@ typedef struct setting
    float min;
    float max;
    float step;
+
+   const char* values;
 } setting_t;
 
 

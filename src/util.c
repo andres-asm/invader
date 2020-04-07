@@ -14,9 +14,15 @@ static const char* tag = "[util]";
 
 static int log_level = 0;
 
-void logger_set_level(int level)
+void logger_set_level(unsigned level)
 {
    log_level = level;
+}
+
+const char* logger_get_level_name(unsigned level)
+{
+   const char* levels[] = { "log_level_desc_debug", "log_level_desc_info", "log_level_desc_warning", "log_level_desc_error"};
+   return levels[level];
 }
 
 void logger(int level, const char *tag, const char *fmt, ...)
