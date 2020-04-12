@@ -20,6 +20,8 @@ static bool showAnotherWindow = false;
 
 const char* glsl_version;
 
+const char* core_entries[100];
+
 ImVec4 clearColor;
 
 SDL_Window *window;
@@ -135,15 +137,38 @@ static void imgui_wnd_status()
    static float f = 0.0f;
    static int counter = 0;
 
-   igBegin(__("status_window_title"), NULL, 0);
+   igBegin(__("window_title_status"), NULL, 0);
 
    igText("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / igGetIO()->Framerate, igGetIO()->Framerate);
    igEnd();
 }
 
+static void imgui_wnd_core()
+{
+   static int previous_core = 0;
+
+
+
+   igBegin(__("window_title_core"), NULL, 0);
+
+
+   igComboStr_arr(__("core_selector_label"), (int*)(&current_core), core_entries,  core_count, 0);
+   igSameLine(0, 0);
+   tooltip(__("core_selector_desc"));
+
+   if (core_count !=0 && (/*!initialized ||*/ previous_core != current_core))
+   {
+      core_load(core_info_list[current_core].file_name, &current_core_info, core_options, true);
+      previous_core = current_core;
+   }
+
+
+   igEnd();
+}
+
 static void imgui_wnd_settings()
 {
-   igBegin(__("settings_window_title"), NULL, 0);
+   igBegin(__("window_title_settings"), NULL, 0);
 
    for (unsigned i = 0; i < CAT_LAST; i++)
    {
@@ -216,6 +241,10 @@ static void imgui_draw_frame()
 
    imgui_wnd_settings();
    imgui_wnd_status();
+   imgui_wnd_core();
+
+   if (showDemoWindow)
+      igShowDemoWindow(&showDemoWindow);
 
    /* render */
    igRender();
@@ -241,6 +270,14 @@ int main(int argc, char* argv[])
 
    imgui_setup();
    imgui_set_default_style();
+
+   core_list_init(setting_string_val("directory_cores"));
+
+   for (unsigned i = 0; i < core_count; i++)
+   {
+      core_entries[i] = core_info_list[i].core_name;
+      logger(LOG_DEBUG, tag, "loading file %s\n", core_entries[i]);
+   }
 
    while (!quit)
    {

@@ -42,8 +42,9 @@ static void localization_strings()
    __("log_level_desc");
 
    /* window titles */
-   __("settings_window_title");
-   __("status_window_title");
+   __("window_title_settings");
+   __("window_title_status");
+   __("window_title_core");
 
    /* log levels */
    __("log_level_desc_debug");
@@ -54,3 +55,7 @@ static void localization_strings()
    /* helper strings */
    __("no_description_available");
    __("no_label_available");
+
+   /* core window */
+   __("core_selector_label");
+   __("core_selector_desc");

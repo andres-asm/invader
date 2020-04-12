@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-12 17:25-0500\n"
+"POT-Creation-Date: 2020-04-12 18:21-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -35,6 +35,14 @@ msgstr ""
 #: src/frontend/intl/settings.def.c:33 src/frontend/intl/settings.def.c:37
 #: src/frontend/intl/settings.def.c:35
 msgid "audio_sync_label"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:61
+msgid "core_selector_desc"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:60
+msgid "core_selector_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:18
@@ -86,22 +94,22 @@ msgid "log_level_desc"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:46 src/frontend/intl/settings.def.c:48
-#: src/frontend/intl/settings.def.c:49
+#: src/frontend/intl/settings.def.c:49 src/frontend/intl/settings.def.c:50
 msgid "log_level_desc_debug"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:49 src/frontend/intl/settings.def.c:51
-#: src/frontend/intl/settings.def.c:52
+#: src/frontend/intl/settings.def.c:52 src/frontend/intl/settings.def.c:53
 msgid "log_level_desc_error"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:47 src/frontend/intl/settings.def.c:49
-#: src/frontend/intl/settings.def.c:50
+#: src/frontend/intl/settings.def.c:50 src/frontend/intl/settings.def.c:51
 msgid "log_level_desc_info"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:48 src/frontend/intl/settings.def.c:50
-#: src/frontend/intl/settings.def.c:51
+#: src/frontend/intl/settings.def.c:51 src/frontend/intl/settings.def.c:52
 msgid "log_level_desc_warning"
 msgstr ""
 
@@ -122,12 +130,12 @@ msgid "log_level_warning"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:52 src/frontend/intl/settings.def.c:54
-#: src/frontend/intl/settings.def.c:55
+#: src/frontend/intl/settings.def.c:55 src/frontend/intl/settings.def.c:56
 msgid "no_description_available"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:53 src/frontend/intl/settings.def.c:55
-#: src/frontend/intl/settings.def.c:56
+#: src/frontend/intl/settings.def.c:56 src/frontend/intl/settings.def.c:57
 msgid "no_label_available"
 msgstr ""
 
@@ -155,15 +163,6 @@ msgstr ""
 msgid "setting_categories_video"
 msgstr ""
 
-#: src/frontend/intl/settings.def.c:41 src/frontend/intl/settings.def.c:39
-#: src/frontend/intl/settings.def.c:43 src/frontend/intl/settings.def.c:45
-msgid "settings_window_title"
-msgstr ""
-
-#: src/frontend/intl/settings.def.c:46
-msgid "status_window_title"
-msgstr ""
-
 #: src/frontend/intl/settings.def.c:38 src/frontend/intl/settings.def.c:30
 #: src/frontend/intl/settings.def.c:32
 msgid "video_fullscreen_desc"
@@ -182,4 +181,17 @@ msgstr ""
 #: src/frontend/intl/settings.def.c:25 src/frontend/intl/settings.def.c:27
 #: src/frontend/intl/settings.def.c:29
 msgid "video_vsync_label"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:47
+msgid "window_title_core"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:41 src/frontend/intl/settings.def.c:39
+#: src/frontend/intl/settings.def.c:43 src/frontend/intl/settings.def.c:45
+msgid "window_title_settings"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:46
+msgid "window_title_status"
 msgstr ""
