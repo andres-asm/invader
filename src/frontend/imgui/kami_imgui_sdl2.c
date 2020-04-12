@@ -117,17 +117,17 @@ static void imgui_set_default_style()
    clearColor = *ImVec4_ImVec4Float(0.45f, 0.55f, 0.60f, 1.00f);
 }
 
-static void igHelpMarker(const char* desc)
+static void tooltip(const char* desc)
 {
-    igTextDisabled("(?)");
-    if (igIsItemHovered(0))
-    {
-        igBeginTooltip();
-        igPushTextWrapPos(igGetFontSize() * 35.0f);
-        igTextUnformatted(desc, (const char*)NULL);
-        igPopTextWrapPos();
-        igEndTooltip();
-    }
+   igTextDisabled("(?)");
+   if (igIsItemHovered(0))
+   {
+      igBeginTooltip();
+      igPushTextWrapPos(igGetFontSize() * 35.0f);
+      igTextUnformatted(desc, (const char*)NULL);
+      igPopTextWrapPos();
+      igEndTooltip();
+   }
 }
 
 static void imgui_wnd_settings()
@@ -174,7 +174,7 @@ static void imgui_wnd_settings()
                if (!string_is_empty(desc))
                {
                   igSameLine(0, 0);
-                  igHelpMarker(desc);
+                  tooltip(desc);
                }
             }
             current = current->next;

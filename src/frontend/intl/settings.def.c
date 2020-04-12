@@ -22,6 +22,8 @@ static void localization_strings()
    __("directory_states_desc");
    __("directory_games_label");
    __("directory_games_desc");
+   __("directory_system_label");
+   __("directory_system_desc");
 
    /* video */
    __("video_vsync_label");
@@ -47,3 +49,7 @@ static void localization_strings()
    __("log_level_desc_info");
    __("log_level_desc_warning");
    __("log_level_desc_error");
+
+   /* helper strings */
+   __("no_description_available");
+   __("no_label_available");

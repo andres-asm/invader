@@ -185,22 +185,44 @@ static int config_load_handler(void* c, const char* section,
 
 const char* setting_get_label(setting_t* s)
 {
-   char label[60];
+   if (!s)
+      return NULL;
+
+   static char label[100];
+   static char localized_label[100];
 
    strlcpy(label, s->name, sizeof(label));
    strlcat(label, "_label", sizeof(label));
 
-   return __(label);
+   strlcpy(localized_label, __(label), sizeof(localized_label));
+
+   if (strstr(localized_label, s->name))
+   {
+      strlcpy(localized_label, __("no_label_available"), sizeof(localized_label));
+      strlcat(localized_label, ": ", sizeof(localized_label));
+      strlcat(localized_label, s->name, sizeof(localized_label));
+   }
+
+   return localized_label;
 }
 
 const char* setting_get_desc(setting_t* s)
 {
-   char desc[60];
+   if (!s)
+      return NULL;
+
+   static char desc[100];
+   static char localized_desc[100];
 
    strlcpy(desc, s->name, sizeof(desc));
    strlcat(desc, "_desc", sizeof(desc));
 
-   return __(desc);
+   strlcpy(localized_desc, __(desc), sizeof(localized_desc));
+
+   if (strstr(localized_desc, s->name))
+      strlcpy(localized_desc, __("no_description_available"), sizeof(localized_desc));
+
+   return localized_desc;
 }
 
 const char* category_label(unsigned category)
