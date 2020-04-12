@@ -130,6 +130,17 @@ static void tooltip(const char* desc)
    }
 }
 
+static void imgui_wnd_status()
+{
+   static float f = 0.0f;
+   static int counter = 0;
+
+   igBegin(__("status_window_title"), NULL, 0);
+
+   igText("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / igGetIO()->Framerate, igGetIO()->Framerate);
+   igEnd();
+}
+
 static void imgui_wnd_settings()
 {
    igBegin(__("settings_window_title"), NULL, 0);
@@ -203,32 +214,8 @@ static void imgui_draw_frame()
    ImGui_ImplSDL2_NewFrame(window);
    igNewFrame();
 
-   if (showDemoWindow)
-      igShowDemoWindow(&showDemoWindow);
-
    imgui_wnd_settings();
-   static float f = 0.0f;
-   static int counter = 0;
-
-   igBegin("Hello, world!", NULL, 0);
-   igText("This is some useful text");
-   igCheckbox("Demo window", &showDemoWindow);
-   igCheckbox("Another window", &showAnotherWindow);
-
-   igSliderFloat("Float", &f, 0.0f, 1.0f, "%.3f", 1.0f);
-   igColorEdit3("clear color", (float*)&clearColor, 0);
-
-   ImVec2 buttonSize;
-   buttonSize.x = 0;
-   buttonSize.y = 0;
-
-   if (igButton("Button", buttonSize))
-      counter++;
-   igSameLine(0.0f, -1.0f);
-   igText("counter = %d", counter);
-
-   igText("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / igGetIO()->Framerate, igGetIO()->Framerate);
-   igEnd();
+   imgui_wnd_status();
 
    /* render */
    igRender();

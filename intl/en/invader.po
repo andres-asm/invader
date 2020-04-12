@@ -67,18 +67,22 @@ msgid "log_level_desc"
 msgstr "Logging level"
 
 #: src/frontend/intl/settings.def.c:46 src/frontend/intl/settings.def.c:48
+#: src/frontend/intl/settings.def.c:49
 msgid "log_level_desc_debug"
 msgstr "Debug"
 
 #: src/frontend/intl/settings.def.c:49 src/frontend/intl/settings.def.c:51
+#: src/frontend/intl/settings.def.c:52
 msgid "log_level_desc_error"
 msgstr "Errors"
 
 #: src/frontend/intl/settings.def.c:47 src/frontend/intl/settings.def.c:49
+#: src/frontend/intl/settings.def.c:50
 msgid "log_level_desc_info"
 msgstr "Informational"
 
 #: src/frontend/intl/settings.def.c:48 src/frontend/intl/settings.def.c:50
+#: src/frontend/intl/settings.def.c:51
 msgid "log_level_desc_warning"
 msgstr "Warnings"
 
@@ -99,10 +103,12 @@ msgid "log_level_warning"
 msgstr "Warnings"
 
 #: src/frontend/intl/settings.def.c:52 src/frontend/intl/settings.def.c:54
+#: src/frontend/intl/settings.def.c:55
 msgid "no_description_available"
 msgstr "No description available"
 
 #: src/frontend/intl/settings.def.c:53 src/frontend/intl/settings.def.c:55
+#: src/frontend/intl/settings.def.c:56
 msgid "no_label_available"
 msgstr "No label available"
 
@@ -134,6 +140,10 @@ msgstr "Video"
 #: src/frontend/intl/settings.def.c:43 src/frontend/intl/settings.def.c:45
 msgid "settings_window_title"
 msgstr "Settings"
+
+#: src/frontend/intl/settings.def.c:46
+msgid "status_window_title"
+msgstr "Status"
 
 #: src/frontend/intl/settings.def.c:38 src/frontend/intl/settings.def.c:30
 #: src/frontend/intl/settings.def.c:32

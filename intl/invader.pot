@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-12 17:12-0500\n"
+"POT-Creation-Date: 2020-04-12 17:25-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -86,18 +86,22 @@ msgid "log_level_desc"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:46 src/frontend/intl/settings.def.c:48
+#: src/frontend/intl/settings.def.c:49
 msgid "log_level_desc_debug"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:49 src/frontend/intl/settings.def.c:51
+#: src/frontend/intl/settings.def.c:52
 msgid "log_level_desc_error"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:47 src/frontend/intl/settings.def.c:49
+#: src/frontend/intl/settings.def.c:50
 msgid "log_level_desc_info"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:48 src/frontend/intl/settings.def.c:50
+#: src/frontend/intl/settings.def.c:51
 msgid "log_level_desc_warning"
 msgstr ""
 
@@ -118,10 +122,12 @@ msgid "log_level_warning"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:52 src/frontend/intl/settings.def.c:54
+#: src/frontend/intl/settings.def.c:55
 msgid "no_description_available"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:53 src/frontend/intl/settings.def.c:55
+#: src/frontend/intl/settings.def.c:56
 msgid "no_label_available"
 msgstr ""
 
@@ -152,6 +158,10 @@ msgstr ""
 #: src/frontend/intl/settings.def.c:41 src/frontend/intl/settings.def.c:39
 #: src/frontend/intl/settings.def.c:43 src/frontend/intl/settings.def.c:45
 msgid "settings_window_title"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:46
+msgid "status_window_title"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:38 src/frontend/intl/settings.def.c:30

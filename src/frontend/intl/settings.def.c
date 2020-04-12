@@ -43,6 +43,7 @@ static void localization_strings()
 
    /* window titles */
    __("settings_window_title");
+   __("status_window_title");
 
    /* log levels */
    __("log_level_desc_debug");
