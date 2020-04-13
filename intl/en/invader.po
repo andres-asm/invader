@@ -19,10 +19,12 @@ msgid "audio_sync_label"
 msgstr "Audio sync"
 
 #: src/frontend/intl/settings.def.c:75 src/frontend/intl/settings.def.c:76
+#: src/frontend/intl/settings.def.c:77
 msgid "core_current_block_extract_desc"
 msgstr "Currently selected core blocks archive extraction"
 
 #: src/frontend/intl/settings.def.c:74 src/frontend/intl/settings.def.c:75
+#: src/frontend/intl/settings.def.c:76
 msgid "core_current_block_extract_label"
 msgstr "Block archive extraction"
 
@@ -38,17 +40,24 @@ msgstr "Currently selected core supported extensions"
 msgid "core_current_extensions_label"
 msgstr "Supported extensions"
 
+#: src/frontend/intl/settings.def.c:71
+#, fuzzy
+msgid "core_current_flags_desc"
+msgstr "Core flags"
+
 #: src/frontend/intl/settings.def.c:69 src/frontend/intl/settings.def.c:70
 msgid "core_current_flags_label"
 msgstr "Core flags"
 
 #: src/frontend/intl/settings.def.c:73 src/frontend/intl/settings.def.c:74
+#: src/frontend/intl/settings.def.c:75
 msgid "core_current_full_path_desc"
 msgstr ""
 "Currently selected core requires full path to be passed instead of content "
 "data"
 
 #: src/frontend/intl/settings.def.c:72 src/frontend/intl/settings.def.c:73
+#: src/frontend/intl/settings.def.c:74
 msgid "core_current_full_path_label"
 msgstr "Requires full path"
 
@@ -56,21 +65,34 @@ msgstr "Requires full path"
 msgid "core_current_label"
 msgstr "Current core"
 
+#: src/frontend/intl/settings.def.c:81
+#, fuzzy
+msgid "core_current_options_desc"
+msgstr "Currently selected core supported extensions"
+
+#: src/frontend/intl/settings.def.c:79 src/frontend/intl/settings.def.c:80
+msgid "core_current_options_label"
+msgstr "Core options"
+
 #: src/frontend/intl/settings.def.c:77 src/frontend/intl/settings.def.c:78
+#: src/frontend/intl/settings.def.c:79
 msgid "core_current_start_core_desc"
 msgstr ""
 "Start the current core (only available for cores that support running "
 "without a game)"
 
 #: src/frontend/intl/settings.def.c:76 src/frontend/intl/settings.def.c:77
+#: src/frontend/intl/settings.def.c:78
 msgid "core_current_start_core_label"
 msgstr "Start core"
 
 #: src/frontend/intl/settings.def.c:71 src/frontend/intl/settings.def.c:72
+#: src/frontend/intl/settings.def.c:73
 msgid "core_current_supports_no_game_desc"
 msgstr "Currently selected core supports running without a game"
 
 #: src/frontend/intl/settings.def.c:70 src/frontend/intl/settings.def.c:71
+#: src/frontend/intl/settings.def.c:72
 msgid "core_current_supports_no_game_label"
 msgstr "Supports running without a game"
 

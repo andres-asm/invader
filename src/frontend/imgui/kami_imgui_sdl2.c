@@ -10,6 +10,7 @@
 
 #include <compat/strl.h>
 #include <string/stdstring.h>
+#include <lists/string_list.h>
 
 static const char* tag = "[kami]";
 static const char* app_name = "invader";
@@ -191,10 +192,13 @@ static void window_core()
    core_run(&frame_buffer, &render_audio);
    render_framebuffer(&frame_buffer, current_core_info.pixel_format);
 
+   unsigned width = current_core_info.av_info.geometry.base_width;
+   unsigned height = current_core_info.av_info.geometry.base_height;
+
    ImTextureID image_texture = (void*)(intptr_t)texture;
-   igImage(image_texture, *ImVec2_ImVec2Float(640, 480),
-                          *ImVec2_ImVec2Float(0, 0),
-                          *ImVec2_ImVec2Float(1, 1),
+   igImage(image_texture, *ImVec2_ImVec2Float((float)width * 2, (float)height * 2),
+                          *ImVec2_ImVec2Float(0.0f, 0.0f),
+                          *ImVec2_ImVec2Float(1.0f, 1.0f),
                           *ImVec4_ImVec4Float(1.0f, 1.0f, 1.0f, 1.0f),
                           *ImVec4_ImVec4Float(1.0f, 1.0f, 1.0f, 1.0f));
 
@@ -202,6 +206,20 @@ static void window_core()
    igEnd();
 }
 
+/* CIMGUI_API bool igComboStr_arr(const char* label,int* current_item,const char* const items[],int items_count,int popup_max_height_in_items) */
+bool igComboStringList(const char* label, int* current_item, struct string_list *list, int popup_max_height_in_items)
+{
+   int ret = 0;
+   const char **entries = calloc(list->size, sizeof (char *));
+   for (unsigned i = 0; i < list->size; i++)
+   {
+      entries[i] = list->elems[i].data;
+   }
+   if (igComboStr_arr(label, current_item, entries, list->size, 0))
+      return true;
+   else
+      return false;
+}
 static void window_core_control()
 {
    static int previous_core = -1;
@@ -214,7 +232,7 @@ static void window_core_control()
    static bool current_core_full_path;
 
    igBegin(__("window_title_core_control"), NULL, 0);
-
+   igPushItemWidth(igGetWindowWidth() * 0.40f);
 
    igComboStr_arr(__("core_selector_label"), (int*)(&current_core), core_entries,  core_count, 0);
    tooltip(__("core_selector_desc"));
@@ -249,6 +267,7 @@ static void window_core_control()
          tooltip(__("core_current_start_core_desc"));
       }
 
+      /* Core flags */
       if(igCollapsingHeaderTreeNodeFlags(__("core_current_flags_label"), ImGuiTreeNodeFlags_None))
       {
          igCheckbox(__("core_current_supports_no_game_label"), &current_core_supports_no_game);
@@ -258,6 +277,27 @@ static void window_core_control()
          igCheckbox(__("core_current_full_path_label"), &current_core_full_path);
          tooltip(__("core_current_full_path_desc"));
       }
+
+      /* Core options V1 */
+      if(core_option_count() > 0 && igCollapsingHeaderTreeNodeFlags(__("core_current_options_label"), ImGuiTreeNodeFlags_None))
+      {
+         for (unsigned i = 0; i < core_option_count(); i++)
+         {
+            static int index;
+            char* description = core_options[i].description;
+
+            struct string_list *list = string_split(core_options[i].values, "|");
+
+            if (igComboStringList(description, &index, list, 0))
+            {
+               char* value = list->elems[index].data;
+
+               /* TO-DO: Do stuff with core options */
+               logger(LOG_INFO, tag, "changing option %s to %s\n", description, value);
+            }
+         }
+      }
+
    }
 
    igEnd();
@@ -266,7 +306,7 @@ static void window_core_control()
 static void window_settings()
 {
    igBegin(__("window_title_settings"), NULL, 0);
-
+   igPushItemWidth(igGetWindowWidth() * 0.40f);
    for (unsigned i = 0; i < CAT_LAST; i++)
    {
       settings_t* current = settings_get();

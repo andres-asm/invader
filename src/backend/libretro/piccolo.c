@@ -195,6 +195,8 @@ void core_load(const char *in, core_info_t *info, core_option_t *options, bool p
    piccolo.core_info = info;
    piccolo.core_info->supports_no_game = false;
 
+   piccolo.core_option_count = 0;
+
    void (*set_environment)(retro_environment_t) = NULL;
    void (*set_video_refresh)(retro_video_refresh_t) = NULL;
    void (*set_input_poll)(retro_input_poll_t) = NULL;

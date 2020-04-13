@@ -68,6 +68,7 @@ static void localization_strings()
    __("core_current_extensions_label");
    __("core_current_extensions_desc");
    __("core_current_flags_label");
+   __("core_current_flags_desc");
    __("core_current_supports_no_game_label");
    __("core_current_supports_no_game_desc");
    __("core_current_full_path_label");
@@ -76,3 +77,5 @@ static void localization_strings()
    __("core_current_block_extract_desc");
    __("core_current_start_core_label");
    __("core_current_start_core_desc");
+   __("core_current_options_label");
+   __("core_current_options_desc");

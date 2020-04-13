@@ -151,7 +151,7 @@ bool init_audio_device()
    /* test code */
    Uint32 wavLength;
    Uint8 *wavBuffer;
-   logger(LOG_ERROR, tag, "load wav %d\n", SDL_LoadWAV("test.wav", &have, &wavBuffer, &wavLength));
+   //logger(LOG_ERROR, tag, "load wav %d\n", SDL_LoadWAV("test.wav", &have, &wavBuffer, &wavLength));
    logger(LOG_ERROR, tag, "queue audio %d\n", SDL_QueueAudio(device, wavBuffer, wavLength));
    SDL_PauseAudioDevice(device, 0);
    return true;

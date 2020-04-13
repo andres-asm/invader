@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-13 00:00-0500\n"
+"POT-Creation-Date: 2020-04-13 13:06-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,10 +38,12 @@ msgid "audio_sync_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:75 src/frontend/intl/settings.def.c:76
+#: src/frontend/intl/settings.def.c:77
 msgid "core_current_block_extract_desc"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:74 src/frontend/intl/settings.def.c:75
+#: src/frontend/intl/settings.def.c:76
 msgid "core_current_block_extract_label"
 msgstr ""
 
@@ -57,15 +59,21 @@ msgstr ""
 msgid "core_current_extensions_label"
 msgstr ""
 
+#: src/frontend/intl/settings.def.c:71
+msgid "core_current_flags_desc"
+msgstr ""
+
 #: src/frontend/intl/settings.def.c:69 src/frontend/intl/settings.def.c:70
 msgid "core_current_flags_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:73 src/frontend/intl/settings.def.c:74
+#: src/frontend/intl/settings.def.c:75
 msgid "core_current_full_path_desc"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:72 src/frontend/intl/settings.def.c:73
+#: src/frontend/intl/settings.def.c:74
 msgid "core_current_full_path_label"
 msgstr ""
 
@@ -73,19 +81,31 @@ msgstr ""
 msgid "core_current_label"
 msgstr ""
 
+#: src/frontend/intl/settings.def.c:81
+msgid "core_current_options_desc"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:79 src/frontend/intl/settings.def.c:80
+msgid "core_current_options_label"
+msgstr ""
+
 #: src/frontend/intl/settings.def.c:77 src/frontend/intl/settings.def.c:78
+#: src/frontend/intl/settings.def.c:79
 msgid "core_current_start_core_desc"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:76 src/frontend/intl/settings.def.c:77
+#: src/frontend/intl/settings.def.c:78
 msgid "core_current_start_core_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:71 src/frontend/intl/settings.def.c:72
+#: src/frontend/intl/settings.def.c:73
 msgid "core_current_supports_no_game_desc"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:70 src/frontend/intl/settings.def.c:71
+#: src/frontend/intl/settings.def.c:72
 msgid "core_current_supports_no_game_label"
 msgstr ""
 
