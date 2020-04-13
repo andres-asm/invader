@@ -294,6 +294,7 @@ static void window_core_control()
 
                /* TO-DO: Do stuff with core options */
                logger(LOG_INFO, tag, "changing option %s to %s\n", description, value);
+               core_options_update();
             }
          }
       }

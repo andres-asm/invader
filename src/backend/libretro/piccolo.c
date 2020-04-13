@@ -81,14 +81,16 @@ void piccolo_get_variables(void *data) {
    struct retro_variable *var = (struct retro_variable*)data;
    var->value = NULL;
 
-
    for (int i = 0; i < piccolo.core_option_count; i++)
    {
       if (!strcmp(var->key, piccolo.core_options[i].key))
-      {
          var->value = piccolo.core_options[i].value;
-      }
    }
+}
+
+void core_options_update()
+{
+   piccolo.core_options_updated = true;
 }
 
 static bool piccolo_set_environment(unsigned cmd, void *data)
@@ -110,8 +112,17 @@ static bool piccolo_set_environment(unsigned cmd, void *data)
       case RETRO_ENVIRONMENT_GET_VARIABLE:
       {
          struct retro_variable *var = (struct retro_variable*)data;
-         logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_VARIABLE: %s\n", var->key);
          piccolo_get_variables(data);
+         logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_VARIABLE: %s=%s\n", var->key, var->value);
+         break;
+      }
+      case RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE:
+      {
+         if (piccolo.core_options)
+            *(bool*)data = piccolo.core_options_updated;
+         else
+            *(bool*)data = false;
+         piccolo.core_options_updated = false;
          break;
       }
       case RETRO_ENVIRONMENT_SET_PIXEL_FORMAT:
@@ -147,10 +158,17 @@ static bool piccolo_set_environment(unsigned cmd, void *data)
          *(bool*)data = true;
          break;
       case RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS:
-         logger(LOG_WARN, tag, "RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS unhandled\n");
+         logger(LOG_DEBUG, tag, "RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS unhandled\n");
          break;
       case RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL:
-         logger(LOG_WARN, tag, "RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL unhandled\n");
+         logger(LOG_DEBUG, tag, "RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL unhandled\n");
+         break;
+      case RETRO_ENVIRONMENT_GET_FASTFORWARDING:
+         logger(LOG_DEBUG, tag, "RETRO_ENVIRONMENT_GET_FASTFORWARDING unhandled\n");
+         break;
+      case RETRO_ENVIRONMENT_GET_CORE_OPTIONS_VERSION:
+         *(unsigned *)data = 1;
+         logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_CORE_OPTIONS_VERSION: %d\n", *(unsigned *)data);
          break;
       default:
          logger(LOG_DEBUG, tag, "unknown command: %d\n", cmd);

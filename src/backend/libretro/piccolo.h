@@ -85,6 +85,7 @@ struct piccolo
    audio_cb_t audio_callback;
 
    unsigned core_option_count;
+   bool core_options_updated;
 } typedef piccolo_t;
 
 void core_load(const char *in, core_info_t *info, core_option_t *options, bool peek);
@@ -92,6 +93,8 @@ void core_load(const char *in, core_info_t *info, core_option_t *options, bool p
 bool core_load_game(const char* filename);
 
 void core_run(core_frame_buffer_t *video_data, audio_cb_t cb);
+
+void core_options_update();
 
 unsigned core_option_count();
 #endif
