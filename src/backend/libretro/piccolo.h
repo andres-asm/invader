@@ -85,7 +85,6 @@ struct piccolo
    audio_cb_t audio_callback;
 
    unsigned core_option_count;
-
 } typedef piccolo_t;
 
 void core_load(const char *in, core_info_t *info, core_option_t *options, bool peek);

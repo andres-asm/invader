@@ -59,3 +59,10 @@ static void localization_strings()
    /* core window */
    __("core_selector_label");
    __("core_selector_desc");
+   __("core_current_label");
+   __("core_current_desc");
+   __("core_empty_label");
+   __("core_current_version_label");
+   __("core_current_version_desc");
+   __("core_current_extensions_label");
+   __("core_current_extensions_desc");

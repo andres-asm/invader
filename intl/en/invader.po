@@ -18,6 +18,34 @@ msgstr ""
 msgid "audio_sync_label"
 msgstr "Audio sync"
 
+#: src/frontend/intl/settings.def.c:63
+msgid "core_current_desc"
+msgstr "Currently selected core name"
+
+#: src/frontend/intl/settings.def.c:68
+msgid "core_current_extensions_desc"
+msgstr "Currently selected core supported extensions"
+
+#: src/frontend/intl/settings.def.c:67
+msgid "core_current_extensions_label"
+msgstr "Supported extensions"
+
+#: src/frontend/intl/settings.def.c:62
+msgid "core_current_label"
+msgstr "Current core"
+
+#: src/frontend/intl/settings.def.c:66
+msgid "core_current_version_desc"
+msgstr "Currently selected core version"
+
+#: src/frontend/intl/settings.def.c:65
+msgid "core_current_version_label"
+msgstr "Version"
+
+#: src/frontend/intl/settings.def.c:64
+msgid "core_empty_label"
+msgstr "No core loaded"
+
 #: src/frontend/intl/settings.def.c:61
 msgid "core_selector_desc"
 msgstr "Select a new core"

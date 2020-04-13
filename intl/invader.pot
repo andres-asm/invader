@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-12 18:21-0500\n"
+"POT-Creation-Date: 2020-04-12 19:15-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -35,6 +35,34 @@ msgstr ""
 #: src/frontend/intl/settings.def.c:33 src/frontend/intl/settings.def.c:37
 #: src/frontend/intl/settings.def.c:35
 msgid "audio_sync_label"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:63
+msgid "core_current_desc"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:68
+msgid "core_current_extensions_desc"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:67
+msgid "core_current_extensions_label"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:62
+msgid "core_current_label"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:66
+msgid "core_current_version_desc"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:65
+msgid "core_current_version_label"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:64
+msgid "core_empty_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:61

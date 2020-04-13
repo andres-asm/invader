@@ -183,6 +183,8 @@ static size_t piccolo_audio_sample_batch(const int16_t *data, size_t frames)
 
 void core_load(const char *in, core_info_t *info, core_option_t *options, bool peek)
 {
+   piccolo.initialized = false;
+
    piccolo.core_options = options;
    piccolo.core_info = info;
    piccolo.core_info->supports_no_game = false;
@@ -349,4 +351,3 @@ unsigned core_option_count()
 {
    return piccolo.core_option_count;
 }
-

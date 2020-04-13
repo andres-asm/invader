@@ -121,6 +121,7 @@ static void imgui_set_default_style()
 
 static void tooltip(const char* desc)
 {
+   igSameLine(0, 0);
    igTextDisabled("(?)");
    if (igIsItemHovered(0))
    {
@@ -146,15 +147,19 @@ static void imgui_wnd_status()
 static void imgui_wnd_core()
 {
    static int previous_core = 0;
-
+   static const char* current_core_label = current_core_info.core_name;
+   static const char* current_core_version = current_core_info.core_version;
+   static const char* current_core_extensions = current_core_info.extensions;
 
 
    igBegin(__("window_title_core"), NULL, 0);
 
 
    igComboStr_arr(__("core_selector_label"), (int*)(&current_core), core_entries,  core_count, 0);
-   igSameLine(0, 0);
    tooltip(__("core_selector_desc"));
+
+   igLabelText(__("core_current_label"), !string_is_empty(current_core_label) ? current_core_label : __("core_empty_label"));
+   tooltip(__("core_current_desc"));
 
    if (core_count !=0 && (/*!initialized ||*/ previous_core != current_core))
    {
@@ -162,6 +167,14 @@ static void imgui_wnd_core()
       previous_core = current_core;
    }
 
+   if (!string_is_empty(current_core_label))
+   {
+      igLabelText(__("core_current_version_label"), current_core_version);
+      tooltip(__("core_current_version_desc"));
+      igLabelText(__("core_current_extensions_label"), current_core_extensions);
+      tooltip(__("core_current_extensions_desc"));
+      igCollapsingHeaderTreeNodeFlags("Core Options", ImGuiTreeNodeFlags_None);
+   }
 
    igEnd();
 }
@@ -208,10 +221,7 @@ static void imgui_wnd_settings()
                      break;
                }
                if (!string_is_empty(desc))
-               {
-                  igSameLine(0, 0);
                   tooltip(desc);
-               }
             }
             current = current->next;
          }
