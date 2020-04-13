@@ -137,6 +137,12 @@ static bool piccolo_set_environment(unsigned cmd, void *data)
          *(const char**)data = "C:\\";
          break;
       }
+      case RETRO_ENVIRONMENT_GET_CONTENT_DIRECTORY:
+      {
+         logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_CONTENT_DIRECTORY\n", "./");
+         *(const char**)data = "C:\\";
+         break;
+      }
       case RETRO_ENVIRONMENT_GET_CAN_DUPE:
          *(bool*)data = true;
          break;

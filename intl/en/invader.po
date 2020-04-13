@@ -18,67 +18,79 @@ msgstr ""
 msgid "audio_sync_label"
 msgstr "Audio sync"
 
-#: src/frontend/intl/settings.def.c:75
+#: src/frontend/intl/settings.def.c:75 src/frontend/intl/settings.def.c:76
 msgid "core_current_block_extract_desc"
 msgstr "Currently selected core blocks archive extraction"
 
-#: src/frontend/intl/settings.def.c:74
+#: src/frontend/intl/settings.def.c:74 src/frontend/intl/settings.def.c:75
 msgid "core_current_block_extract_label"
 msgstr "Block archive extraction"
 
-#: src/frontend/intl/settings.def.c:63
+#: src/frontend/intl/settings.def.c:63 src/frontend/intl/settings.def.c:64
 msgid "core_current_desc"
 msgstr "Currently selected core name"
 
-#: src/frontend/intl/settings.def.c:68
+#: src/frontend/intl/settings.def.c:68 src/frontend/intl/settings.def.c:69
 msgid "core_current_extensions_desc"
 msgstr "Currently selected core supported extensions"
 
-#: src/frontend/intl/settings.def.c:67
+#: src/frontend/intl/settings.def.c:67 src/frontend/intl/settings.def.c:68
 msgid "core_current_extensions_label"
 msgstr "Supported extensions"
 
-#: src/frontend/intl/settings.def.c:69
+#: src/frontend/intl/settings.def.c:69 src/frontend/intl/settings.def.c:70
 msgid "core_current_flags_label"
 msgstr "Core flags"
 
-#: src/frontend/intl/settings.def.c:73
+#: src/frontend/intl/settings.def.c:73 src/frontend/intl/settings.def.c:74
 msgid "core_current_full_path_desc"
-msgstr "Currently selected core requires full path to be passed instead of content data"
+msgstr ""
+"Currently selected core requires full path to be passed instead of content "
+"data"
 
-#: src/frontend/intl/settings.def.c:72
+#: src/frontend/intl/settings.def.c:72 src/frontend/intl/settings.def.c:73
 msgid "core_current_full_path_label"
 msgstr "Requires full path"
 
-#: src/frontend/intl/settings.def.c:62
+#: src/frontend/intl/settings.def.c:62 src/frontend/intl/settings.def.c:63
 msgid "core_current_label"
 msgstr "Current core"
 
-#: src/frontend/intl/settings.def.c:71
+#: src/frontend/intl/settings.def.c:77 src/frontend/intl/settings.def.c:78
+msgid "core_current_start_core_desc"
+msgstr ""
+"Start the current core (only available for cores that support running "
+"without a game)"
+
+#: src/frontend/intl/settings.def.c:76 src/frontend/intl/settings.def.c:77
+msgid "core_current_start_core_label"
+msgstr "Start core"
+
+#: src/frontend/intl/settings.def.c:71 src/frontend/intl/settings.def.c:72
 msgid "core_current_supports_no_game_desc"
 msgstr "Currently selected core supports running without a game"
 
-#: src/frontend/intl/settings.def.c:70
+#: src/frontend/intl/settings.def.c:70 src/frontend/intl/settings.def.c:71
 msgid "core_current_supports_no_game_label"
 msgstr "Supports running without a game"
 
-#: src/frontend/intl/settings.def.c:66
+#: src/frontend/intl/settings.def.c:66 src/frontend/intl/settings.def.c:67
 msgid "core_current_version_desc"
 msgstr "Currently selected core version"
 
-#: src/frontend/intl/settings.def.c:65
+#: src/frontend/intl/settings.def.c:65 src/frontend/intl/settings.def.c:66
 msgid "core_current_version_label"
 msgstr "Version"
 
-#: src/frontend/intl/settings.def.c:64
+#: src/frontend/intl/settings.def.c:64 src/frontend/intl/settings.def.c:65
 msgid "core_empty_label"
 msgstr "No core loaded"
 
-#: src/frontend/intl/settings.def.c:61
+#: src/frontend/intl/settings.def.c:61 src/frontend/intl/settings.def.c:62
 msgid "core_selector_desc"
 msgstr "Select a new core"
 
-#: src/frontend/intl/settings.def.c:60
+#: src/frontend/intl/settings.def.c:60 src/frontend/intl/settings.def.c:61
 msgid "core_selector_label"
 msgstr "Core"
 
@@ -132,21 +144,25 @@ msgstr "Logging level"
 
 #: src/frontend/intl/settings.def.c:46 src/frontend/intl/settings.def.c:48
 #: src/frontend/intl/settings.def.c:49 src/frontend/intl/settings.def.c:50
+#: src/frontend/intl/settings.def.c:51
 msgid "log_level_desc_debug"
 msgstr "Debug"
 
 #: src/frontend/intl/settings.def.c:49 src/frontend/intl/settings.def.c:51
 #: src/frontend/intl/settings.def.c:52 src/frontend/intl/settings.def.c:53
+#: src/frontend/intl/settings.def.c:54
 msgid "log_level_desc_error"
 msgstr "Errors"
 
 #: src/frontend/intl/settings.def.c:47 src/frontend/intl/settings.def.c:49
 #: src/frontend/intl/settings.def.c:50 src/frontend/intl/settings.def.c:51
+#: src/frontend/intl/settings.def.c:52
 msgid "log_level_desc_info"
 msgstr "Informational"
 
 #: src/frontend/intl/settings.def.c:48 src/frontend/intl/settings.def.c:50
 #: src/frontend/intl/settings.def.c:51 src/frontend/intl/settings.def.c:52
+#: src/frontend/intl/settings.def.c:53
 msgid "log_level_desc_warning"
 msgstr "Warnings"
 
@@ -168,11 +184,13 @@ msgstr "Warnings"
 
 #: src/frontend/intl/settings.def.c:52 src/frontend/intl/settings.def.c:54
 #: src/frontend/intl/settings.def.c:55 src/frontend/intl/settings.def.c:56
+#: src/frontend/intl/settings.def.c:57
 msgid "no_description_available"
 msgstr "No description available"
 
 #: src/frontend/intl/settings.def.c:53 src/frontend/intl/settings.def.c:55
 #: src/frontend/intl/settings.def.c:56 src/frontend/intl/settings.def.c:57
+#: src/frontend/intl/settings.def.c:58
 msgid "no_label_available"
 msgstr "No label available"
 
@@ -222,7 +240,11 @@ msgstr "Vertical syncronization"
 
 #: src/frontend/intl/settings.def.c:47
 msgid "window_title_core"
-msgstr "Cores"
+msgstr "Core"
+
+#: src/frontend/intl/settings.def.c:47 src/frontend/intl/settings.def.c:48
+msgid "window_title_core_control"
+msgstr "Core control"
 
 #: src/frontend/intl/settings.def.c:41 src/frontend/intl/settings.def.c:39
 #: src/frontend/intl/settings.def.c:43 src/frontend/intl/settings.def.c:45

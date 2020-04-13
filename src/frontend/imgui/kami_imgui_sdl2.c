@@ -18,6 +18,8 @@ static bool quit = false;
 static bool showDemoWindow = true;
 static bool showAnotherWindow = false;
 
+static bool core_running = false;
+
 const char* glsl_version;
 
 const char* core_entries[100];
@@ -28,6 +30,8 @@ SDL_Window *window;
 SDL_GLContext context;
 
 ImGuiIO io;
+
+GLuint texture;
 
 static void init_localization()
 {
@@ -83,7 +87,7 @@ static void imgui_set_default_style()
    style->Colors[ImGuiCol_FrameBgHovered] = *ImVec4_ImVec4Float(0.24f, 0.23f, 0.29f, 1.00f);
    style->Colors[ImGuiCol_FrameBgActive] = *ImVec4_ImVec4Float(0.56f, 0.56f, 0.58f, 1.00f);
    style->Colors[ImGuiCol_TitleBg] = *ImVec4_ImVec4Float(0.10f, 0.09f, 0.12f, 1.00f);
-   style->Colors[ImGuiCol_TitleBgCollapsed] = *ImVec4_ImVec4Float(1.00f, 0.98f, 0.95f, 0.75f);
+   style->Colors[ImGuiCol_TitleBgCollapsed] = *ImVec4_ImVec4Float(0.70f, 0.70f, 0.70f, 0.70f);
    style->Colors[ImGuiCol_TitleBgActive] = *ImVec4_ImVec4Float(0.07f, 0.07f, 0.09f, 1.00f);
    style->Colors[ImGuiCol_MenuBarBg] = *ImVec4_ImVec4Float(0.10f, 0.09f, 0.12f, 1.00f);
    style->Colors[ImGuiCol_ScrollbarBg] = *ImVec4_ImVec4Float(0.10f, 0.09f, 0.12f, 1.00f);
@@ -119,6 +123,43 @@ static void imgui_set_default_style()
    clearColor = *ImVec4_ImVec4Float(0.45f, 0.55f, 0.60f, 1.00f);
 }
 
+/* test code */
+size_t render_audio(const int16_t *data, size_t frames)
+{
+   //SDL_QueueAudio(device, data, 4 * frames);
+   return frames;
+}
+
+int render_framebuffer(const core_frame_buffer_t *frame_buffer, unsigned pixel_format)
+{
+   if (!texture)
+      glGenTextures(1, &texture);
+
+   glBindTexture(GL_TEXTURE_2D, texture);
+   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+   switch (pixel_format)
+   {
+      case RETRO_PIXEL_FORMAT_XRGB8888:
+         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, frame_buffer->width, frame_buffer->height, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, frame_buffer->data);
+         glPixelStorei(GL_UNPACK_ROW_LENGTH, frame_buffer->pitch / sizeof(uint32_t));
+         break;
+      case RETRO_PIXEL_FORMAT_RGB565:
+         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+         glPixelStorei(GL_UNPACK_ROW_LENGTH, frame_buffer->pitch / sizeof(uint16_t));
+         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB565, frame_buffer->width, frame_buffer->height, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, frame_buffer->data);
+         break;
+      default:
+         logger(LOG_DEBUG, tag, "pixel format: %s (%d) unhandled\n", PRINT_PIXFMT(pixel_format), pixel_format);
+
+   }
+
+   return ((int)texture);
+}
+
 static void tooltip(const char* desc)
 {
    igSameLine(0, 0);
@@ -133,7 +174,7 @@ static void tooltip(const char* desc)
    }
 }
 
-static void imgui_wnd_status()
+static void window_status()
 {
    static float f = 0.0f;
    static int counter = 0;
@@ -144,7 +185,24 @@ static void imgui_wnd_status()
    igEnd();
 }
 
-static void imgui_wnd_core()
+static void window_core()
+{
+   igBegin(__("window_title_core"), NULL, 0);
+   core_run(&frame_buffer, &render_audio);
+   render_framebuffer(&frame_buffer, current_core_info.pixel_format);
+
+   ImTextureID image_texture = (void*)(intptr_t)texture;
+   igImage(image_texture, *ImVec2_ImVec2Float(640, 480),
+                          *ImVec2_ImVec2Float(0, 0),
+                          *ImVec2_ImVec2Float(1, 1),
+                          *ImVec4_ImVec4Float(1.0f, 1.0f, 1.0f, 1.0f),
+                          *ImVec4_ImVec4Float(1.0f, 1.0f, 1.0f, 1.0f));
+
+
+   igEnd();
+}
+
+static void window_core_control()
 {
    static int previous_core = -1;
    static const char* current_core_label = current_core_info.core_name;
@@ -155,7 +213,7 @@ static void imgui_wnd_core()
    static bool current_core_block_extract;
    static bool current_core_full_path;
 
-   igBegin(__("window_title_core"), NULL, 0);
+   igBegin(__("window_title_core_control"), NULL, 0);
 
 
    igComboStr_arr(__("core_selector_label"), (int*)(&current_core), core_entries,  core_count, 0);
@@ -168,6 +226,7 @@ static void imgui_wnd_core()
    {
       core_load(core_info_list[current_core].file_name, &current_core_info, core_options, true);
 
+      static bool core_running = false;
       current_core_supports_no_game = current_core_info.supports_no_game;
       previous_core = current_core;
    }
@@ -178,6 +237,18 @@ static void imgui_wnd_core()
       tooltip(__("core_current_version_desc"));
       igLabelText(__("core_current_extensions_label"), current_core_extensions);
       tooltip(__("core_current_extensions_desc"));
+
+      if (current_core_supports_no_game && !core_running)
+      {
+         if(igButton(__("core_current_start_core_label"), *ImVec2_ImVec2Float(0, 0)))
+         {
+            core_load(core_info_list[current_core].file_name, &current_core_info, core_options, false);
+            if (core_load_game(NULL))
+               core_running = true;
+         }
+         tooltip(__("core_current_start_core_desc"));
+      }
+
       if(igCollapsingHeaderTreeNodeFlags(__("core_current_flags_label"), ImGuiTreeNodeFlags_None))
       {
          igCheckbox(__("core_current_supports_no_game_label"), &current_core_supports_no_game);
@@ -192,7 +263,7 @@ static void imgui_wnd_core()
    igEnd();
 }
 
-static void imgui_wnd_settings()
+static void window_settings()
 {
    igBegin(__("window_title_settings"), NULL, 0);
 
@@ -262,9 +333,12 @@ static void imgui_draw_frame()
    ImGui_ImplSDL2_NewFrame(window);
    igNewFrame();
 
-   imgui_wnd_settings();
-   imgui_wnd_status();
-   imgui_wnd_core();
+   window_settings();
+   window_status();
+   window_core_control();
+
+   if (core_running)
+      window_core();
 
    if (showDemoWindow)
       igShowDemoWindow(&showDemoWindow);

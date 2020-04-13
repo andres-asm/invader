@@ -45,6 +45,7 @@ static void localization_strings()
    __("window_title_settings");
    __("window_title_status");
    __("window_title_core");
+   __("window_title_core_control");
 
    /* log levels */
    __("log_level_desc_debug");
@@ -73,3 +74,5 @@ static void localization_strings()
    __("core_current_full_path_desc");
    __("core_current_block_extract_label");
    __("core_current_block_extract_desc");
+   __("core_current_start_core_label");
+   __("core_current_start_core_desc");
