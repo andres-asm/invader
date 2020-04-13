@@ -30,6 +30,10 @@ msgstr "Currently selected core supported extensions"
 msgid "core_current_extensions_label"
 msgstr "Supported extensions"
 
+#: src/frontend/intl/settings.def.c:69
+msgid "core_current_flags_label"
+msgstr "Core flags"
+
 #: src/frontend/intl/settings.def.c:62
 msgid "core_current_label"
 msgstr "Current core"

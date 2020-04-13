@@ -151,6 +151,9 @@ static void imgui_wnd_core()
    static const char* current_core_version = current_core_info.core_version;
    static const char* current_core_extensions = current_core_info.extensions;
 
+   static bool current_core_supports_no_game;
+   static bool current_core_block_extract;
+   static bool current_core_full_path;
 
    igBegin(__("window_title_core"), NULL, 0);
 
@@ -164,6 +167,8 @@ static void imgui_wnd_core()
    if (core_count !=0 && (/*!initialized ||*/ previous_core != current_core) || previous_core == -1)
    {
       core_load(core_info_list[current_core].file_name, &current_core_info, core_options, true);
+
+      current_core_supports_no_game = current_core_info.supports_no_game;
       previous_core = current_core;
    }
 
@@ -173,7 +178,15 @@ static void imgui_wnd_core()
       tooltip(__("core_current_version_desc"));
       igLabelText(__("core_current_extensions_label"), current_core_extensions);
       tooltip(__("core_current_extensions_desc"));
-      igCollapsingHeaderTreeNodeFlags("Core Options", ImGuiTreeNodeFlags_None);
+      if(igCollapsingHeaderTreeNodeFlags(__("core_current_flags_label"), ImGuiTreeNodeFlags_None))
+      {
+         igCheckbox(__("core_current_supports_no_game_label"), &current_core_supports_no_game);
+         tooltip(__("core_current_supports_no_game_desc"));
+         igCheckbox(__("core_current_block_extract_label"), &current_core_block_extract);
+         tooltip(__("core_current_block_extract_desc"));
+         igCheckbox(__("core_current_full_path_label"), &current_core_full_path);
+         tooltip(__("core_current_full_path_desc"));
+      }
    }
 
    igEnd();

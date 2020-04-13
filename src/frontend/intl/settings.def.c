@@ -66,3 +66,4 @@ static void localization_strings()
    __("core_current_version_desc");
    __("core_current_extensions_label");
    __("core_current_extensions_desc");
+   __("core_current_flags_label");
