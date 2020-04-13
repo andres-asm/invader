@@ -10,6 +10,7 @@ SOURCES_C = \
       ./deps/libretro/encodings/encoding_utf.c \
       ./deps/libretro/file/file_path.c \
       ./deps/libretro/lists/string_list.c \
+      ./deps/libretro/string/stdstring.c \
       ./deps/libretro/vfs/vfs_implementation.c \
       ./src/backend/libretro/piccolo.c \
       ./src/frontend/common.c \
