@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-12 19:36-0500\n"
+"POT-Creation-Date: 2020-04-12 19:39-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,6 +37,14 @@ msgstr ""
 msgid "audio_sync_label"
 msgstr ""
 
+#: src/frontend/intl/settings.def.c:75
+msgid "core_current_block_extract_desc"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:74
+msgid "core_current_block_extract_label"
+msgstr ""
+
 #: src/frontend/intl/settings.def.c:63
 msgid "core_current_desc"
 msgstr ""
@@ -53,8 +61,24 @@ msgstr ""
 msgid "core_current_flags_label"
 msgstr ""
 
+#: src/frontend/intl/settings.def.c:73
+msgid "core_current_full_path_desc"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:72
+msgid "core_current_full_path_label"
+msgstr ""
+
 #: src/frontend/intl/settings.def.c:62
 msgid "core_current_label"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:71
+msgid "core_current_supports_no_game_desc"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:70
+msgid "core_current_supports_no_game_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:66

@@ -18,6 +18,14 @@ msgstr ""
 msgid "audio_sync_label"
 msgstr "Audio sync"
 
+#: src/frontend/intl/settings.def.c:75
+msgid "core_current_block_extract_desc"
+msgstr "Currently selected core blocks archive extraction"
+
+#: src/frontend/intl/settings.def.c:74
+msgid "core_current_block_extract_label"
+msgstr "Block archive extraction"
+
 #: src/frontend/intl/settings.def.c:63
 msgid "core_current_desc"
 msgstr "Currently selected core name"
@@ -34,9 +42,25 @@ msgstr "Supported extensions"
 msgid "core_current_flags_label"
 msgstr "Core flags"
 
+#: src/frontend/intl/settings.def.c:73
+msgid "core_current_full_path_desc"
+msgstr "Currently selected core requires full path to be passed instead of content data"
+
+#: src/frontend/intl/settings.def.c:72
+msgid "core_current_full_path_label"
+msgstr "Requires full path"
+
 #: src/frontend/intl/settings.def.c:62
 msgid "core_current_label"
 msgstr "Current core"
+
+#: src/frontend/intl/settings.def.c:71
+msgid "core_current_supports_no_game_desc"
+msgstr "Currently selected core supports running without a game"
+
+#: src/frontend/intl/settings.def.c:70
+msgid "core_current_supports_no_game_label"
+msgstr "Supports running without a game"
 
 #: src/frontend/intl/settings.def.c:66
 msgid "core_current_version_desc"

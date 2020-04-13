@@ -67,3 +67,9 @@ static void localization_strings()
    __("core_current_extensions_label");
    __("core_current_extensions_desc");
    __("core_current_flags_label");
+   __("core_current_supports_no_game_label");
+   __("core_current_supports_no_game_desc");
+   __("core_current_full_path_label");
+   __("core_current_full_path_desc");
+   __("core_current_block_extract_label");
+   __("core_current_block_extract_desc");
