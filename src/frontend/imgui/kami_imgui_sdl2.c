@@ -267,6 +267,14 @@ static void window_core_control()
          tooltip(__("core_current_start_core_desc"));
       }
 
+         if(igButton(__("core_current_load_content_label"), *ImVec2_ImVec2Float(0, 0)))
+         {
+            core_load(core_info_list[current_core].file_name, &current_core_info, core_options, false);
+            if (core_load_game("rom.nes"))
+               core_running = true;
+         }
+         tooltip(__("core_current_load_content_desc"));
+
       /* Core flags */
       if(igCollapsingHeaderTreeNodeFlags(__("core_current_flags_label"), ImGuiTreeNodeFlags_None))
       {
@@ -283,10 +291,15 @@ static void window_core_control()
       {
          for (unsigned i = 0; i < core_option_count(); i++)
          {
-            static int index;
             char* description = core_options[i].description;
-
             struct string_list *list = string_split(core_options[i].values, "|");
+
+            int index = 0;
+            for (unsigned j = 0; j < list->size; j++)
+            {
+               if ((string_is_equal(list->elems[j].data, core_options[i].value)))
+                  index = j;
+            }
 
             if (igComboStringList(description, &index, list, 0))
             {
@@ -294,6 +307,7 @@ static void window_core_control()
 
                /* TO-DO: Do stuff with core options */
                logger(LOG_INFO, tag, "changing option %s to %s\n", description, value);
+               strlcpy(core_options[i].value, value, sizeof(core_options[i].value));
                core_options_update();
             }
          }

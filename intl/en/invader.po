@@ -41,7 +41,6 @@ msgid "core_current_extensions_label"
 msgstr "Supported extensions"
 
 #: src/frontend/intl/settings.def.c:71
-#, fuzzy
 msgid "core_current_flags_desc"
 msgstr "Core flags"
 
@@ -65,8 +64,16 @@ msgstr "Requires full path"
 msgid "core_current_label"
 msgstr "Current core"
 
+#: src/frontend/intl/settings.def.c:83
+msgid "core_current_load_content_desc"
+msgstr ""
+"Load selected game"
+
+#: src/frontend/intl/settings.def.c:82
+msgid "core_current_load_content_label"
+msgstr "Load game"
+
 #: src/frontend/intl/settings.def.c:81
-#, fuzzy
 msgid "core_current_options_desc"
 msgstr "Currently selected core supported extensions"
 

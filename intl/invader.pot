@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-13 18:19-0500\n"
+"POT-Creation-Date: 2020-04-13 18:44-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -79,6 +79,14 @@ msgstr ""
 
 #: src/frontend/intl/settings.def.c:62 src/frontend/intl/settings.def.c:63
 msgid "core_current_label"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:83
+msgid "core_current_load_content_desc"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:82
+msgid "core_current_load_content_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:81

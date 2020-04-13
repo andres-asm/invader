@@ -167,7 +167,7 @@ static bool piccolo_set_environment(unsigned cmd, void *data)
          logger(LOG_DEBUG, tag, "RETRO_ENVIRONMENT_GET_FASTFORWARDING unhandled\n");
          break;
       case RETRO_ENVIRONMENT_GET_CORE_OPTIONS_VERSION:
-         *(unsigned *)data = 1;
+         *(unsigned *)data = 0;
          logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_CORE_OPTIONS_VERSION: %d\n", *(unsigned *)data);
          break;
       default:

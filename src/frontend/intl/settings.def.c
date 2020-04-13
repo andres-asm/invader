@@ -79,3 +79,5 @@ static void localization_strings()
    __("core_current_start_core_desc");
    __("core_current_options_label");
    __("core_current_options_desc");
+   __("core_current_load_content_label");
+   __("core_current_load_content_desc");
