@@ -146,7 +146,7 @@ static void imgui_wnd_status()
 
 static void imgui_wnd_core()
 {
-   static int previous_core = 0;
+   static int previous_core = -1;
    static const char* current_core_label = current_core_info.core_name;
    static const char* current_core_version = current_core_info.core_version;
    static const char* current_core_extensions = current_core_info.extensions;
@@ -161,7 +161,7 @@ static void imgui_wnd_core()
    igLabelText(__("core_current_label"), !string_is_empty(current_core_label) ? current_core_label : __("core_empty_label"));
    tooltip(__("core_current_desc"));
 
-   if (core_count !=0 && (/*!initialized ||*/ previous_core != current_core))
+   if (core_count !=0 && (/*!initialized ||*/ previous_core != current_core) || previous_core == -1)
    {
       core_load(core_info_list[current_core].file_name, &current_core_info, core_options, true);
       previous_core = current_core;
