@@ -4,9 +4,7 @@
 #include "imgui_impl_opengl3.h"
 
 #include "kami.h"
-#include "common.h"
-#include "config.h"
-#include "util.h"
+
 
 static const char* tag = "[kami]";
 static const char* app_name = "invader";
@@ -121,13 +119,13 @@ static void imgui_set_default_style()
 }
 
 /* test code */
-size_t render_audio(const int16_t *data, size_t frames)
+size_t kami_render_audio(const int16_t *data, size_t frames)
 {
    //SDL_QueueAudio(device, data, 4 * frames);
    return frames;
 }
 
-int render_framebuffer(const core_frame_buffer_t *frame_buffer, unsigned pixel_format)
+int kami_render_framebuffer(const core_frame_buffer_t *frame_buffer, unsigned pixel_format)
 {
    if (!texture)
       glGenTextures(1, &texture);
@@ -185,8 +183,8 @@ static void window_status()
 static void window_core()
 {
    igBegin(__("window_title_core"), NULL, 0);
-   core_run(&frame_buffer, &render_audio);
-   render_framebuffer(&frame_buffer, current_core_info.pixel_format);
+   core_run(&frame_buffer, &kami_render_audio);
+   kami_render_framebuffer(&frame_buffer, current_core_info.pixel_format);
 
    unsigned width = current_core_info.av_info.geometry.base_width;
    unsigned height = current_core_info.av_info.geometry.base_height;
@@ -289,16 +287,14 @@ static void window_core_control()
          {
             core_option_t* option = &core_options[i];
             char* description = option->description;
-            struct string_list* values = core_option_get_values(option);
+            struct string_list* values = kami_core_option_get_values(option);
 
-            int index = core_option_get_index(option, values);
+            int index = kami_core_option_get_index(option, values);
 
             if (igComboStringList(description, &index, values, 0))
             {
                char* value = values->elems[index].data;
-
-               logger(LOG_INFO, tag, "changing option %s to %s\n", description, value);
-               core_options_update(option, value);
+               kami_core_option_update(option, value);
             }
             string_list_free(values);
          }
@@ -414,7 +410,7 @@ int main(int argc, char* argv[])
    imgui_setup();
    imgui_set_default_style();
 
-   core_list_init(setting_string_val("directory_cores"));
+   kami_core_list_init(setting_string_val("directory_cores"));
 
    for (unsigned i = 0; i < core_count; i++)
    {

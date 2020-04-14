@@ -1,22 +1,7 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <stdarg.h>
-#include <string.h>
-#include <math.h>
-#include <assert.h>
-#include <limits.h>
-#include <time.h>
-#include <stdbool.h>
-
-#include <GL/glew.h>
-
 #define NK_IMPLEMENTATION
 #define NK_SDL_GL3_IMPLEMENTATION
 
 #include <GL/glew.h>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_opengl.h>
 
 #define NK_INCLUDE_FIXED_TYPES
 #define NK_INCLUDE_STANDARD_IO
@@ -26,20 +11,15 @@
 #define NK_INCLUDE_FONT_BAKING
 #define NK_INCLUDE_DEFAULT_FONT
 
-struct nk_context *ctx;
-struct nk_colorf bg;
-
 #include "nuklear.h"
-#include "nuklear_extra.h"
-
 #include "kami.h"
-#include "common.h"
-#include "config.h"
-#include "util.h"
 #include "nuklear_sdl_gl3.h"
 
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
+
+struct nk_context *ctx;
+struct nk_colorf bg;
 
 static const char* tag = "[kami]";
 static const char* app_name = "invader";
@@ -49,8 +29,6 @@ GLuint texture;
 SDL_AudioSpec want, have;
 SDL_AudioDeviceID device;
 
-
-#include <compat/strl.h>
 bool nk_checkbox_bool(struct nk_context* ctx, const char* label, bool *active)
 {
    int    x = *active;
@@ -63,18 +41,19 @@ bool nk_checkbox_bool(struct nk_context* ctx, const char* label, bool *active)
 /* This is probable very bad for performance */
 int nk_combo_string_list(struct nk_context *ctx, struct string_list *list, int selected, int item_height, struct nk_vec2 size)
 {
-   int ret = 0;
+   int ret = selected;
    const char **entries = calloc(list->size, sizeof (char *));
    for (unsigned i = 0; i < list->size; i++)
    {
       entries[i] = list->elems[i].data;
    }
-   logger(LOG_INFO, tag, "changing option to %d\n", selected);
+
    ret = nk_combo(ctx, entries, list->size, ret, item_height, size);
    free(entries);
+   return ret;
 }
 
-int render_framebuffer(const core_frame_buffer_t *frame_buffer, unsigned pixel_format)
+int kami_render_framebuffer(const core_frame_buffer_t *frame_buffer, unsigned pixel_format)
 {
    if (!texture)
       glGenTextures(1, &texture);
@@ -105,7 +84,7 @@ int render_framebuffer(const core_frame_buffer_t *frame_buffer, unsigned pixel_f
 }
 
 /* test code */
-size_t render_audio(const int16_t *data, size_t frames)
+size_t kami_render_audio(const int16_t *data, size_t frames)
 {
    SDL_QueueAudio(device, data, 4 * frames);
    return frames;
@@ -165,7 +144,7 @@ void gui_render(struct nk_context *ctx)
    static bool running;
 
    if (!initialized)
-      core_list_init(setting_string_val("directory_cores"));
+      kami_core_list_init(setting_string_val("directory_cores"));
 
    /* GUI */
    if (nk_begin(ctx, "Just a placeholder GUI", nk_rect(10, 10, 500, 700),
@@ -246,25 +225,18 @@ void gui_render(struct nk_context *ctx)
       {
          core_option_t* option = &core_options[i];
          char* description = option->description;
-         struct string_list* values = core_option_get_values(option);
+         struct string_list* values = kami_core_option_get_values(option);
          nk_layout_row_dynamic(ctx, 30, 1);
          nk_label(ctx, description, NK_TEXT_ALIGN_CENTERED | NK_TEXT_LEFT);
          nk_layout_row_dynamic(ctx, 30, 1);
 
-         int index = core_option_get_index(option, values);
+         int index = kami_core_option_get_index(option, values);
 
-         const char **entries = calloc(values->size, sizeof (char *));
-         for (unsigned i = 0; i < values->size; i++)
-         {
-            entries[i] = values->elems[i].data;
-         }
-         index = nk_combo(ctx, entries, values->size, index, 30, nk_vec2(200,200));
+         index = nk_combo_string_list(ctx, values, index, 30, nk_vec2(200,200));
          if (index)
          {
             char* value = values->elems[index].data;
-
-            logger(LOG_INFO, tag, "changing option %s to %s\n", description, value);
-            core_options_update(option, value);
+            kami_core_option_update(option, value);
          }
       }
       nk_group_end(ctx);
@@ -274,14 +246,14 @@ void gui_render(struct nk_context *ctx)
    initialized = true;
    if (running)
    {
-      core_run(&frame_buffer, &render_audio);
+      core_run(&frame_buffer, &kami_render_audio);
          if (nk_begin(ctx, "Video output", nk_rect(520, 10, 664, 700),
             NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_SCALABLE|
             NK_WINDOW_MINIMIZABLE|NK_WINDOW_TITLE))
          {
             nk_layout_space_begin(ctx, NK_STATIC,400, INT_MAX);
             nk_layout_space_push(ctx, nk_rect(0, 0, 640, 480));
-            nk_image(ctx,  nk_image_id(render_framebuffer(&frame_buffer, current_core_info.pixel_format)));
+            nk_image(ctx,  nk_image_id(kami_render_framebuffer(&frame_buffer, current_core_info.pixel_format)));
             nk_layout_space_end(ctx);
          }
          nk_end(ctx);

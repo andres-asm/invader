@@ -1,3 +1,5 @@
+#include "util.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
@@ -7,8 +9,6 @@
 #include <sys/stat.h>
 #include <dirent.h>
 #include <compat/strl.h>
-
-#include "util.h"
 
 static const char* tag = "[util]";
 

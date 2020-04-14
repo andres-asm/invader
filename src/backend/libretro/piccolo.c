@@ -88,7 +88,7 @@ void piccolo_get_variables(void *data) {
    }
 }
 
-void piccolo_core_options_update()
+void core_options_updated()
 {
    piccolo.core_options_updated = true;
 }
