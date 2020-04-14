@@ -8,10 +8,6 @@
 #include "config.h"
 #include "util.h"
 
-#include <compat/strl.h>
-#include <string/stdstring.h>
-#include <lists/string_list.h>
-
 static const char* tag = "[kami]";
 static const char* app_name = "invader";
 
@@ -206,7 +202,6 @@ static void window_core()
    igEnd();
 }
 
-/* CIMGUI_API bool igComboStr_arr(const char* label,int* current_item,const char* const items[],int items_count,int popup_max_height_in_items) */
 bool igComboStringList(const char* label, int* current_item, struct string_list *list, int popup_max_height_in_items)
 {
    int ret = 0;
@@ -220,6 +215,7 @@ bool igComboStringList(const char* label, int* current_item, struct string_list 
    else
       return false;
 }
+
 static void window_core_control()
 {
    static int previous_core = -1;
@@ -291,25 +287,20 @@ static void window_core_control()
       {
          for (unsigned i = 0; i < core_option_count(); i++)
          {
-            char* description = core_options[i].description;
-            struct string_list *list = string_split(core_options[i].values, "|");
+            core_option_t* option = &core_options[i];
+            char* description = option->description;
+            struct string_list* values = core_option_get_values(option);
 
-            int index = 0;
-            for (unsigned j = 0; j < list->size; j++)
+            int index = core_option_get_index(option, values);
+
+            if (igComboStringList(description, &index, values, 0))
             {
-               if ((string_is_equal(list->elems[j].data, core_options[i].value)))
-                  index = j;
-            }
+               char* value = values->elems[index].data;
 
-            if (igComboStringList(description, &index, list, 0))
-            {
-               char* value = list->elems[index].data;
-
-               /* TO-DO: Do stuff with core options */
                logger(LOG_INFO, tag, "changing option %s to %s\n", description, value);
-               strlcpy(core_options[i].value, value, sizeof(core_options[i].value));
-               core_options_update();
+               core_options_update(option, value);
             }
+            string_list_free(values);
          }
       }
 

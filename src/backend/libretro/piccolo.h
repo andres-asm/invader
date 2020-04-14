@@ -94,7 +94,7 @@ bool core_load_game(const char* filename);
 
 void core_run(core_frame_buffer_t *video_data, audio_cb_t cb);
 
-void core_options_update();
+void piccolo_core_options_update();
 
 unsigned core_option_count();
 #endif

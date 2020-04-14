@@ -46,3 +46,24 @@ bool core_list_init(const char* in)
    return true;
 }
 
+void core_options_update(core_option_t* option, const char* value)
+{
+   strlcpy(option->value, value, sizeof(option->value));
+   piccolo_core_options_update();
+}
+
+struct string_list* core_option_get_values(core_option_t* option)
+{
+   return string_split(option->values, "|");
+}
+
+unsigned core_option_get_index(core_option_t* option, struct string_list* values)
+{
+   unsigned index = 0;
+   for (unsigned i = 0; i < values->size; i++)
+   {
+      if ((string_is_equal(values->elems[i].data, option->value)))
+         index = i;
+   }
+   return index;
+}

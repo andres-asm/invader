@@ -69,8 +69,8 @@ int nk_combo_string_list(struct nk_context *ctx, struct string_list *list, int s
    {
       entries[i] = list->elems[i].data;
    }
-
-   ret = nk_combo(ctx, entries, list->size, selected, item_height, size);
+   logger(LOG_INFO, tag, "changing option to %d\n", selected);
+   ret = nk_combo(ctx, entries, list->size, ret, item_height, size);
    free(entries);
 }
 
@@ -244,12 +244,28 @@ void gui_render(struct nk_context *ctx)
       nk_group_begin(ctx, "Core options", flags);
       for (unsigned i = 0; i < core_option_count(); i++)
       {
-         struct string_list *list = string_split(core_options[i].values, "|");
+         core_option_t* option = &core_options[i];
+         char* description = option->description;
+         struct string_list* values = core_option_get_values(option);
          nk_layout_row_dynamic(ctx, 30, 1);
-         nk_label(ctx, core_options[i].description, NK_TEXT_ALIGN_CENTERED | NK_TEXT_LEFT);
+         nk_label(ctx, description, NK_TEXT_ALIGN_CENTERED | NK_TEXT_LEFT);
          nk_layout_row_dynamic(ctx, 30, 1);
-         /* To-Do: set return value */
-         nk_combo_string_list(ctx, list, 0, 30, nk_vec2(200,200));
+
+         int index = core_option_get_index(option, values);
+
+         const char **entries = calloc(values->size, sizeof (char *));
+         for (unsigned i = 0; i < values->size; i++)
+         {
+            entries[i] = values->elems[i].data;
+         }
+         index = nk_combo(ctx, entries, values->size, index, 30, nk_vec2(200,200));
+         if (index)
+         {
+            char* value = values->elems[index].data;
+
+            logger(LOG_INFO, tag, "changing option %s to %s\n", description, value);
+            core_options_update(option, value);
+         }
       }
       nk_group_end(ctx);
    }
