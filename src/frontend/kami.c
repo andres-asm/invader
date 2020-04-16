@@ -78,6 +78,13 @@ size_t kami_render_audio(const int16_t *data, size_t frames)
 
 bool kami_init_audio()
 {
+   int devices = SDL_GetNumAudioDevices(0);
+
+   logger(LOG_INFO, tag, "audio devices: %d\n", devices);
+
+   for(unsigned i = 0; i < devices; i++)
+      logger(LOG_INFO, tag, "device %d: %s\n", i, SDL_GetAudioDeviceName(i, 0));
+
    SDL_zero(want);
 
    want.freq = 48000;
@@ -99,10 +106,6 @@ bool kami_init_audio()
 
    logger(LOG_INFO, tag, "have - frequency: %d format: f %d s %d be %d sz %d channels: %d samples: %d\n",
       have.freq, SDL_AUDIO_ISFLOAT(have.format), SDL_AUDIO_ISSIGNED(have.format), SDL_AUDIO_ISBIGENDIAN(have.format), SDL_AUDIO_BITSIZE(have.format), have.channels, have.samples);
-
-   /* test code */
-   Uint32 wavLength;
-   Uint8 *wavBuffer;
 
    SDL_PauseAudioDevice(device, 0);
    return true;
