@@ -12,8 +12,6 @@ static const char *tag = "[core]";
 
 piccolo_t piccolo = {0};
 
-struct retro_game_info   piccolo_game_info   = {0};
-
 static void piccolo_logger(enum retro_log_level level, const char *fmt, ...)
 {
    va_list va;

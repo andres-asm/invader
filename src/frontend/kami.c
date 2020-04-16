@@ -15,6 +15,9 @@
 
 static const char* tag = "[invader]";
 
+SDL_AudioSpec want, have;
+SDL_AudioDeviceID device;
+
 bool kami_core_list_init(const char* in)
 {
    char buf[PATH_MAX_LENGTH];
@@ -65,4 +68,42 @@ unsigned kami_core_option_get_index(core_option_t* option, struct string_list* v
          index = i;
    }
    return index;
+}
+
+size_t kami_render_audio(const int16_t *data, size_t frames)
+{
+   SDL_QueueAudio(device, data, 4 * frames);
+   return frames;
+}
+
+bool kami_init_audio()
+{
+   SDL_zero(want);
+
+   want.freq = 48000;
+   want.format = AUDIO_S16;
+   want.channels = 2;
+   want.samples = 4096;
+   want.callback = NULL;
+
+   logger(LOG_INFO, tag, "want - frequency: %d format: f %d s %d be %d sz %d channels: %d samples: %d\n",
+      want.freq, SDL_AUDIO_ISFLOAT(want.format), SDL_AUDIO_ISSIGNED(want.format), SDL_AUDIO_ISBIGENDIAN(want.format), SDL_AUDIO_BITSIZE(want.format), want.channels, want.samples);
+   device = SDL_OpenAudioDevice(0, 0, &want, &have, 0);
+   if(!device) {
+      logger(LOG_ERROR, tag, "failed to open audio device: %s\n", SDL_GetError());
+      SDL_Quit();
+      return false;
+   }
+   else
+      logger(LOG_ERROR, tag, "opened audio device: %s\n", SDL_GetAudioDeviceName(0, 0));
+
+   logger(LOG_INFO, tag, "have - frequency: %d format: f %d s %d be %d sz %d channels: %d samples: %d\n",
+      have.freq, SDL_AUDIO_ISFLOAT(have.format), SDL_AUDIO_ISSIGNED(have.format), SDL_AUDIO_ISBIGENDIAN(have.format), SDL_AUDIO_BITSIZE(have.format), have.channels, have.samples);
+
+   /* test code */
+   Uint32 wavLength;
+   Uint8 *wavBuffer;
+
+   SDL_PauseAudioDevice(device, 0);
+   return true;
 }

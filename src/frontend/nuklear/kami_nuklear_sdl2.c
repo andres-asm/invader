@@ -15,9 +15,6 @@
 #include "kami.h"
 #include "nuklear_sdl_gl3.h"
 
-#define WINDOW_WIDTH 1280
-#define WINDOW_HEIGHT 720
-
 struct nk_context *ctx;
 struct nk_colorf bg;
 
@@ -25,9 +22,6 @@ static const char* tag = "[kami]";
 static const char* app_name = "invader";
 
 GLuint texture;
-
-SDL_AudioSpec want, have;
-SDL_AudioDeviceID device;
 
 bool nk_checkbox_bool(struct nk_context* ctx, const char* label, bool *active)
 {
@@ -81,59 +75,6 @@ int kami_render_framebuffer(const core_frame_buffer_t *frame_buffer, unsigned pi
    }
 
    return ((int)texture);
-}
-
-/* test code */
-size_t kami_render_audio(const int16_t *data, size_t frames)
-{
-   SDL_QueueAudio(device, data, 4 * frames);
-   return frames;
-}
-
-void sdl_audio_callback(void *data, uint8_t* stream, int len)
-{
-   logger(LOG_INFO, tag, "playing audio frames %d\n", 0);
-}
-
-
-bool init_audio_device()
-{
-   int devices = SDL_GetNumAudioDevices(0);
-
-   logger(LOG_INFO, tag, "audio devices: %d\n", devices);
-
-   for(unsigned i = 0; i < devices; i++)
-      logger(LOG_INFO, tag, "device %d: %s\n", i, SDL_GetAudioDeviceName(i, 0));
-
-   SDL_zero(want);
-
-   want.freq = 48000;
-   want.format = AUDIO_S16;
-   want.channels = 2;
-   want.samples = 4096;
-   want.callback = NULL;
-
-   logger(LOG_INFO, tag, "want - frequency: %d format: f %d s %d be %d sz %d channels: %d samples: %d\n",
-      want.freq, SDL_AUDIO_ISFLOAT(want.format), SDL_AUDIO_ISSIGNED(want.format), SDL_AUDIO_ISBIGENDIAN(want.format), SDL_AUDIO_BITSIZE(want.format), want.channels, want.samples);
-   device = SDL_OpenAudioDevice(0, 0, &want, &have, 0);
-   if(!device) {
-      logger(LOG_ERROR, tag, "failed to open audio device: %s\n", SDL_GetError());
-      SDL_Quit();
-      return false;
-   }
-   else
-      logger(LOG_ERROR, tag, "opened audio device: %s\n", SDL_GetAudioDeviceName(0, 0));
-
-   logger(LOG_INFO, tag, "have - frequency: %d format: f %d s %d be %d sz %d channels: %d samples: %d\n",
-      have.freq, SDL_AUDIO_ISFLOAT(have.format), SDL_AUDIO_ISSIGNED(have.format), SDL_AUDIO_ISBIGENDIAN(have.format), SDL_AUDIO_BITSIZE(have.format), have.channels, have.samples);
-
-   /* test code */
-   Uint32 wavLength;
-   Uint8 *wavBuffer;
-   //logger(LOG_ERROR, tag, "load wav %d\n", SDL_LoadWAV("test.wav", &have, &wavBuffer, &wavLength));
-   logger(LOG_ERROR, tag, "queue audio %d\n", SDL_QueueAudio(device, wavBuffer, wavLength));
-   SDL_PauseAudioDevice(device, 0);
-   return true;
 }
 
 /* Render the main interface */
@@ -278,7 +219,7 @@ int main(int argc, char *argv[])
    const char* glsl_version = get_glsl_version();
 
    logger(LOG_INFO, tag, "audio driver: %s\n", SDL_GetCurrentAudioDriver());
-   init_audio_device();
+   kami_init_audio();
 
    ctx = nk_sdl_init(window);
    /* Load Fonts: if none of these are loaded a default font will be used  */

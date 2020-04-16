@@ -31,4 +31,6 @@ unsigned kami_core_option_get_index(core_option_t* option, struct string_list* v
 
 struct string_list* kami_core_option_get_values(core_option_t* option);
 
+bool kami_init_audio();
+
 #endif

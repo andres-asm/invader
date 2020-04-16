@@ -14,17 +14,17 @@
 
 #define load_retro_sym(S) load_sym(piccolo.S, S)
 
-struct core_frame_buffer
+typedef struct core_frame_buffer
 {
    const void *data;
    unsigned width;
    unsigned height;
    unsigned pitch;
-} typedef core_frame_buffer_t;
+} core_frame_buffer_t;
 
 typedef size_t (*audio_cb_t)(const int16_t *, size_t);
 
-struct core_info
+typedef struct core_info
 {
    unsigned core_id;
    char file_name[PATH_MAX_LENGTH];
@@ -39,17 +39,17 @@ struct core_info
    unsigned pixel_format;
 
    struct retro_system_av_info av_info;
-} typedef core_info_t;
+} core_info_t;
 
-struct core_option
+typedef struct core_option
 {
    char key[100];
    char description[100];
    char value[100];
    char values[PATH_MAX_LENGTH];
-} typedef core_option_t;
+} core_option_t;
 
-struct piccolo
+typedef struct piccolo
 {
    void   *handle;
    bool initialized;
@@ -86,7 +86,9 @@ struct piccolo
 
    unsigned core_option_count;
    bool core_options_updated;
-} typedef piccolo_t;
+
+   void (*piccolo_load_core)(const char *in, core_info_t *info, core_option_t *options, bool peek);
+} piccolo_t;
 
 void core_load(const char *in, core_info_t *info, core_option_t *options, bool peek);
 

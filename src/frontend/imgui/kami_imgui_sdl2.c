@@ -118,13 +118,6 @@ static void imgui_set_default_style()
    clearColor = *ImVec4_ImVec4Float(0.45f, 0.55f, 0.60f, 1.00f);
 }
 
-/* test code */
-size_t kami_render_audio(const int16_t *data, size_t frames)
-{
-   //SDL_QueueAudio(device, data, 4 * frames);
-   return frames;
-}
-
 int kami_render_framebuffer(const core_frame_buffer_t *frame_buffer, unsigned pixel_format)
 {
    if (!texture)
@@ -399,6 +392,7 @@ int main(int argc, char* argv[])
 {
    logger_set_level(LOG_DEBUG);
    init_localization();
+
    common_config_load();
    if (!create_window(app_name, WINDOW_WIDTH, WINDOW_HEIGHT))
       return -1;
@@ -409,6 +403,9 @@ int main(int argc, char* argv[])
 
    imgui_setup();
    imgui_set_default_style();
+
+   kami_init_audio();
+//   logger(LOG_INFO, tag, "audio driver: %s\n", SDL_GetCurrentAudioDriver());
 
    kami_core_list_init(setting_string_val("directory_cores"));
 
