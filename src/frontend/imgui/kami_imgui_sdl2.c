@@ -4,6 +4,8 @@
 #include "imgui_impl_opengl3.h"
 
 #include "kami.h"
+#include <retro_stat.h>
+#include <file/file_path.h>
 
 
 static const char* tag = "[kami]";
@@ -18,6 +20,8 @@ static bool core_running = false;
 const char* glsl_version;
 
 const char* core_entries[100];
+
+file_list_t *file_selector_list = NULL;
 
 ImVec4 clearColor;
 
@@ -207,6 +211,101 @@ bool igComboStringList(const char* label, int* current_item, struct string_list 
       return false;
 }
 
+bool igComboFileList(const char* label, int* current_item, file_list_t *list, int popup_max_height_in_items)
+{
+   int ret = 0;
+   const char **entries = calloc(list->file_count, sizeof (char *));
+   for (unsigned i = 0; i < list->file_count; i++)
+   {
+      entries[i] = list->file_names[i];
+   }
+   if (igComboStr_arr(label, current_item, entries, list->file_count, 0))
+      return true;
+   else
+      return false;
+}
+
+bool igListBoxFileList(const char* label, int* current_item, file_list_t *list, int popup_max_height_in_items)
+{
+   int ret = 0;
+   const char **entries = calloc(list->file_count, sizeof (char *));
+   for (unsigned i = 0; i < list->file_count; i++)
+   {
+      entries[i] = list->file_names[i];
+   }
+   if (igListBoxStr_arr(label, current_item, entries, list->file_count, popup_max_height_in_items))
+      return true;
+   else
+      return false;
+}
+
+bool igListBoxStringList(const char* label, int* current_item, struct string_list *list, int popup_max_height_in_items)
+{
+   int ret = 0;
+   const char **entries = calloc(list->size, sizeof (char *));
+   for (unsigned i = 0; i < list->size; i++)
+   {
+      entries[i] = list->elems[i].data;
+   }
+   if (igListBoxStr_arr(label, current_item, entries, list->size, 0))
+      return true;
+   else
+      return false;
+}
+
+static bool window_file_selector(char* output, size_t size, const char* dir, const char* extensions)
+{
+   static bool ret = false;
+   static int index = 0;
+
+   static char cur[2048];
+   static char old[2048];
+
+
+
+   static file_list_t* list = NULL;
+
+   igBegin(__("window_file_selector"), NULL, 0);
+
+   if (!list)
+   {
+      strlcpy(cur, dir, sizeof(cur));
+      logger(LOG_DEBUG, tag, "path: %s\n", cur);
+      list = (file_list_t *)calloc(1, sizeof(file_list_t));
+      get_file_list(cur, list, "", true);
+   }
+   else
+   {
+      if (igListBoxFileList(__("file_selector_list_label"), &index, list, 10))
+      {
+         fill_pathname_join(cur, old, list->file_names[index], sizeof(cur));
+         if (path_is_directory(cur))
+         {
+            get_file_list(cur, list, "", true);
+            strlcpy(old, cur, sizeof(old));
+         }
+      }
+   }
+
+
+   if (igButton(__("button_close"), *ImVec2_ImVec2Float(0, 0)) || igButton(__("button_select"), *ImVec2_ImVec2Float(0, 0)))
+   {
+      list = NULL;
+      ret = false;
+
+      strlcpy(output, cur, size);
+   }
+   else
+      ret = true;
+
+
+   igEnd();
+
+   return ret;
+}
+
+static char romfile[2048] = "rom.nes";
+
 static void window_core_control()
 {
    static int previous_core = -1;
@@ -217,6 +316,8 @@ static void window_core_control()
    static bool current_core_supports_no_game;
    static bool current_core_block_extract;
    static bool current_core_full_path;
+
+   static bool file_selector_open;
 
    igBegin(__("window_title_core_control"), NULL, 0);
    igPushItemWidth(igGetWindowWidth() * 0.40f);
@@ -254,13 +355,28 @@ static void window_core_control()
          tooltip(__("core_current_start_core_desc"));
       }
 
-         if(igButton(__("core_current_load_content_label"), *ImVec2_ImVec2Float(0, 0)))
-         {
-            core_load(core_info_list[current_core].file_name, &current_core_info, core_options, false);
-            if (core_load_game("rom.nes"))
-               core_running = true;
-         }
-         tooltip(__("core_current_load_content_desc"));
+      if(igButton(__("core_current_select_content_label"), *ImVec2_ImVec2Float(0, 0)))
+      {
+         file_selector_open = true;
+      }
+
+      if (file_selector_open)
+      {
+         if (!window_file_selector(romfile, sizeof(romfile), "./", NULL))
+            file_selector_open = false;
+      }
+
+      tooltip(__("core_current_load_content_desc"));
+
+      igInputText(__("current_filename_label"), romfile, sizeof(romfile), ImGuiInputTextFlags_ReadOnly, NULL, NULL);
+      tooltip(__("current_filename_desc"));
+      if(igButton(__("core_current_load_content_label"), *ImVec2_ImVec2Float(0, 0)))
+      {
+         core_load(core_info_list[current_core].file_name, &current_core_info, core_options, false);
+         if (core_load_game(romfile))
+            core_running = true;
+      }
+      tooltip(__("core_current_load_content_desc"));
 
       /* Core flags */
       if(igCollapsingHeaderTreeNodeFlags(__("core_current_flags_label"), ImGuiTreeNodeFlags_None))

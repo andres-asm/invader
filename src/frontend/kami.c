@@ -24,9 +24,9 @@ bool kami_core_list_init(const char* in)
    file_list_t *list;
    list = (file_list_t *)calloc(1, sizeof(file_list_t));
 #ifdef _WIN32
-   get_file_list(in, list, ".dll");
+   get_file_list(in, list, ".dll", false);
 #else
-   get_file_list(in, list, ".so");
+   get_file_list(in, list, ".so", false);
 #endif
    logger(LOG_DEBUG, tag, "core count: %d\n", list->file_count);
    for (unsigned i = 0; i < list->file_count; i++)
