@@ -7,36 +7,32 @@ SOURCES_C = \
       ./deps/libretro/compat/fopen_utf8.c \
       ./deps/libretro/dynamic/dylib.c \
       ./deps/libretro/encodings/encoding_utf.c \
-      ./deps/libretro/file/file_path.c \
       ./deps/libretro/file/file_path_io.c \
+      ./deps/libretro/file/file_path.c \
       ./deps/libretro/lists/string_list.c \
       ./deps/libretro/string/stdstring.c \
       ./deps/libretro/vfs/vfs_implementation.c
 
-ifeq ($(WITH_GUI), nuklear)
-   SOURCES_C += \
-         ./src/frontend/nuklear/kami_nuklear_sdl2.c
-   INCLUDE = -I./deps/nuklear -I./include/nuklear -I./src/frontend/nuklear
-else ifeq ($(WITH_GUI), imgui)
+ifeq ($(WITH_GUI), imgui)
    SOURCES_CXX += \
-         ./deps/imgui/imgui.cpp \
-         ./deps/imgui/imgui_draw.cpp \
          ./deps/imgui/imgui_demo.cpp \
+         ./deps/imgui/imgui_draw.cpp \
          ./deps/imgui/imgui_widgets.cpp \
+         ./deps/imgui/imgui.cpp \
+         ./src/backend/libretro/piccolo.cpp \
+         ./src/frontend/common.cpp \
          ./src/frontend/imgui/imgui_impl_opengl3.cpp \
          ./src/frontend/imgui/imgui_impl_sdl.cpp \
          ./src/frontend/imgui/kami_imgui_sdl2.cpp \
-         ./src/frontend/common.cpp \
-         ./src/util.cpp \
          ./src/frontend/kami.cpp \
-         ./src/backend/libretro/piccolo.cpp
+         ./src/util.cpp
    INCLUDE += -I./deps/ -I./deps/imgui
    LIBS +=
-   CFLAGS += -DIMGUI_IMPL_API=""
-   CXXFLAGS += -DIMGUI_IMPL_API="extern \"C\"" -DIMGUI_IMPL_OPENGL_LOADER_GLEW -DINI_CALL_HANDLER_ON_NEW_SECTION=1
+   CFLAGS +=
+   CXXFLAGS += -DIMGUI_IMPL_API="" -DIMGUI_IMPL_OPENGL_LOADER_GLEW
 endif
 
 SOURCES_LOCALIZATION = \
       ./src/frontend/intl/settings.def.c
 
-INCLUDE += -I./deps/inih -I./deps/libretro/include -I./src/ -I./src/backend/ -I./src/frontend/
+INCLUDE += -I./deps/libretro/include -I./src/ -I./src/backend/ -I./src/frontend/

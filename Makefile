@@ -21,6 +21,8 @@ endif
 
 include Makefile.common
 
+OBJDIR = obj/
+
 OBJECTS  = $(SOURCES_CXX:.cpp=.o) $(SOURCES_C:.c=.o)
 LOCALIZATION = $(SOURCES_LOCALIZATION:.c=.po)
 
