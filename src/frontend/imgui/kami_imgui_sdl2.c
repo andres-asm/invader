@@ -244,8 +244,10 @@ static void window_core()
    unsigned width = current_core_info.av_info.geometry.base_width;
    unsigned height = current_core_info.av_info.geometry.base_height;
 
+   float aspect = current_core_info.av_info.geometry.aspect_ratio;
+
    ImTextureID image_texture = (void*)(intptr_t)texture;
-   igImage(image_texture, *ImVec2_ImVec2Float((float)width * 2, (float)height * 2),
+   igImage(image_texture, *ImVec2_ImVec2Float((float)width * 2 * aspect, (float)height * 2),
                           *ImVec2_ImVec2Float(0.0f, 0.0f),
                           *ImVec2_ImVec2Float(1.0f, 1.0f),
                           *ImVec4_ImVec4Float(1.0f, 1.0f, 1.0f, 1.0f),
