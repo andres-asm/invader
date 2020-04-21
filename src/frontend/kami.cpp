@@ -1,15 +1,14 @@
+#include <assert.h>
+#include <compat/strl.h>
+#include <limits.h>
+#include <lists/string_list.h>
+#include <math.h>
+#include <stdarg.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
-#include <stdarg.h>
 #include <string.h>
-#include <math.h>
-#include <assert.h>
-#include <math.h>
-#include <limits.h>
 #include <time.h>
-#include <compat/strl.h>
-#include <lists/string_list.h>
 
 #include "kami.h"
 
@@ -31,8 +30,8 @@ SDL_AudioDeviceID device;
 bool kami_core_list_init(const char* in)
 {
    char buf[PATH_MAX_LENGTH];
-   file_list_t *list;
-   list = (file_list_t *)calloc(1, sizeof(file_list_t));
+   file_list_t* list;
+   list = (file_list_t*)calloc(1, sizeof(file_list_t));
 #ifdef _WIN32
    get_file_list(in, list, ".dll", false);
 #else
@@ -41,7 +40,8 @@ bool kami_core_list_init(const char* in)
    logger(LOG_DEBUG, tag, "core count: %d\n", list->file_count);
    for (unsigned i = 0; i < list->file_count; i++)
    {
-      strlcpy(core_info_list[i].file_name, list->file_names[i], sizeof(core_info_list[i].file_name));
+      strlcpy(
+         core_info_list[i].file_name, list->file_names[i], sizeof(core_info_list[i].file_name));
       snprintf(buf, sizeof(buf), "%s/%s", in, list->file_names[i]);
       core_load(buf, &core_info_list[i], core_options, true);
       core_info_list[i].core_id = i;
@@ -80,7 +80,7 @@ unsigned kami_core_option_get_index(core_option_t* option, struct string_list* v
    return index;
 }
 
-size_t kami_render_audio(const int16_t *data, size_t frames)
+size_t kami_render_audio(const int16_t* data, size_t frames)
 {
    SDL_QueueAudio(device, data, 4 * frames);
    return frames;
@@ -92,7 +92,7 @@ bool kami_init_audio()
 
    logger(LOG_INFO, tag, "audio devices: %d\n", devices);
 
-   for(unsigned i = 0; i < devices; i++)
+   for (unsigned i = 0; i < devices; i++)
       logger(LOG_INFO, tag, "device %d: %s\n", i, SDL_GetAudioDeviceName(i, 0));
 
    SDL_zero(want);
@@ -103,19 +103,27 @@ bool kami_init_audio()
    want.samples = 4096;
    want.callback = NULL;
 
-   logger(LOG_INFO, tag, "want - frequency: %d format: f %d s %d be %d sz %d channels: %d samples: %d\n",
-      want.freq, SDL_AUDIO_ISFLOAT(want.format), SDL_AUDIO_ISSIGNED(want.format), SDL_AUDIO_ISBIGENDIAN(want.format), SDL_AUDIO_BITSIZE(want.format), want.channels, want.samples);
+   logger(
+      LOG_INFO, tag,
+      "want - frequency: %d format: f %d s %d be %d sz %d channels: %d samples: %d\n", want.freq,
+      SDL_AUDIO_ISFLOAT(want.format), SDL_AUDIO_ISSIGNED(want.format),
+      SDL_AUDIO_ISBIGENDIAN(want.format), SDL_AUDIO_BITSIZE(want.format), want.channels,
+      want.samples);
    device = SDL_OpenAudioDevice(0, 0, &want, &have, 0);
-   if(!device) {
+   if (!device)
+   {
       logger(LOG_ERROR, tag, "failed to open audio device: %s\n", SDL_GetError());
       SDL_Quit();
       return false;
-   }
-   else
+   } else
       logger(LOG_ERROR, tag, "opened audio device: %s\n", SDL_GetAudioDeviceName(0, 0));
 
-   logger(LOG_INFO, tag, "have - frequency: %d format: f %d s %d be %d sz %d channels: %d samples: %d\n",
-      have.freq, SDL_AUDIO_ISFLOAT(have.format), SDL_AUDIO_ISSIGNED(have.format), SDL_AUDIO_ISBIGENDIAN(have.format), SDL_AUDIO_BITSIZE(have.format), have.channels, have.samples);
+   logger(
+      LOG_INFO, tag,
+      "have - frequency: %d format: f %d s %d be %d sz %d channels: %d samples: %d\n", have.freq,
+      SDL_AUDIO_ISFLOAT(have.format), SDL_AUDIO_ISSIGNED(have.format),
+      SDL_AUDIO_ISBIGENDIAN(have.format), SDL_AUDIO_BITSIZE(have.format), have.channels,
+      have.samples);
 
    SDL_PauseAudioDevice(device, 0);
    return true;

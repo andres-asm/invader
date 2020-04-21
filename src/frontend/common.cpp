@@ -4,24 +4,24 @@
 static const char* tag = "[common]";
 const char* glsl_version;
 
-SDL_Window *mywindow = NULL;
+SDL_Window* mywindow = NULL;
 SDL_GLContext mycontext = NULL;
 
-bool create_window(const char *app_name, unsigned width, unsigned height)
+bool create_window(const char* app_name, unsigned width, unsigned height)
 {
-
    if (SDL_Init(SDL_INIT_VIDEO) < 0)
    {
       logger(LOG_DEBUG, tag, "failed to init: %s", SDL_GetError());
       return false;
    }
-   if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER|SDL_INIT_EVENTS|SDL_INIT_AUDIO) == -1)
-         logger(LOG_ERROR, tag, SDL_GetError());
-   /* Decide GL+GLSL versions */
+   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_EVENTS | SDL_INIT_AUDIO) == -1)
+      logger(LOG_ERROR, tag, SDL_GetError());
+      /* Decide GL+GLSL versions */
 #if __APPLE__
    /* GL 3.2 Core + GLSL 150 */
    glsl_version = "#version 150";
-   SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG); /* Always required on Mac */
+   SDL_GL_SetAttribute(
+      SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG); /* Always required on Mac */
    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
@@ -42,13 +42,10 @@ bool create_window(const char *app_name, unsigned width, unsigned height)
    SDL_DisplayMode current;
    SDL_GetCurrentDisplayMode(0, &current);
 
-   uint32_t flags = SDL_WINDOW_OPENGL|SDL_WINDOW_SHOWN|SDL_WINDOW_ALLOW_HIGHDPI;
+   uint32_t flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI;
 
    mywindow = SDL_CreateWindow(
-      app_name, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-      width, height,
-      flags
-      );
+      app_name, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags);
    if (mywindow == NULL)
    {
       logger(LOG_DEBUG, tag, "failed to create window: %s", SDL_GetError());
@@ -64,7 +61,6 @@ bool create_window(const char *app_name, unsigned width, unsigned height)
 
    glViewport(0, 0, width, height);
    glewExperimental = 1;
-
 
    bool err = glewInit() != GLEW_OK;
 
@@ -105,6 +101,4 @@ const char* get_glsl_version()
 
 /* Initialize configuration */
 void common_config_load()
-{
-
-}
+{ }

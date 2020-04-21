@@ -19,22 +19,22 @@ msgid "audio_sync_label"
 msgstr "Audio sync"
 
 #: src/frontend/intl/settings.def.c:92 src/frontend/intl/settings.def.c:94
-#: src/frontend/intl/settings.def.c:95
+#: src/frontend/intl/settings.def.c:95 src/frontend/intl/settings.def.c:93
 msgid "button_cancel_desc"
 msgstr "Cancel current operation"
 
 #: src/frontend/intl/settings.def.c:91 src/frontend/intl/settings.def.c:93
-#: src/frontend/intl/settings.def.c:94
+#: src/frontend/intl/settings.def.c:94 src/frontend/intl/settings.def.c:92
 msgid "button_cancel_label"
 msgstr "Cancel"
 
 #: src/frontend/intl/settings.def.c:94 src/frontend/intl/settings.def.c:96
-#: src/frontend/intl/settings.def.c:97
+#: src/frontend/intl/settings.def.c:97 src/frontend/intl/settings.def.c:95
 msgid "button_select_desc"
 msgstr "Select file"
 
 #: src/frontend/intl/settings.def.c:93 src/frontend/intl/settings.def.c:95
-#: src/frontend/intl/settings.def.c:96
+#: src/frontend/intl/settings.def.c:96 src/frontend/intl/settings.def.c:94
 msgid "button_select_label"
 msgstr "Select"
 
@@ -64,14 +64,17 @@ msgid "core_current_extensions_label"
 msgstr "Supported extensions"
 
 #: src/frontend/intl/settings.def.c:87 src/frontend/intl/settings.def.c:88
+#: src/frontend/intl/settings.def.c:86
 msgid "core_current_filename_desc"
 msgstr "Currently selected content file"
 
 #: src/frontend/intl/settings.def.c:86 src/frontend/intl/settings.def.c:87
+#: src/frontend/intl/settings.def.c:85
 msgid "core_current_filename_label"
 msgstr "Filename"
 
 #: src/frontend/intl/settings.def.c:71 src/frontend/intl/settings.def.c:72
+#: src/frontend/intl/settings.def.c:70
 msgid "core_current_flags_desc"
 msgstr "Core flags"
 
@@ -96,15 +99,15 @@ msgstr "Requires full path"
 msgid "core_current_info_desc"
 msgstr "Currently active core information"
 
-#: src/frontend/intl/settings.def.c:89
+#: src/frontend/intl/settings.def.c:89 src/frontend/intl/settings.def.c:87
 msgid "core_current_info_label"
 msgstr "Core information"
 
-#: src/frontend/intl/settings.def.c:91
+#: src/frontend/intl/settings.def.c:91 src/frontend/intl/settings.def.c:89
 msgid "core_current_info_video_desc"
 msgstr "Currently active core vide output information"
 
-#: src/frontend/intl/settings.def.c:90
+#: src/frontend/intl/settings.def.c:90 src/frontend/intl/settings.def.c:88
 msgid "core_current_info_video_label"
 msgstr "Video framebuffer information"
 
@@ -114,14 +117,17 @@ msgid "core_current_label"
 msgstr "Current core"
 
 #: src/frontend/intl/settings.def.c:83 src/frontend/intl/settings.def.c:84
+#: src/frontend/intl/settings.def.c:82
 msgid "core_current_load_content_desc"
 msgstr "Load selected game"
 
 #: src/frontend/intl/settings.def.c:82 src/frontend/intl/settings.def.c:83
+#: src/frontend/intl/settings.def.c:81
 msgid "core_current_load_content_label"
 msgstr "Load game"
 
 #: src/frontend/intl/settings.def.c:81 src/frontend/intl/settings.def.c:82
+#: src/frontend/intl/settings.def.c:80
 msgid "core_current_options_desc"
 msgstr "Currently selected core supported extensions"
 
@@ -131,10 +137,12 @@ msgid "core_current_options_label"
 msgstr "Core options"
 
 #: src/frontend/intl/settings.def.c:85 src/frontend/intl/settings.def.c:86
+#: src/frontend/intl/settings.def.c:84
 msgid "core_current_select_content_desc"
 msgstr "Open a file selector to pick a game file"
 
 #: src/frontend/intl/settings.def.c:84 src/frontend/intl/settings.def.c:85
+#: src/frontend/intl/settings.def.c:83
 msgid "core_current_select_content_label"
 msgstr "Select game"
 
@@ -185,11 +193,11 @@ msgstr "Select a new core"
 msgid "core_selector_label"
 msgstr "Core"
 
-#: src/frontend/intl/settings.def.c:18
+#: src/frontend/intl/settings.def.c:18 src/frontend/intl/settings.def.c:16
 msgid "directory_cores_desc"
 msgstr ""
 
-#: src/frontend/intl/settings.def.c:17
+#: src/frontend/intl/settings.def.c:17 src/frontend/intl/settings.def.c:15
 msgid "directory_cores_label"
 msgstr "Core directory"
 
@@ -202,50 +210,60 @@ msgid "directory_games_label"
 msgstr "Game directory"
 
 #: src/frontend/intl/settings.def.c:46 src/frontend/intl/settings.def.c:20
+#: src/frontend/intl/settings.def.c:18
 msgid "directory_saves_desc"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:45 src/frontend/intl/settings.def.c:19
+#: src/frontend/intl/settings.def.c:17
 msgid "directory_saves_label"
 msgstr "Save directory"
 
 #: src/frontend/intl/settings.def.c:48 src/frontend/intl/settings.def.c:22
+#: src/frontend/intl/settings.def.c:20
 msgid "directory_states_desc"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:47 src/frontend/intl/settings.def.c:21
+#: src/frontend/intl/settings.def.c:19
 msgid "directory_states_label"
 msgstr "Save state directory"
 
-#: src/frontend/intl/settings.def.c:26
+#: src/frontend/intl/settings.def.c:26 src/frontend/intl/settings.def.c:24
 msgid "directory_system_desc"
 msgstr "System directory"
 
-#: src/frontend/intl/settings.def.c:25
+#: src/frontend/intl/settings.def.c:25 src/frontend/intl/settings.def.c:23
 msgid "directory_system_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:104 src/frontend/intl/settings.def.c:105
+#: src/frontend/intl/settings.def.c:103
 msgid "framebuffer_aspect_desc"
 msgstr "Core current aspect ratio"
 
 #: src/frontend/intl/settings.def.c:103 src/frontend/intl/settings.def.c:104
+#: src/frontend/intl/settings.def.c:102
 msgid "framebuffer_aspect_label"
 msgstr "Aspect"
 
 #: src/frontend/intl/settings.def.c:102 src/frontend/intl/settings.def.c:103
+#: src/frontend/intl/settings.def.c:101
 msgid "framebuffer_height_desc"
 msgstr "Core current height"
 
 #: src/frontend/intl/settings.def.c:101 src/frontend/intl/settings.def.c:102
+#: src/frontend/intl/settings.def.c:100
 msgid "framebuffer_height_label"
 msgstr "Height"
 
 #: src/frontend/intl/settings.def.c:100 src/frontend/intl/settings.def.c:101
+#: src/frontend/intl/settings.def.c:99
 msgid "framebuffer_width_desc"
 msgstr "Core current width"
 
 #: src/frontend/intl/settings.def.c:99 src/frontend/intl/settings.def.c:100
+#: src/frontend/intl/settings.def.c:98
 msgid "framebuffer_width_label"
 msgstr "Width"
 
@@ -309,27 +327,27 @@ msgstr "No description available"
 msgid "no_label_available"
 msgstr "No label available"
 
-#: src/frontend/intl/settings.def.c:11
+#: src/frontend/intl/settings.def.c:11 src/frontend/intl/settings.def.c:9
 msgid "setting_categories_audio"
 msgstr "Audio"
 
-#: src/frontend/intl/settings.def.c:9
+#: src/frontend/intl/settings.def.c:9 src/frontend/intl/settings.def.c:7
 msgid "setting_categories_general"
 msgstr "General"
 
-#: src/frontend/intl/settings.def.c:12
+#: src/frontend/intl/settings.def.c:12 src/frontend/intl/settings.def.c:10
 msgid "setting_categories_input"
 msgstr "Input"
 
-#: src/frontend/intl/settings.def.c:8
+#: src/frontend/intl/settings.def.c:8 src/frontend/intl/settings.def.c:6
 msgid "setting_categories_none"
 msgstr "Uncategorized"
 
-#: src/frontend/intl/settings.def.c:13
+#: src/frontend/intl/settings.def.c:13 src/frontend/intl/settings.def.c:11
 msgid "setting_categories_paths"
 msgstr "Directories"
 
-#: src/frontend/intl/settings.def.c:10
+#: src/frontend/intl/settings.def.c:10 src/frontend/intl/settings.def.c:8
 msgid "setting_categories_video"
 msgstr "Video"
 
@@ -353,15 +371,16 @@ msgstr ""
 msgid "video_vsync_label"
 msgstr "Vertical syncronization"
 
-#: src/frontend/intl/settings.def.c:47
+#: src/frontend/intl/settings.def.c:47 src/frontend/intl/settings.def.c:45
 msgid "window_title_core"
 msgstr "Core"
 
 #: src/frontend/intl/settings.def.c:47 src/frontend/intl/settings.def.c:48
+#: src/frontend/intl/settings.def.c:46
 msgid "window_title_core_control"
 msgstr "Core control"
 
-#: src/frontend/intl/settings.def.c:49
+#: src/frontend/intl/settings.def.c:49 src/frontend/intl/settings.def.c:47
 msgid "window_title_file_selector"
 msgstr "File selector"
 
@@ -370,6 +389,6 @@ msgstr "File selector"
 msgid "window_title_settings"
 msgstr "Settings"
 
-#: src/frontend/intl/settings.def.c:46
+#: src/frontend/intl/settings.def.c:46 src/frontend/intl/settings.def.c:44
 msgid "window_title_status"
 msgstr "Status"

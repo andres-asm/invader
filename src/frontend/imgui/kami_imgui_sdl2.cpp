@@ -1,6 +1,6 @@
 #include "imgui.h"
-#include "imgui_impl_sdl.h"
 #include "imgui_impl_opengl3.h"
+#include "imgui_impl_sdl.h"
 
 #include "kami.h"
 
@@ -17,7 +17,7 @@ const char* core_entries[100];
 
 static char filename[2048] = "";
 
-file_list_t *file_selector_list = NULL;
+file_list_t* file_selector_list = NULL;
 
 ImVec4 clearColor;
 ImGuiIO io;
@@ -26,9 +26,9 @@ GLuint texture;
 
 static void init_localization()
 {
-   setlocale (LC_ALL, "");
-   bindtextdomain ("invader", "./intl/");
-   textdomain ("invader");
+   setlocale(LC_ALL, "");
+   bindtextdomain("invader", "./intl/");
+   textdomain("invader");
 }
 
 static void imgui_shutdown()
@@ -129,16 +129,14 @@ int kami_render_framebuffer(const core_frame_buffer_t *frame_buffer, unsigned pi
    switch (pixel_format)
    {
       case RETRO_PIXEL_FORMAT_XRGB8888:
-         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, frame_buffer->width, frame_buffer->height, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, frame_buffer->data);
-         glPixelStorei(GL_UNPACK_ROW_LENGTH, frame_buffer->pitch / sizeof(uint32_t));
-         break;
-      case RETRO_PIXEL_FORMAT_RGB565:
+         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, frame_buffer->width, frame_buffer->height, 0,
+GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, frame_buffer->data); glPixelStorei(GL_UNPACK_ROW_LENGTH,
+frame_buffer->pitch / sizeof(uint32_t)); break; case RETRO_PIXEL_FORMAT_RGB565:
          glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
          glPixelStorei(GL_UNPACK_ROW_LENGTH, frame_buffer->pitch / sizeof(uint16_t));
-         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB565, frame_buffer->width, frame_buffer->height, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, frame_buffer->data);
-         break;
-      default:
-         logger(LOG_DEBUG, tag, "pixel format: %s (%d) unhandled\n", PRINT_PIXFMT(pixel_format), pixel_format);
+         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB565, frame_buffer->width, frame_buffer->height, 0,
+GL_RGB, GL_UNSIGNED_SHORT_5_6_5, frame_buffer->data); break; default: logger(LOG_DEBUG, tag, "pixel
+format: %s (%d) unhandled\n", PRINT_PIXFMT(pixel_format), pixel_format);
 
    }
 
@@ -159,7 +157,8 @@ static void tooltip(const char* desc)
    }
 }
 
-bool igComboStringList(const char* label, int* current_item, struct string_list *list, int popup_max_height_in_items)
+bool igComboStringList(const char* label, int* current_item, struct string_list *list, int
+popup_max_height_in_items)
 {
    int ret = 0;
    const char **entries = calloc(list->size, sizeof (char *));
@@ -173,7 +172,8 @@ bool igComboStringList(const char* label, int* current_item, struct string_list 
       return false;
 }
 
-bool igComboFileList(const char* label, int* current_item, file_list_t *list, int popup_max_height_in_items)
+bool igComboFileList(const char* label, int* current_item, file_list_t *list, int
+popup_max_height_in_items)
 {
    int ret = 0;
    const char **entries = calloc(list->file_count, sizeof (char *));
@@ -187,7 +187,8 @@ bool igComboFileList(const char* label, int* current_item, file_list_t *list, in
       return false;
 }
 
-bool igListBoxFileList(const char* label, int* current_item, file_list_t *list, int popup_max_height_in_items)
+bool igListBoxFileList(const char* label, int* current_item, file_list_t *list, int
+popup_max_height_in_items)
 {
    int ret = 0;
    const char **entries = calloc(list->file_count, sizeof (char *));
@@ -201,7 +202,8 @@ bool igListBoxFileList(const char* label, int* current_item, file_list_t *list, 
       return false;
 }
 
-bool igListBoxStringList(const char* label, int* current_item, struct string_list *list, int popup_max_height_in_items)
+bool igListBoxStringList(const char* label, int* current_item, struct string_list *list, int
+popup_max_height_in_items)
 {
    int ret = 0;
    const char **entries = calloc(list->size, sizeof (char *));
@@ -222,8 +224,8 @@ static void window_status()
 
    igBegin(__("window_title_status"), NULL, 0);
 
-   igText("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / igGetIO()->Framerate, igGetIO()->Framerate);
-   igEnd();
+   igText("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / igGetIO()->Framerate,
+igGetIO()->Framerate); igEnd();
 }
 
 static void window_core()
@@ -324,8 +326,8 @@ static void window_core_control()
    igComboStr_arr(__("core_selector_label"), (int*)(&current_core), core_entries,  core_count, 0);
    tooltip(__("core_selector_desc"));
 
-   igLabelText(__("core_current_label"), !string_is_empty(current_core_label) ? current_core_label : __("core_empty_label"));
-   tooltip(__("core_current_desc"));
+   igLabelText(__("core_current_label"), !string_is_empty(current_core_label) ? current_core_label :
+__("core_empty_label")); tooltip(__("core_current_desc"));
 
    if (core_count !=0 && (previous_core != current_core) || previous_core == -1)
    {
@@ -347,9 +349,8 @@ static void window_core_control()
       {
          if(igButton(__("core_current_start_core_label"), *ImVec2_ImVec2Float(0, 0)))
          {
-            core_load(core_info_list[current_core].file_name, &current_core_info, core_options, false);
-            if (core_load_game(NULL))
-               core_running = true;
+            core_load(core_info_list[current_core].file_name, &current_core_info, core_options,
+false); if (core_load_game(NULL)) core_running = true;
          }
          tooltip(__("core_current_start_core_desc"));
       }
@@ -363,10 +364,11 @@ static void window_core_control()
       }
       tooltip(__("core_current_select_content_desc"));
 
-      igInputText(__("core_current_filename_label"), filename, sizeof(filename), ImGuiInputTextFlags_ReadOnly, NULL, NULL);
-      tooltip(__("core_current_filename_desc"));
+      igInputText(__("core_current_filename_label"), filename, sizeof(filename),
+ImGuiInputTextFlags_ReadOnly, NULL, NULL); tooltip(__("core_current_filename_desc"));
 
-      if(!string_is_empty(filename) && filename_supported(filename, current_core_extensions) && igButton(__("core_current_load_content_label"), *ImVec2_ImVec2Float(0, 0)))
+      if(!string_is_empty(filename) && filename_supported(filename, current_core_extensions) &&
+igButton(__("core_current_load_content_label"), *ImVec2_ImVec2Float(0, 0)))
       {
          core_load(core_info_list[current_core].file_name, &current_core_info, core_options, false);
          if (core_load_game(filename))
@@ -386,7 +388,8 @@ static void window_core_control()
       }
 
       /* Core options V1
-      if(core_option_count() > 0 && igCollapsingHeaderTreeNodeFlags(__("core_current_options_label"), ImGuiTreeNodeFlags_None))
+      if(core_option_count() > 0 &&
+igCollapsingHeaderTreeNodeFlags(__("core_current_options_label"), ImGuiTreeNodeFlags_None))
       {
          for (unsigned i = 0; i < core_option_count(); i++)
          {
@@ -406,20 +409,22 @@ static void window_core_control()
       }
 
       /* Core info
-      if(core_running && igCollapsingHeaderTreeNodeFlags(__("core_current_info_label"), ImGuiTreeNodeFlags_None))
+      if(core_running && igCollapsingHeaderTreeNodeFlags(__("core_current_info_label"),
+ImGuiTreeNodeFlags_None))
       {
-         if(igCollapsingHeaderTreeNodeFlags(__("core_current_info_video_label"), ImGuiTreeNodeFlags_None))
+         if(igCollapsingHeaderTreeNodeFlags(__("core_current_info_video_label"),
+ImGuiTreeNodeFlags_None))
          {
             int base_width = current_core_info.av_info.geometry.base_width;
             int base_height = current_core_info.av_info.geometry.base_height;
             float aspect = current_core_info.av_info.geometry.aspect_ratio;
 
-            igInputInt(__("framebuffer_width_label"), &base_width, 0, 0, ImGuiInputTextFlags_ReadOnly);
-            tooltip(__("framebuffer_width_desc"));
-            igInputInt(__("framebuffer_height_label"), &base_height, 0, 0, ImGuiInputTextFlags_ReadOnly);
-            tooltip(__("framebuffer_height_desc"));
-            igInputFloat(__("framebuffer_aspect_label"), &aspect, 0, 0, "%.3f", ImGuiInputTextFlags_ReadOnly);
-            tooltip(__("framebuffer_aspect_desc"));
+            igInputInt(__("framebuffer_width_label"), &base_width, 0, 0,
+ImGuiInputTextFlags_ReadOnly); tooltip(__("framebuffer_width_desc"));
+            igInputInt(__("framebuffer_height_label"), &base_height, 0, 0,
+ImGuiInputTextFlags_ReadOnly); tooltip(__("framebuffer_height_desc"));
+            igInputFloat(__("framebuffer_aspect_label"), &aspect, 0, 0, "%.3f",
+ImGuiInputTextFlags_ReadOnly); tooltip(__("framebuffer_aspect_desc"));
          }
 
 
@@ -452,10 +457,8 @@ static void window_settings()
                      igCheckbox(label, s->data);
                      break;
                   case SETTING_STRING:
-                     igInputText(label, s->data, sizeof(s->data), ImGuiInputTextFlags_ReadOnly, NULL, NULL);
-                     break;
-                  case SETTING_INT:
-                  case SETTING_UINT:
+                     igInputText(label, s->data, sizeof(s->data), ImGuiInputTextFlags_ReadOnly,
+NULL, NULL); break; case SETTING_INT: case SETTING_UINT:
                   {
                      if (string_is_equal(s->name, "log_level"))
                      {
@@ -491,7 +494,9 @@ static void imgui_draw_frame()
       ImGui_ImplSDL2_ProcessEvent(&e);
       if (e.type == SDL_QUIT)
          quit = true;
-      if (e.type == SDL_WINDOWEVENT && e.window.event == SDL_WINDOWEVENT_CLOSE && e.window.windowID == SDL_GetWindowID(mywindow))
+      if (
+         e.type == SDL_WINDOWEVENT && e.window.event == SDL_WINDOWEVENT_CLOSE
+         && e.window.windowID == SDL_GetWindowID(mywindow))
          quit = true;
    }
 
@@ -500,9 +505,9 @@ static void imgui_draw_frame()
    ImGui_ImplSDL2_NewFrame(mywindow);
    ImGui::NewFrame();
 
-   //window_settings();
-   //window_status();
-   //window_core_control();
+   // window_settings();
+   // window_status();
+   // window_core_control();
    /*
    if (core_running)
       window_core();
@@ -526,7 +531,7 @@ int main(int argc, char* argv[])
    logger_set_level(LOG_DEBUG);
    init_localization();
 
-   //common_config_load();
+   // common_config_load();
    if (!create_window(app_name, WINDOW_WIDTH, WINDOW_HEIGHT))
       return -1;
    mywindow = get_window();
@@ -535,12 +540,12 @@ int main(int argc, char* argv[])
    glsl_version = get_glsl_version();
 
    imgui_setup();
-   //imgui_set_default_style();
+   // imgui_set_default_style();
 
-   //kami_init_audio();
-   //logger(LOG_INFO, tag, "audio driver: %s\n", SDL_GetCurrentAudioDriver());
+   // kami_init_audio();
+   // logger(LOG_INFO, tag, "audio driver: %s\n", SDL_GetCurrentAudioDriver());
 
-   //kami_core_list_init(setting_string_val("directory_cores"));
+   // kami_core_list_init(setting_string_val("directory_cores"));
 
    for (unsigned i = 0; i < core_count; i++)
    {

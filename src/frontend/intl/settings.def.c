@@ -1,9 +1,7 @@
 #include "config.h"
 
-
 static void localization_strings()
 {
-
    /* categories*/
    __("setting_categories_none");
    __("setting_categories_general");
