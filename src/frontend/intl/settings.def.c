@@ -46,6 +46,7 @@ static void localization_strings()
    __("window_title_status");
    __("window_title_core");
    __("window_title_core_control");
+   __("window_title_file_selector");
 
    /* log levels */
    __("log_level_desc_debug");
@@ -81,3 +82,13 @@ static void localization_strings()
    __("core_current_options_desc");
    __("core_current_load_content_label");
    __("core_current_load_content_desc");
+   __("core_current_select_content_label");
+   __("core_current_select_content_desc");
+   __("core_current_filename_label");
+   __("core_current_filename_desc");
+
+   /* window buttons */
+   __("button_cancel_label");
+   __("button_cancel_desc");
+   __("button_select_label");
+   __("button_select_desc");

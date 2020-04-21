@@ -21,6 +21,8 @@ const char* glsl_version;
 
 const char* core_entries[100];
 
+static char filename[2048] = "";
+
 file_list_t *file_selector_list = NULL;
 
 ImVec4 clearColor;
@@ -166,37 +168,6 @@ static void tooltip(const char* desc)
    }
 }
 
-static void window_status()
-{
-   static float f = 0.0f;
-   static int counter = 0;
-
-   igBegin(__("window_title_status"), NULL, 0);
-
-   igText("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / igGetIO()->Framerate, igGetIO()->Framerate);
-   igEnd();
-}
-
-static void window_core()
-{
-   igBegin(__("window_title_core"), NULL, 0);
-   core_run(&frame_buffer, &kami_render_audio);
-   kami_render_framebuffer(&frame_buffer, current_core_info.pixel_format);
-
-   unsigned width = current_core_info.av_info.geometry.base_width;
-   unsigned height = current_core_info.av_info.geometry.base_height;
-
-   ImTextureID image_texture = (void*)(intptr_t)texture;
-   igImage(image_texture, *ImVec2_ImVec2Float((float)width * 2, (float)height * 2),
-                          *ImVec2_ImVec2Float(0.0f, 0.0f),
-                          *ImVec2_ImVec2Float(1.0f, 1.0f),
-                          *ImVec4_ImVec4Float(1.0f, 1.0f, 1.0f, 1.0f),
-                          *ImVec4_ImVec4Float(1.0f, 1.0f, 1.0f, 1.0f));
-
-
-   igEnd();
-}
-
 bool igComboStringList(const char* label, int* current_item, struct string_list *list, int popup_max_height_in_items)
 {
    int ret = 0;
@@ -253,6 +224,37 @@ bool igListBoxStringList(const char* label, int* current_item, struct string_lis
       return false;
 }
 
+static void window_status()
+{
+   static float f = 0.0f;
+   static int counter = 0;
+
+   igBegin(__("window_title_status"), NULL, 0);
+
+   igText("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / igGetIO()->Framerate, igGetIO()->Framerate);
+   igEnd();
+}
+
+static void window_core()
+{
+   igBegin(__("window_title_core"), NULL, 0);
+   core_run(&frame_buffer, &kami_render_audio);
+   kami_render_framebuffer(&frame_buffer, current_core_info.pixel_format);
+
+   unsigned width = current_core_info.av_info.geometry.base_width;
+   unsigned height = current_core_info.av_info.geometry.base_height;
+
+   ImTextureID image_texture = (void*)(intptr_t)texture;
+   igImage(image_texture, *ImVec2_ImVec2Float((float)width * 2, (float)height * 2),
+                          *ImVec2_ImVec2Float(0.0f, 0.0f),
+                          *ImVec2_ImVec2Float(1.0f, 1.0f),
+                          *ImVec4_ImVec4Float(1.0f, 1.0f, 1.0f, 1.0f),
+                          *ImVec4_ImVec4Float(1.0f, 1.0f, 1.0f, 1.0f));
+
+
+   igEnd();
+}
+
 static bool window_file_selector(char* output, size_t size, const char* dir, const char* extensions)
 {
    static bool ret = false;
@@ -261,11 +263,12 @@ static bool window_file_selector(char* output, size_t size, const char* dir, con
    static char cur[2048];
    static char old[2048];
 
-
+   static bool cancel_result = false;
+   static bool select_result = false;
 
    static file_list_t* list = NULL;
 
-   igBegin(__("window_file_selector"), NULL, 0);
+   igBegin(__("window_title_file_selector"), NULL, 0);
 
    if (!list)
    {
@@ -276,7 +279,7 @@ static bool window_file_selector(char* output, size_t size, const char* dir, con
    }
    else
    {
-      if (igListBoxFileList(__("file_selector_list_label"), &index, list, 10))
+      if (igListBoxFileList(__(""), &index, list, 10))
       {
          fill_pathname_join(cur, old, list->file_names[index], sizeof(cur));
          if (path_is_directory(cur))
@@ -287,13 +290,19 @@ static bool window_file_selector(char* output, size_t size, const char* dir, con
       }
    }
 
+   cancel_result = igButton(__("button_cancel_label"), *ImVec2_ImVec2Float(0, 0));
+   tooltip(__("button_cancel_desc"));
 
-   if (igButton(__("button_close"), *ImVec2_ImVec2Float(0, 0)) || igButton(__("button_select"), *ImVec2_ImVec2Float(0, 0)))
+   select_result = igButton(__("button_select_label"), *ImVec2_ImVec2Float(0, 0));
+   tooltip(__("button_select_desc"));
+
+   if (cancel_result || select_result)
    {
       list = NULL;
       ret = false;
 
-      strlcpy(output, cur, size);
+      if (select_result)
+         strlcpy(output, cur, size);
    }
    else
       ret = true;
@@ -303,8 +312,6 @@ static bool window_file_selector(char* output, size_t size, const char* dir, con
 
    return ret;
 }
-
-static char romfile[2048] = "rom.nes";
 
 static void window_core_control()
 {
@@ -356,24 +363,21 @@ static void window_core_control()
       }
 
       if(igButton(__("core_current_select_content_label"), *ImVec2_ImVec2Float(0, 0)))
-      {
          file_selector_open = true;
-      }
-
       if (file_selector_open)
       {
-         if (!window_file_selector(romfile, sizeof(romfile), "./", NULL))
+         if (!window_file_selector(filename, sizeof(filename), "./", NULL))
             file_selector_open = false;
       }
+      tooltip(__("core_current_select_content_desc"));
 
-      tooltip(__("core_current_load_content_desc"));
+      igInputText(__("core_current_filename_label"), filename, sizeof(filename), ImGuiInputTextFlags_ReadOnly, NULL, NULL);
+      tooltip(__("core_current_filename_desc"));
 
-      igInputText(__("current_filename_label"), romfile, sizeof(romfile), ImGuiInputTextFlags_ReadOnly, NULL, NULL);
-      tooltip(__("current_filename_desc"));
-      if(igButton(__("core_current_load_content_label"), *ImVec2_ImVec2Float(0, 0)))
+      if(!string_is_empty(filename) && filename_supported(filename, current_core_extensions) && igButton(__("core_current_load_content_label"), *ImVec2_ImVec2Float(0, 0)))
       {
          core_load(core_info_list[current_core].file_name, &current_core_info, core_options, false);
-         if (core_load_game(romfile))
+         if (core_load_game(filename))
             core_running = true;
       }
       tooltip(__("core_current_load_content_desc"));

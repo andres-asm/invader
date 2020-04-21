@@ -97,3 +97,19 @@ void get_file_list(const char *in, file_list_t *out, const char *filter, bool in
       closedir(dir);
    }
 }
+
+bool filename_supported(const char* filename, const char* extensions)
+{
+   bool ret = false;
+   const char* ext = path_get_extension(filename);
+
+   struct string_list* list = string_split(extensions, "|");
+
+      for (unsigned i = 0; i < list->size; i++)
+   {
+      if ((string_is_equal(list->elems[i].data, ext)))
+         ret = true;
+   }
+
+   return ret;
+}

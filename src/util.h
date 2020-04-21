@@ -32,4 +32,6 @@ void logger(int level, const char *tag, const char *fmt, ...);
 
 void get_file_list(const char *in, file_list_t *out, const char *filter, bool include_dirs);
 
+bool filename_supported(const char* filename, const char* extensions);
+
 #endif
