@@ -18,6 +18,13 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 
+#include <libintl.h>
+#include <locale.h>
+#define __(str) gettext(str)
+
+#define WINDOW_WIDTH 1920
+#define WINDOW_HEIGHT 1080
+
 #define UNUSED(a) (void)a
 #define MIN(a,b) ((a) < (b) ? (a) : (b))
 #define MAX(a,b) ((a) < (b) ? (b) : (a))

@@ -7,7 +7,6 @@
 #include <lists/string_list.h>
 
 #include "common.h"
-#include "config.h"
 #include "util.h"
 #include "libretro/piccolo.h"
 

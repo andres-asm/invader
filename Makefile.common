@@ -1,7 +1,6 @@
 CFLAGS += -DHAVE_DYNAMIC
 
 SOURCES_C = \
-      ./deps/inih/ini.c \
       ./deps/libretro/compat/compat_posix_string.c \
       ./deps/libretro/compat/compat_strcasestr.c \
       ./deps/libretro/compat/compat_strl.c \
@@ -20,11 +19,10 @@ ifeq ($(WITH_GUI), nuklear)
    INCLUDE = -I./deps/nuklear -I./include/nuklear -I./src/frontend/nuklear
 else ifeq ($(WITH_GUI), imgui)
    SOURCES_CXX += \
-         ./deps/cimgui/cimgui.cpp \
-         ./deps/cimgui/imgui/imgui.cpp \
-         ./deps/cimgui/imgui/imgui_draw.cpp \
-         ./deps/cimgui/imgui/imgui_demo.cpp \
-         ./deps/cimgui/imgui/imgui_widgets.cpp \
+         ./deps/imgui/imgui.cpp \
+         ./deps/imgui/imgui_draw.cpp \
+         ./deps/imgui/imgui_demo.cpp \
+         ./deps/imgui/imgui_widgets.cpp \
          ./src/frontend/imgui/imgui_impl_opengl3.cpp \
          ./src/frontend/imgui/imgui_impl_sdl.cpp \
          ./src/frontend/imgui/kami_imgui_sdl2.cpp \
@@ -32,10 +30,10 @@ else ifeq ($(WITH_GUI), imgui)
          ./src/util.cpp \
          ./src/frontend/kami.cpp \
          ./src/backend/libretro/piccolo.cpp
-   INCLUDE += -I./deps/ -I./deps/cimgui -I./deps/cimgui/imgui
+   INCLUDE += -I./deps/ -I./deps/imgui
    LIBS +=
    CFLAGS += -DIMGUI_IMPL_API=""
-   CXXFLAGS += -DIMGUI_IMPL_API="extern \"C\"" -DIMGUI_IMPL_OPENGL_LOADER_GLEW -DINI_CALL_HANDLER_ON_NEW_SECTION=1 -D__cplusplus
+   CXXFLAGS += -DIMGUI_IMPL_API="extern \"C\"" -DIMGUI_IMPL_OPENGL_LOADER_GLEW -DINI_CALL_HANDLER_ON_NEW_SECTION=1
 endif
 
 SOURCES_LOCALIZATION = \
