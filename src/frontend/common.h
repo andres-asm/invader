@@ -2,16 +2,16 @@
 #ifndef COMMON_H_
 #define COMMON_H_
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <stdarg.h>
-#include <string.h>
-#include <math.h>
 #include <assert.h>
 #include <limits.h>
-#include <time.h>
+#include <math.h>
+#include <stdarg.h>
 #include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
 #include <GL/glew.h>
 
@@ -26,9 +26,9 @@
 #define WINDOW_HEIGHT 1080
 
 #define UNUSED(a) (void)a
-#define MIN(a,b) ((a) < (b) ? (a) : (b))
-#define MAX(a,b) ((a) < (b) ? (b) : (a))
-#define LEN(a) (sizeof(a)/sizeof(a)[0])
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
+#define MAX(a, b) ((a) < (b) ? (b) : (a))
+#define LEN(a) (sizeof(a) / sizeof(a)[0])
 
 #define MAX_SIZE 256
 #define MAX_VERTEX_MEMORY 512 * 1024
@@ -37,7 +37,7 @@
 #define MAX_VERTEX_BUFFER 512 * 1024
 #define MAX_ELEMENT_BUFFER 128 * 1024
 
-extern SDL_Window *mywindow;
+extern SDL_Window* mywindow;
 extern SDL_GLContext mycontext;
 
 extern const char* glsl_version;
