@@ -253,7 +253,6 @@ static void window_core()
                           *ImVec4_ImVec4Float(1.0f, 1.0f, 1.0f, 1.0f),
                           *ImVec4_ImVec4Float(1.0f, 1.0f, 1.0f, 1.0f));
 
-
    igEnd();
 }
 
