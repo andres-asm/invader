@@ -13,6 +13,16 @@
 
 #include "kami.h"
 
+core_frame_buffer_t frame_buffer;
+
+core_info_t core_info_list[100];
+core_option_t core_options[1000];
+
+core_info_t current_core_info;
+
+unsigned core_count;
+unsigned current_core;
+
 static const char* tag = "[invader]";
 
 SDL_AudioSpec want, have;

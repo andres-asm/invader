@@ -1,12 +1,8 @@
-#define CIMGUI_DEFINE_ENUMS_AND_STRUCTS
-#include "cimgui.h"
+#include "imgui.h"
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_opengl3.h"
 
 #include "kami.h"
-#include <retro_stat.h>
-#include <file/file_path.h>
-
 
 static const char* tag = "[kami]";
 static const char* app_name = "invader";
@@ -17,8 +13,6 @@ static bool showAnotherWindow = false;
 
 static bool core_running = false;
 
-const char* glsl_version;
-
 const char* core_entries[100];
 
 static char filename[2048] = "";
@@ -26,10 +20,6 @@ static char filename[2048] = "";
 file_list_t *file_selector_list = NULL;
 
 ImVec4 clearColor;
-
-SDL_Window *window;
-SDL_GLContext context;
-
 ImGuiIO io;
 
 GLuint texture;
@@ -45,20 +35,21 @@ static void imgui_shutdown()
 {
    ImGui_ImplOpenGL3_Shutdown();
    ImGui_ImplSDL2_Shutdown();
-   igDestroyContext(NULL);
+   ImGui::DestroyContext(NULL);
 }
 
 static void imgui_setup()
 {
-   igCreateContext(NULL);
-   io = *igGetIO();
-   ImGui_ImplSDL2_InitForOpenGL(window, context);
+   ImGui::CreateContext(NULL);
+   io = ImGui::GetIO();
+   ImGui_ImplSDL2_InitForOpenGL(mywindow, mycontext);
    ImGui_ImplOpenGL3_Init(glsl_version);
 
-   igStyleColorsDark(NULL);
-   ImFontAtlas_AddFontDefault(io.Fonts, NULL);
+   ImGui::StyleColorsDark(NULL);
+   io.Fonts->AddFontDefault();
 }
 
+/*
 static void imgui_set_default_style()
 {
     ImGuiStyle *style = igGetStyle();
@@ -237,7 +228,7 @@ static void window_status()
 
 static void window_core()
 {
-   igBegin(__("window_title_core"), NULL, 0);
+   igBegin(__("window_title_core"), NULL, ImGuiWindowFlags_AlwaysAutoResize);
    core_run(&frame_buffer, &kami_render_audio);
    kami_render_framebuffer(&frame_buffer, current_core_info.pixel_format);
 
@@ -247,7 +238,7 @@ static void window_core()
    float aspect = current_core_info.av_info.geometry.aspect_ratio;
 
    ImTextureID image_texture = (void*)(intptr_t)texture;
-   igImage(image_texture, *ImVec2_ImVec2Float((float)width * 2 * aspect, (float)height * 2),
+   igImage(image_texture, *ImVec2_ImVec2Float((float)height * 2 * aspect, (float)height * 2),
                           *ImVec2_ImVec2Float(0.0f, 0.0f),
                           *ImVec2_ImVec2Float(1.0f, 1.0f),
                           *ImVec4_ImVec4Float(1.0f, 1.0f, 1.0f, 1.0f),
@@ -336,7 +327,7 @@ static void window_core_control()
    igLabelText(__("core_current_label"), !string_is_empty(current_core_label) ? current_core_label : __("core_empty_label"));
    tooltip(__("core_current_desc"));
 
-   if (core_count !=0 && (/*!initialized ||*/ previous_core != current_core) || previous_core == -1)
+   if (core_count !=0 && (previous_core != current_core) || previous_core == -1)
    {
       core_load(core_info_list[current_core].file_name, &current_core_info, core_options, true);
 
@@ -383,7 +374,7 @@ static void window_core_control()
       }
       tooltip(__("core_current_load_content_desc"));
 
-      /* Core flags */
+      /* Core flags
       if(igCollapsingHeaderTreeNodeFlags(__("core_current_flags_label"), ImGuiTreeNodeFlags_None))
       {
          igCheckbox(__("core_current_supports_no_game_label"), &current_core_supports_no_game);
@@ -394,7 +385,7 @@ static void window_core_control()
          tooltip(__("core_current_full_path_desc"));
       }
 
-      /* Core options V1 */
+      /* Core options V1
       if(core_option_count() > 0 && igCollapsingHeaderTreeNodeFlags(__("core_current_options_label"), ImGuiTreeNodeFlags_None))
       {
          for (unsigned i = 0; i < core_option_count(); i++)
@@ -412,6 +403,26 @@ static void window_core_control()
             }
             string_list_free(values);
          }
+      }
+
+      /* Core info
+      if(core_running && igCollapsingHeaderTreeNodeFlags(__("core_current_info_label"), ImGuiTreeNodeFlags_None))
+      {
+         if(igCollapsingHeaderTreeNodeFlags(__("core_current_info_video_label"), ImGuiTreeNodeFlags_None))
+         {
+            int base_width = current_core_info.av_info.geometry.base_width;
+            int base_height = current_core_info.av_info.geometry.base_height;
+            float aspect = current_core_info.av_info.geometry.aspect_ratio;
+
+            igInputInt(__("framebuffer_width_label"), &base_width, 0, 0, ImGuiInputTextFlags_ReadOnly);
+            tooltip(__("framebuffer_width_desc"));
+            igInputInt(__("framebuffer_height_label"), &base_height, 0, 0, ImGuiInputTextFlags_ReadOnly);
+            tooltip(__("framebuffer_height_desc"));
+            igInputFloat(__("framebuffer_aspect_label"), &aspect, 0, 0, "%.3f", ImGuiInputTextFlags_ReadOnly);
+            tooltip(__("framebuffer_aspect_desc"));
+         }
+
+
       }
 
    }
@@ -470,7 +481,7 @@ static void window_settings()
 
    igEnd();
 }
-
+*/
 static void imgui_draw_frame()
 {
    SDL_Event e;
@@ -480,33 +491,34 @@ static void imgui_draw_frame()
       ImGui_ImplSDL2_ProcessEvent(&e);
       if (e.type == SDL_QUIT)
          quit = true;
-      if (e.type == SDL_WINDOWEVENT && e.window.event == SDL_WINDOWEVENT_CLOSE && e.window.windowID == SDL_GetWindowID(window))
+      if (e.type == SDL_WINDOWEVENT && e.window.event == SDL_WINDOWEVENT_CLOSE && e.window.windowID == SDL_GetWindowID(mywindow))
          quit = true;
    }
 
    /* start imgui frame */
    ImGui_ImplOpenGL3_NewFrame();
-   ImGui_ImplSDL2_NewFrame(window);
-   igNewFrame();
+   ImGui_ImplSDL2_NewFrame(mywindow);
+   ImGui::NewFrame();
 
-   window_settings();
-   window_status();
-   window_core_control();
-
+   //window_settings();
+   //window_status();
+   //window_core_control();
+   /*
    if (core_running)
       window_core();
 
    if (showDemoWindow)
       igShowDemoWindow(&showDemoWindow);
-
-   /* render */
-   igRender();
-   SDL_GL_MakeCurrent(window, context);
+   */
+   bool demo = true;
+   ImGui::ShowDemoWindow(&demo);
+   ImGui::Render();
+   SDL_GL_MakeCurrent(mywindow, mycontext);
    glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
    glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
    glClear(GL_COLOR_BUFFER_BIT);
-   ImGui_ImplOpenGL3_RenderDrawData(igGetDrawData());
-   SDL_GL_SwapWindow(window);
+   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+   SDL_GL_SwapWindow(mywindow);
 }
 
 int main(int argc, char* argv[])
@@ -514,21 +526,21 @@ int main(int argc, char* argv[])
    logger_set_level(LOG_DEBUG);
    init_localization();
 
-   common_config_load();
+   //common_config_load();
    if (!create_window(app_name, WINDOW_WIDTH, WINDOW_HEIGHT))
       return -1;
-   window = get_window();
-   context = get_context();
+   mywindow = get_window();
+   mycontext = get_context();
 
    glsl_version = get_glsl_version();
 
    imgui_setup();
-   imgui_set_default_style();
+   //imgui_set_default_style();
 
-   kami_init_audio();
-//   logger(LOG_INFO, tag, "audio driver: %s\n", SDL_GetCurrentAudioDriver());
+   //kami_init_audio();
+   //logger(LOG_INFO, tag, "audio driver: %s\n", SDL_GetCurrentAudioDriver());
 
-   kami_core_list_init(setting_string_val("directory_cores"));
+   //kami_core_list_init(setting_string_val("directory_cores"));
 
    for (unsigned i = 0; i < core_count; i++)
    {

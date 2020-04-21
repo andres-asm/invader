@@ -1,6 +1,6 @@
 /* User interface functions */
-#ifndef INVADER_H_
-#define INVADER_H_
+#ifndef KAMI_H_
+#define KAMI_H_
 
 #include <compat/strl.h>
 #include <string/stdstring.h>
@@ -11,14 +11,14 @@
 #include "util.h"
 #include "libretro/piccolo.h"
 
-core_frame_buffer_t frame_buffer;
+extern core_frame_buffer_t frame_buffer;
 
-core_info_t core_info_list[100];
-core_option_t core_options[1000];
+extern core_info_t core_info_list[100];
+extern core_option_t core_options[1000];
 
-core_info_t current_core_info;
-unsigned core_count;
-unsigned current_core;
+extern core_info_t current_core_info;
+extern unsigned core_count;
+extern unsigned current_core;
 
 bool kami_core_list_init(const char* in);
 

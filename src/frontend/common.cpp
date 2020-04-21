@@ -2,11 +2,11 @@
 #include "config.h"
 #include "util.h"
 
-
 static const char* tag = "[common]";
-SDL_Window *window = NULL;
-SDL_GLContext context = NULL;
 const char* glsl_version;
+
+SDL_Window *mywindow = NULL;
+SDL_GLContext mycontext = NULL;
 
 bool create_window(const char *app_name, unsigned width, unsigned height)
 {
@@ -45,18 +45,18 @@ bool create_window(const char *app_name, unsigned width, unsigned height)
 
    uint32_t flags = SDL_WINDOW_OPENGL|SDL_WINDOW_SHOWN|SDL_WINDOW_ALLOW_HIGHDPI;
 
-   window = SDL_CreateWindow(
+   mywindow = SDL_CreateWindow(
       app_name, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
       width, height,
       flags
       );
-   if (window == NULL)
+   if (mywindow == NULL)
    {
       logger(LOG_DEBUG, tag, "failed to create window: %s", SDL_GetError());
       return -1;
    }
 
-   context = SDL_GL_CreateContext(window);
+   mycontext = SDL_GL_CreateContext(mywindow);
    /* enable vsync */
    SDL_GL_SetSwapInterval(1);
 
@@ -80,23 +80,23 @@ bool create_window(const char *app_name, unsigned width, unsigned height)
 
 void destroy_window()
 {
-   SDL_GL_DeleteContext(context);
-   if (window != NULL)
+   SDL_GL_DeleteContext(mycontext);
+   if (mywindow != NULL)
    {
-      SDL_DestroyWindow(window);
-      window = NULL;
+      SDL_DestroyWindow(mywindow);
+      mywindow = NULL;
    }
    SDL_Quit();
 }
 
 SDL_GLContext get_context()
 {
-   return context;
+   return mycontext;
 }
 
 SDL_Window* get_window()
 {
-   return window;
+   return mywindow;
 }
 
 const char* get_glsl_version()
@@ -108,5 +108,5 @@ const char* get_glsl_version()
 void common_config_load()
 {
    //config_init();
-   config_load("invader.cfg");
+   //config_load("invader.cfg");
 }

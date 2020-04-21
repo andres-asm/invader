@@ -30,6 +30,11 @@
 #define MAX_VERTEX_BUFFER 512 * 1024
 #define MAX_ELEMENT_BUFFER 128 * 1024
 
+extern SDL_Window *mywindow;
+extern SDL_GLContext mycontext;
+
+extern const char* glsl_version;
+
 bool create_window(const char* app_name, unsigned width, unsigned height);
 void destroy_window();
 

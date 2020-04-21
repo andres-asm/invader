@@ -86,9 +86,20 @@ static void localization_strings()
    __("core_current_select_content_desc");
    __("core_current_filename_label");
    __("core_current_filename_desc");
+   __("core_current_info_label");
+   __("core_current_info_video_label");
+   __("core_current_info_video_desc");
 
    /* window buttons */
    __("button_cancel_label");
    __("button_cancel_desc");
    __("button_select_label");
    __("button_select_desc");
+
+   /* core info */
+   __("framebuffer_width_label");
+   __("framebuffer_width_desc");
+   __("framebuffer_height_label");
+   __("framebuffer_height_desc");
+   __("framebuffer_aspect_label");
+   __("framebuffer_aspect_desc");
