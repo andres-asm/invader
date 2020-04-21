@@ -1,13 +1,14 @@
 {
-   "terminal.integrated.shell.windows":    "C:\\msys64\\usr\\bin\\bash.exe",
+   "terminal.integrated.shell.windows": "C:\\msys64\\usr\\bin\\bash.exe",
    "terminal.integrated.env.windows": {
       "PATH": "/mingw64/lib/ccache/bin:/mingw64/lib/ccache/bin:/mingw64/lib/ccache/bin:/mingw64/bin:/usr/local/bin:/usr/bin:/bin:$PATH",
       "MSYSTEM": "MINGW64",
    },
    "terminal.integrated.cursorBlinking": true,
-
    "editor.tabSize": 3,
    "editor.detectIndentation": false,
+   "editor.formatOnSave": true,
+   "clang-format.executable": "E:\\msys64\\mingw64\\bin\\clang-format.exe",
    "editor.renderWhitespace": "all",
    "editor.insertSpaces": true,
    "files.associations": {
