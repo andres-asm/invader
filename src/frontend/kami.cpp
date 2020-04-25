@@ -27,6 +27,8 @@ static const char* tag = "[invader]";
 SDL_AudioSpec want, have;
 SDL_AudioDeviceID device;
 
+Piccolo* piccolo;
+
 bool kami_core_list_init(const char* in)
 {
    char buf[PATH_MAX_LENGTH];
@@ -40,13 +42,14 @@ bool kami_core_list_init(const char* in)
    logger(LOG_DEBUG, tag, "core count: %d\n", list->file_count);
    for (unsigned i = 0; i < list->file_count; i++)
    {
+      piccolo = new Piccolo(&core_info_list[i], core_options);
       strlcpy(
          core_info_list[i].file_name, list->file_names[i], sizeof(core_info_list[i].file_name));
       snprintf(buf, sizeof(buf), "%s/%s", in, list->file_names[i]);
-      core_load(buf, &core_info_list[i], core_options, true);
-      core_info_list[i].core_id = i;
+      piccolo->core_load(buf, true);
 
 #ifdef DEBUG
+      logger(LOG_DEBUG, tag, "file name: %s\n", core_info_list[i].file_name);
       logger(LOG_DEBUG, tag, "core name: %s\n", core_info_list[i].core_name);
       logger(LOG_DEBUG, tag, "core version: %s\n", core_info_list[i].core_version);
       logger(LOG_DEBUG, tag, "valid extensions: %s\n", core_info_list[i].extensions);
@@ -61,7 +64,7 @@ void kami_core_option_update(core_option_t* option, const char* value)
 {
    logger(LOG_INFO, tag, "changing option %s to %s\n", option->description, value);
    strlcpy(option->value, value, sizeof(option->value));
-   core_options_updated();
+   // core_options_updated();
 }
 
 struct string_list* kami_core_option_get_values(core_option_t* option)

@@ -29,9 +29,11 @@ LOCALIZATION = $(SOURCES_LOCALIZATION:.c=.po)
 ifeq ($(DEBUG),1)
 ifneq ($(OS),Windows_NT)
    CFLAGS += -g -O0 -DDEBUG -pedantic -D_GNU_SOURCE
+   CXXFLAGS += -g -O0 -DDEBUG
    LIBS += -g
 else
    CFLAGS += -g -O0 -DDEBUG -pedantic
+   CXXFLAGS += -g -O0 -DDEBUG
 endif
 else
 ifneq ($(OS),Windows_NT)

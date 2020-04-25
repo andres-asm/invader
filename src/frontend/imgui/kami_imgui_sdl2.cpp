@@ -228,26 +228,6 @@ static void window_status()
 igGetIO()->Framerate); igEnd();
 }
 
-static void window_core()
-{
-   igBegin(__("window_title_core"), NULL, ImGuiWindowFlags_AlwaysAutoResize);
-   core_run(&frame_buffer, &kami_render_audio);
-   kami_render_framebuffer(&frame_buffer, current_core_info.pixel_format);
-
-   unsigned width = current_core_info.av_info.geometry.base_width;
-   unsigned height = current_core_info.av_info.geometry.base_height;
-
-   float aspect = current_core_info.av_info.geometry.aspect_ratio;
-
-   ImTextureID image_texture = (void*)(intptr_t)texture;
-   igImage(image_texture, *ImVec2_ImVec2Float((float)height * 2 * aspect, (float)height * 2),
-                          *ImVec2_ImVec2Float(0.0f, 0.0f),
-                          *ImVec2_ImVec2Float(1.0f, 1.0f),
-                          *ImVec4_ImVec4Float(1.0f, 1.0f, 1.0f, 1.0f),
-                          *ImVec4_ImVec4Float(1.0f, 1.0f, 1.0f, 1.0f));
-
-   igEnd();
-}
 
 static bool window_file_selector(char* output, size_t size, const char* dir, const char* extensions)
 {
@@ -485,6 +465,31 @@ NULL, NULL); break; case SETTING_INT: case SETTING_UINT:
    igEnd();
 }
 */
+
+static void window_core_control()
+{
+   static int current_core = 0;
+   /*
+   static int previous_core = -1;
+   static const char* current_core_label = current_core_info.core_name;
+   static const char* current_core_version = current_core_info.core_version;
+   static const char* current_core_extensions = current_core_info.extensions;
+
+   static bool current_core_supports_no_game;
+   static bool current_core_block_extract;
+   static bool current_core_full_path;
+
+   static bool file_selector_open;
+   */
+
+   ImGui::Begin(__("window_title_core_control"), NULL, 0);
+
+   ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.40f);
+   ImGui::Combo(__("core_selector_label"), &current_core, core_entries, core_count);
+
+   ImGui::End();
+}
+
 static void imgui_draw_frame()
 {
    SDL_Event e;
@@ -507,7 +512,7 @@ static void imgui_draw_frame()
 
    // window_settings();
    // window_status();
-   // window_core_control();
+   window_core_control();
    /*
    if (core_running)
       window_core();
@@ -545,7 +550,7 @@ int main(int argc, char* argv[])
    // kami_init_audio();
    // logger(LOG_INFO, tag, "audio driver: %s\n", SDL_GetCurrentAudioDriver());
 
-   // kami_core_list_init(setting_string_val("directory_cores"));
+   kami_core_list_init("./cores");
 
    for (unsigned i = 0; i < core_count; i++)
    {
