@@ -19,6 +19,8 @@ extern core_info_t current_core_info;
 extern unsigned core_count;
 extern unsigned current_core;
 
+extern Piccolo* piccolo;
+
 bool kami_core_list_init(const char* in);
 
 int kami_render_framebuffer(const core_frame_buffer_t* data, unsigned pixel_format);

@@ -469,23 +469,33 @@ NULL, NULL); break; case SETTING_INT: case SETTING_UINT:
 static void window_core_control()
 {
    static int current_core = 0;
-   /*
    static int previous_core = -1;
+
    static const char* current_core_label = current_core_info.core_name;
    static const char* current_core_version = current_core_info.core_version;
    static const char* current_core_extensions = current_core_info.extensions;
+
+   static bool file_selector_open;
 
    static bool current_core_supports_no_game;
    static bool current_core_block_extract;
    static bool current_core_full_path;
 
-   static bool file_selector_open;
-   */
-
    ImGui::Begin(__("window_title_core_control"), NULL, 0);
 
    ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.40f);
    ImGui::Combo(__("core_selector_label"), &current_core, core_entries, core_count);
+
+   if (core_count != 0 && (previous_core != current_core) || previous_core == -1)
+   {
+      delete piccolo;
+      piccolo = new Piccolo(&core_info_list[current_core], core_options);
+      piccolo->core_load(core_info_list[current_core].file_name, true);
+
+      static bool core_running = false;
+      current_core_supports_no_game = current_core_info.supports_no_game;
+      previous_core = current_core;
+   }
 
    ImGui::End();
 }
