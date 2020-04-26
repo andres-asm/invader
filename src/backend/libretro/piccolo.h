@@ -16,16 +16,19 @@ extern "C" function_t dylib_proc(dylib_t lib, const char* proc);
 #define load_sym(V, S) \
    do \
    { \
-      function_t func = dylib_proc(this->handle, #S); \
+      function_t func = dylib_proc(this->library_handle, #S); \
       memcpy(&V, &func, sizeof(func)); \
       if (!func) \
          logger(LOG_ERROR, tag, "failed to load symbol '" #S "'': %s"); \
    } while (0)
-
 #define load_retro_sym(S) load_sym(this->S, S)
 
-static void piccolo_logger(enum retro_log_level level, const char* fmt, ...)
+static void internal_logger(enum retro_log_level level, const char* fmt, ...)
 {
+#ifndef DEBUG
+   if (level == RETRO_LOG_DEBUG)
+      return;
+#endif
    va_list va;
    char buffer[4096] = {0};
    static const char* level_char = "diwe";
@@ -38,6 +41,7 @@ static void piccolo_logger(enum retro_log_level level, const char* fmt, ...)
    fflush(stderr);
 }
 
+/*core frame buffer data*/
 typedef struct core_frame_buffer
 {
    const void* data;
@@ -46,8 +50,10 @@ typedef struct core_frame_buffer
    unsigned pitch;
 } core_frame_buffer_t;
 
+/*audio callback*/
 typedef size_t (*audio_cb_t)(const int16_t*, size_t);
 
+/*core information*/
 typedef struct core_info
 {
    char file_name[PATH_MAX_LENGTH];
@@ -64,6 +70,7 @@ typedef struct core_info
    struct retro_system_av_info av_info;
 } core_info_t;
 
+/*core options*/
 typedef struct core_option
 {
    char key[100];
@@ -72,20 +79,29 @@ typedef struct core_option
    char values[PATH_MAX_LENGTH];
 } core_option_t;
 
+enum core_status
+{
+   CORE_STATUS_NONE = 0,
+   CORE_STATUS_LOADED,
+   CORE_STATUS_RUNNING
+};
+
+/*piccolo class is the class that interacts with the libretro core directly*/
 class Piccolo
 {
-  private:
+private:
    /*variables*/
-   void* handle;
-   bool initialized;
+   void* library_handle;
+   enum core_status status;
    unsigned core_option_count;
-   bool core_options_updated;
+   bool options_updated;
 
-   /*libretro variables*/
    core_option_t core_options[1000];
    core_info_t* core_info;
    core_frame_buffer_t* video_data;
    audio_cb_t audio_callback;
+
+   /*libretro variables*/
    struct retro_system_info system_info;
    struct retro_system_av_info av_info;
 
@@ -114,37 +130,88 @@ class Piccolo
    static void core_audio_sample(int16_t left, int16_t right);
    static size_t core_audio_sample_batch(const int16_t* data, size_t frames);
    static int16_t core_input_state(unsigned port, unsigned device, unsigned index, unsigned id);
-
    static bool core_set_environment(unsigned cmd, void* data);
 
-  public:
+public:
    /*constructor*/
-   Piccolo(core_info_t* info);
+   Piccolo(core_info_t* info) { core_info = info; }
 
    /*helper functions*/
+   /*load core*/
    bool load_core(const char* in, bool peek);
+   /*load game*/
    bool load_game(const char* in);
+
+   /*accessors*/
+   /*get core information*/
+   core_info_t* get_info() { return core_info; }
+   /*get core options array*/
+   core_option_t* get_options() { return core_options; }
+   /*get core options count*/
+   unsigned get_option_count() { return core_option_count; }
+
+   /*set the current core instance*/
    void set_instance_ptr(Piccolo* piccolo);
-   core_option_t* get_options();
-   unsigned get_option_count();
-   core_info_t* get_info();
 };
 
+/*piccolo controller is a wrapper for piccolo with the single purpose of making sure the correct instance pointer is set
+ * in every function call to achieve multi-instancing*/
 class PiccoloController
 {
-  private:
+private:
    Piccolo* piccolo;
 
-  public:
-   PiccoloController(core_info_t* info);
-   ~PiccoloController();
-   bool peek_core(const char* in);
-   bool load_core(const char* in);
-   bool load_game(const char* in);
-   void core_deinit();
-   core_option_t* get_options();
-   unsigned get_option_count();
-   core_info_t* get_info();
+public:
+   /*constructor*/
+   PiccoloController(core_info_t* info) { piccolo = new Piccolo(info); }
+   /*destructor*/
+   ~PiccoloController() { }
+
+   /*load core for use*/
+   bool load_core(const char* in)
+   {
+      piccolo->set_instance_ptr(piccolo);
+      return piccolo->load_core(in, false);
+   }
+   /*load core to peek for core information*/
+   bool peek_core(const char* in)
+   {
+      piccolo->set_instance_ptr(piccolo);
+      return piccolo->load_core(in, true);
+   }
+   /*load game*/
+   bool load_game(const char* in)
+   {
+      piccolo->set_instance_ptr(piccolo);
+      return piccolo->load_game(in);
+   }
+
+   /*accessors*/
+   /*get core information*/
+   core_info_t* get_info()
+   {
+      piccolo->set_instance_ptr(piccolo);
+      return piccolo->get_info();
+   }
+   /*get core options array*/
+   core_option_t* get_options()
+   {
+      piccolo->set_instance_ptr(piccolo);
+      return piccolo->get_options();
+   }
+   /*get core options count*/
+   unsigned get_option_count()
+   {
+      piccolo->set_instance_ptr(piccolo);
+      return piccolo->get_option_count();
+   }
+
+   /*core deinit*/
+   void core_deinit()
+   {
+      piccolo->set_instance_ptr(piccolo);
+      delete piccolo;
+   }
 };
 
 #endif

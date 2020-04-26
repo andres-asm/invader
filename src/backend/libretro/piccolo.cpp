@@ -9,16 +9,13 @@
 
 static const char* tag = "[core]";
 
-static Piccolo* piccolo_ptr;
+/*pointer to the current instance*/
+Piccolo* piccolo_ptr;
 
+/*set the current core instance*/
 void Piccolo::set_instance_ptr(Piccolo* piccolo)
 {
    piccolo_ptr = piccolo;
-}
-
-Piccolo::Piccolo(core_info_t* info)
-{
-   core_info = info;
 }
 
 void Piccolo::core_get_variables(void* data)
@@ -47,17 +44,18 @@ void Piccolo::core_set_variables(void* data)
    struct retro_variable* vars = (struct retro_variable*)data;
 
    /* pointer to count and iterate over options */
-   struct retro_variable* count = vars;
+   struct retro_variable* var = vars;
 
    /* count core options */
-   while (count->key)
+   while (var->key)
    {
-      count++;
+      var++;
       piccolo_ptr->core_option_count++;
    }
    core_option_t* core_options = piccolo_ptr->core_options;
 
    logger(LOG_DEBUG, tag, "variables: %u\n", piccolo_ptr->core_option_count);
+
    for (unsigned i = 0; i < piccolo_ptr->core_option_count; i++)
    {
       unsigned j = 0;
@@ -75,11 +73,10 @@ void Piccolo::core_set_variables(void* data)
       strlcpy(core_options[i].description, vars[i].value, values + 1 - vars[i].value);
       strlcpy(core_options[i].values, values + 2, sizeof(core_options[i].values));
       strlcpy(core_options[i].value, values + 2, value - values - 1);
-#ifdef DEBUG
+
       logger(
          LOG_DEBUG, tag, "key: %s description: %s values: %s default: %s\n", core_options[i].key,
          core_options[i].description, core_options[i].values, core_options[i].value);
-#endif
    }
 }
 
@@ -87,55 +84,71 @@ bool Piccolo::core_set_environment(unsigned cmd, void* data)
 {
    switch (cmd)
    {
-   case RETRO_ENVIRONMENT_SET_SUPPORT_NO_GAME: {
+   case RETRO_ENVIRONMENT_SET_SUPPORT_NO_GAME:
+   {
       logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_SET_SUPPORT_NO_GAME: %s\n", PRINT_BOOLEAN(*(bool*)data));
       piccolo_ptr->core_info->supports_no_game = *(bool*)data;
       break;
    }
-   case RETRO_ENVIRONMENT_SET_VARIABLES: {
+   case RETRO_ENVIRONMENT_SET_VARIABLES:
+   {
       logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_SET_VARIABLES:\n");
       piccolo_ptr->core_set_variables(data);
       break;
    }
-   case RETRO_ENVIRONMENT_GET_VARIABLE: {
+   case RETRO_ENVIRONMENT_GET_VARIABLE:
+   {
       struct retro_variable* var = (struct retro_variable*)data;
       piccolo_ptr->core_get_variables(data);
       logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_VARIABLE: %s=%s\n", var->key, var->value);
       break;
    }
-   case RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE: {
+   case RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE:
+   {
       if (piccolo_ptr->core_options)
-         *(bool*)data = piccolo_ptr->core_options_updated;
-      else
+      {
+         *(bool*)data = piccolo_ptr->options_updated;
+         logger(
+            LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE: %s\n",
+            piccolo_ptr->options_updated ? "true" : "false");
+      } else
          *(bool*)data = false;
-      piccolo_ptr->core_options_updated = false;
+      piccolo_ptr->options_updated = false;
       break;
    }
    case RETRO_ENVIRONMENT_SET_PIXEL_FORMAT:
       logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_SET_PIXEL_FORMAT: %s\n", PRINT_PIXFMT(*(int*)data));
       piccolo_ptr->core_info->pixel_format = *(int*)data;
       break;
-   case RETRO_ENVIRONMENT_GET_LOG_INTERFACE: {
+   case RETRO_ENVIRONMENT_GET_LOG_INTERFACE:
+   {
       logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_LOG_INTERFACE\n");
       struct retro_log_callback* callback = (struct retro_log_callback*)data;
-      callback->log = piccolo_logger;
+      callback->log = internal_logger;
       break;
    }
-   case RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY: {
+   case RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY:
+   {
       logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY\n", "./");
       *(const char**)data = "C:\\";
       break;
    }
-   case RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY: {
+   case RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY:
+   {
       logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY %s\n", "./");
       *(const char**)data = "C:\\";
       break;
    }
-   case RETRO_ENVIRONMENT_GET_CONTENT_DIRECTORY: {
+   case RETRO_ENVIRONMENT_GET_CONTENT_DIRECTORY:
+   {
       logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_CONTENT_DIRECTORY\n", "./");
       *(const char**)data = "C:\\";
       break;
    }
+   case RETRO_ENVIRONMENT_GET_CORE_OPTIONS_VERSION:
+      *(unsigned*)data = 0;
+      logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_CORE_OPTIONS_VERSION: %d\n", *(unsigned*)data);
+      break;
    case RETRO_ENVIRONMENT_GET_CAN_DUPE:
       *(bool*)data = true;
       break;
@@ -148,10 +161,6 @@ bool Piccolo::core_set_environment(unsigned cmd, void* data)
    case RETRO_ENVIRONMENT_GET_FASTFORWARDING:
       logger(LOG_DEBUG, tag, "RETRO_ENVIRONMENT_GET_FASTFORWARDING unhandled\n");
       break;
-   case RETRO_ENVIRONMENT_GET_CORE_OPTIONS_VERSION:
-      *(unsigned*)data = 0;
-      logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_CORE_OPTIONS_VERSION: %d\n", *(unsigned*)data);
-      break;
    default:
       logger(LOG_DEBUG, tag, "unknown command: %d\n", cmd);
    }
@@ -160,21 +169,21 @@ bool Piccolo::core_set_environment(unsigned cmd, void* data)
 
 bool Piccolo::load_game(const char* filename)
 {
-   /* No content code path */
+   /*supports no-game codepath*/
    if (!filename)
    {
       if (this->retro_load_game(NULL))
       {
-         logger(LOG_DEBUG, tag, "loading without content\n");
+         logger(LOG_INFO, tag, "loading without content\n");
          return true;
       } else
       {
-         logger(LOG_DEBUG, tag, "loading failed\n");
+         logger(LOG_ERROR, tag, "loading failed\n");
          return false;
       }
    } else
    {
-      logger(LOG_DEBUG, tag, "loading file %s\n", filename);
+      logger(LOG_INFO, tag, "loading file %s\n", filename);
       if (this->core_info->full_path)
       {
          struct retro_game_info info;
@@ -210,16 +219,19 @@ bool Piccolo::load_game(const char* filename)
    return false;
 }
 
+/*TODO: hook this up*/
 void Piccolo::core_input_poll()
 {
    return;
 }
 
+/*TODO: hook this up*/
 int16_t Piccolo::core_input_state(unsigned port, unsigned device, unsigned index, unsigned id)
 {
    return 0;
 }
 
+/*TODO: hook this up*/
 void Piccolo::core_audio_sample(int16_t left, int16_t right)
 {
    return;
@@ -239,24 +251,10 @@ void Piccolo::core_video_refresh(const void* data, unsigned width, unsigned heig
    return;
 }
 
-core_option_t* Piccolo::get_options()
-{
-   return core_options;
-}
-
-core_info_t* Piccolo::get_info()
-{
-   return core_info;
-}
-
-unsigned Piccolo::get_option_count()
-{
-   return core_option_count;
-}
-
 bool Piccolo::load_core(const char* in, bool peek)
 {
-   initialized = false;
+   status = CORE_STATUS_NONE;
+
    piccolo_ptr = this;
 
    core_option_count = 0;
@@ -271,12 +269,12 @@ bool Piccolo::load_core(const char* in, bool peek)
    void (*set_audio_sample)(retro_audio_sample_t) = NULL;
    void (*set_audio_sample_batch)(retro_audio_sample_batch_t) = NULL;
 
-   handle = dylib_load(in);
+   library_handle = dylib_load(in);
 
    void (*proc)(struct retro_system_info*);
-   proc = (void (*)(struct retro_system_info*))dylib_proc(handle, "retro_get_system_info");
+   proc = (void (*)(struct retro_system_info*))dylib_proc(library_handle, "retro_get_system_info");
 
-   if (!handle)
+   if (!library_handle)
    {
       logger(LOG_ERROR, tag, "failed to load library: %s\n");
       return false;
@@ -299,18 +297,16 @@ bool Piccolo::load_core(const char* in, bool peek)
    core_info->full_path = system_info.need_fullpath;
    core_info->block_extract = system_info.block_extract;
 
-#ifdef DEBUG
    logger(LOG_DEBUG, tag, "retro api version: %d\n", retro_api_version());
    logger(LOG_DEBUG, tag, "core name: %s\n", core_info->core_name);
    logger(LOG_DEBUG, tag, "core version: %s\n", core_info->core_version);
    logger(LOG_DEBUG, tag, "valid extensions: %s\n", core_info->extensions);
-#endif
 
    set_environment(core_set_environment);
 
    if (peek)
    {
-      dylib_close(handle);
+      dylib_close(library_handle);
       return true;
    }
 
@@ -353,8 +349,9 @@ bool Piccolo::load_core(const char* in, bool peek)
       LOG_DEBUG, tag, "geometry: %ux%d/%ux%d %f\n", av_info.geometry.base_width, av_info.geometry.base_height,
       av_info.geometry.max_width, av_info.geometry.max_height, av_info.geometry.aspect_ratio);
    logger(LOG_DEBUG, tag, "timing: %ffps %fHz\n", av_info.timing.fps, av_info.timing.sample_rate);
+
+   status = CORE_STATUS_LOADED;
    retro_init();
-   initialized = true;
 
    return true;
 }
