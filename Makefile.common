@@ -20,6 +20,7 @@ ifeq ($(WITH_GUI), imgui)
          ./deps/imgui/imgui_widgets.cpp \
          ./deps/imgui/imgui.cpp \
          ./src/backend/libretro/piccolo.cpp \
+         ./src/backend/libretro/piccolo_controller.cpp \
          ./src/frontend/common.cpp \
          ./src/frontend/imgui/imgui_impl_opengl3.cpp \
          ./src/frontend/imgui/imgui_impl_sdl.cpp \
@@ -29,7 +30,7 @@ ifeq ($(WITH_GUI), imgui)
    INCLUDE += -I./deps/ -I./deps/imgui
    LIBS +=
    CFLAGS +=
-   CXXFLAGS += -DIMGUI_IMPL_API="" -DIMGUI_IMPL_OPENGL_LOADER_GLEW
+   CXXFLAGS += -DIMGUI_IMPL_API="" -DIMGUI_IMPL_OPENGL_LOADER_GLEW -DRETRO_COMMON_API
 endif
 
 SOURCES_LOCALIZATION = \

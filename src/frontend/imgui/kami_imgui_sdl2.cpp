@@ -311,7 +311,7 @@ __("core_empty_label")); tooltip(__("core_current_desc"));
 
    if (core_count !=0 && (previous_core != current_core) || previous_core == -1)
    {
-      core_load(core_info_list[current_core].file_name, &current_core_info, core_options, true);
+      load_core(core_info_list[current_core].file_name, &current_core_info, core_options, true);
 
       static bool core_running = false;
       current_core_supports_no_game = current_core_info.supports_no_game;
@@ -329,7 +329,7 @@ __("core_empty_label")); tooltip(__("core_current_desc"));
       {
          if(igButton(__("core_current_start_core_label"), *ImVec2_ImVec2Float(0, 0)))
          {
-            core_load(core_info_list[current_core].file_name, &current_core_info, core_options,
+            load_core(core_info_list[current_core].file_name, &current_core_info, core_options,
 false); if (core_load_game(NULL)) core_running = true;
          }
          tooltip(__("core_current_start_core_desc"));
@@ -350,7 +350,7 @@ ImGuiInputTextFlags_ReadOnly, NULL, NULL); tooltip(__("core_current_filename_des
       if(!string_is_empty(filename) && filename_supported(filename, current_core_extensions) &&
 igButton(__("core_current_load_content_label"), *ImVec2_ImVec2Float(0, 0)))
       {
-         core_load(core_info_list[current_core].file_name, &current_core_info, core_options, false);
+         load_core(core_info_list[current_core].file_name, &current_core_info, core_options, false);
          if (core_load_game(filename))
             core_running = true;
       }
@@ -505,7 +505,7 @@ static void window_core_control()
       current_core_info = core_info_list[current_core];
 
       delete controller;
-      controller = new PiccoloController(&current_core_info, core_options);
+      controller = new PiccoloController(&current_core_info);
       controller->core_peek(current_core_info.file_name);
 
       static bool core_running = false;
@@ -525,7 +525,7 @@ static void window_core_control()
       {
          if (ImGui::Button(__("core_current_start_core_label")))
          {
-            controller->core_load(current_core_info.file_name);
+            controller->load_core(current_core_info.file_name);
             // if (core_load_game(NULL))
             //   core_running = true;
          }

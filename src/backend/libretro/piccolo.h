@@ -4,6 +4,15 @@
 #include "libretro.h"
 #include "util.h"
 
+extern "C" {
+#include <dynamic/dylib.h>
+}
+
+extern "C" dylib_t dylib_load(const char* path);
+extern "C" void dylib_close(dylib_t lib);
+extern "C" char* dylib_error(void);
+extern "C" function_t dylib_proc(dylib_t lib, const char* proc);
+
 #define load_sym(V, S) \
    do \
    { \
@@ -14,6 +23,20 @@
    } while (0)
 
 #define load_retro_sym(S) load_sym(this->S, S)
+
+static void piccolo_logger(enum retro_log_level level, const char* fmt, ...)
+{
+   va_list va;
+   char buffer[4096] = {0};
+   static const char* level_char = "diwe";
+
+   va_start(va, fmt);
+   vsnprintf(buffer, sizeof(buffer), fmt, va);
+   va_end(va);
+
+   fprintf(stderr, "[%c] --- %s %s", level_char[level], "[libretro]", buffer);
+   fflush(stderr);
+}
 
 typedef struct core_frame_buffer
 {
@@ -51,16 +74,15 @@ typedef struct core_option
 
 class Piccolo
 {
-   public:
-   Piccolo(core_info_t* info, core_option_t* options);
-   /* variables */
+  private:
+   /*variables*/
    void* handle;
    bool initialized;
    unsigned core_option_count;
    bool core_options_updated;
 
-   /* libretro variables */
-   core_option_t* core_options;
+   /*libretro variables*/
+   core_option_t core_options[1000];
    core_info_t* core_info;
    core_frame_buffer_t* video_data;
    audio_cb_t audio_callback;
@@ -84,11 +106,9 @@ class Piccolo
    void* (*retro_get_memory_data)(unsigned id);
    size_t (*retro_get_memory_size)(unsigned id);
 
-   /* helper functions */
-   bool core_load(const char* in, bool peek);
+   /*internal helper functions*/
    static void core_set_variables(void* data);
    static void core_get_variables(void* data);
-
    static void core_video_refresh(const void* data, unsigned width, unsigned height, size_t pitch);
    static void core_input_poll();
    static void core_audio_sample(int16_t left, int16_t right);
@@ -97,19 +117,26 @@ class Piccolo
 
    static bool core_set_environment(unsigned cmd, void* data);
 
-   void core_set_active(Piccolo* piccolo);
+  public:
+   /*constructor*/
+   Piccolo(core_info_t* info);
+
+   /*helper functions*/
+   bool load_core(const char* in, bool peek);
+   void set_instance_ptr(Piccolo* piccolo);
+   core_option_t* get_options();
 };
 
 class PiccoloController
 {
-   private:
+  private:
    Piccolo* piccolo;
 
-   public:
-   PiccoloController(core_info_t* info, core_option_t* options);
+  public:
+   PiccoloController(core_info_t* info);
    ~PiccoloController();
    bool core_peek(const char* in);
-   bool core_load(const char* in);
+   bool load_core(const char* in);
    void core_deinit();
 };
 

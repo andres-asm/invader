@@ -46,13 +46,13 @@ size_t do_stuff_with_audio(const int16_t *data, size_t frames)
 void main()
 {
    /*
-      void core_load(const char *in, core_info_t *info, core_option_t *options, bool peek);
+      void load_core(const char *in, core_info_t *info, core_option_t *options, bool peek);
       - in is the path to the core file
       - info is a structure that will hold information about the running core
       - options is a structure that will hold core variables
       - peek means we're just looking for core_info, it will close the core immediately
    */
-   core_load("path_to_core_file", &core_info, core_options, false);
+   load_core("path_to_core_file", &core_info, core_options, false);
 
    /*
       bool core_load_game(const char* filename);

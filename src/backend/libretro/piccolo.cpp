@@ -4,16 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-extern "C" {
-// Get declaration for f(int i, char c, float x)
-#include <dynamic/dylib.h>
-}
-
-extern "C" dylib_t dylib_load(const char* path);
-extern "C" void dylib_close(dylib_t lib);
-extern "C" char* dylib_error(void);
-extern "C" function_t dylib_proc(dylib_t lib, const char* proc);
-
 #include "piccolo.h"
 #include "util.h"
 
@@ -21,54 +11,14 @@ static const char* tag = "[core]";
 
 static Piccolo* piccolo_ptr;
 
-static void piccolo_logger(enum retro_log_level level, const char* fmt, ...)
-{
-   va_list va;
-   char buffer[4096] = {0};
-   static const char* level_char = "diwe";
-
-   va_start(va, fmt);
-   vsnprintf(buffer, sizeof(buffer), fmt, va);
-   va_end(va);
-
-   fprintf(stderr, "[%c] --- %s %s", level_char[level], "[libretro]", buffer);
-   fflush(stderr);
-}
-
-PiccoloController::~PiccoloController()
-{ }
-
-PiccoloController::PiccoloController(core_info_t* info, core_option_t* options)
-{
-   piccolo = new Piccolo(info, options);
-}
-
-void PiccoloController::core_deinit()
-{
-   delete piccolo;
-}
-
-bool PiccoloController::core_load(const char* in)
-{
-   piccolo->core_set_active(piccolo);
-   return piccolo->core_load(in, false);
-}
-
-bool PiccoloController::core_peek(const char* in)
-{
-   piccolo->core_set_active(piccolo);
-   return piccolo->core_load(in, true);
-}
-
-void Piccolo::core_set_active(Piccolo* piccolo)
+void Piccolo::set_instance_ptr(Piccolo* piccolo)
 {
    piccolo_ptr = piccolo;
 }
 
-Piccolo::Piccolo(core_info_t* info, core_option_t* options)
+Piccolo::Piccolo(core_info_t* info)
 {
    core_info = info;
-   core_options = options;
 }
 
 void Piccolo::core_get_variables(void* data)
@@ -238,7 +188,12 @@ void Piccolo::core_video_refresh(const void* data, unsigned width, unsigned heig
    return;
 }
 
-bool Piccolo::core_load(const char* in, bool peek)
+core_option_t* Piccolo::get_options()
+{
+   return core_options;
+}
+
+bool Piccolo::load_core(const char* in, bool peek)
 {
    initialized = false;
    piccolo_ptr = this;
@@ -341,55 +296,3 @@ bool Piccolo::core_load(const char* in, bool peek)
 
    return true;
 }
-
-/*
-void core_load(const char* in, core_info_t* info, core_option_t* options, bool peek)
-{
-
-
-   load_retro_sym(retro_init);
-   load_retro_sym(retro_deinit);
-   load_retro_sym(retro_get_system_av_info);
-   load_retro_sym(retro_set_controller_port_device);
-   load_retro_sym(retro_reset);
-   load_retro_sym(retro_run);
-   load_retro_sym(retro_load_game);
-   load_retro_sym(retro_unload_game);
-   load_retro_sym(retro_get_memory_data);
-   load_retro_sym(retro_get_memory_size);
-
-   load_retro_sym(retro_serialize);
-   load_retro_sym(retro_serialize_size);
-   load_retro_sym(retro_unserialize);
-
-   load_sym(set_video_refresh, retro_set_video_refresh);
-   load_sym(set_input_poll, retro_set_input_poll);
-   load_sym(set_input_state, retro_set_input_state);
-   load_sym(set_audio_sample, retro_set_audio_sample);
-   load_sym(set_audio_sample_batch, retro_set_audio_sample_batch);
-
-   set_video_refresh(piccolo_video_refresh);
-   set_input_poll(piccolo_input_poll);
-   set_input_state(piccolo_input_state);
-   set_audio_sample(piccolo_audio_sample);
-   set_audio_sample_batch(piccolo_audio_sample_batch);
-
-   piccolo.retro_get_system_av_info(&piccolo.av_info);
-
-   piccolo.core_info->av_info.geometry.base_width = piccolo.av_info.geometry.base_width;
-   piccolo.core_info->av_info.geometry.base_height = piccolo.av_info.geometry.base_height;
-   piccolo.core_info->av_info.geometry.max_width = piccolo.av_info.geometry.max_width;
-   piccolo.core_info->av_info.geometry.max_height = piccolo.av_info.geometry.max_height;
-   piccolo.core_info->av_info.geometry.aspect_ratio = piccolo.av_info.geometry.aspect_ratio;
-
-   logger(
-      LOG_DEBUG, tag, "geometry: %ux%d/%ux%d %f\n", piccolo.av_info.geometry.base_width,
-      piccolo.av_info.geometry.base_height, piccolo.av_info.geometry.max_width,
-      piccolo.av_info.geometry.max_height, piccolo.av_info.geometry.aspect_ratio);
-   logger(
-      LOG_DEBUG, tag, "timing: %ffps %fHz\n", piccolo.av_info.timing.fps,
-      piccolo.av_info.timing.sample_rate);
-   piccolo.retro_init();
-   piccolo.initialized = true;
-}
- */
