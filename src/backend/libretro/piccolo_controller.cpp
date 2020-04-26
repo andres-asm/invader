@@ -33,3 +33,8 @@ bool PiccoloController::core_peek(const char* in)
    piccolo->set_instance_ptr(piccolo);
    return piccolo->load_core(in, true);
 }
+
+core_option_t PiccoloController::get_options()
+{
+   return piccolo->get_options();
+}

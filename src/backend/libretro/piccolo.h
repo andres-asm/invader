@@ -138,6 +138,7 @@ class PiccoloController
    bool core_peek(const char* in);
    bool load_core(const char* in);
    void core_deinit();
+   core_option_t get_options();
 };
 
 #endif
