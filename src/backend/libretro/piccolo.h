@@ -123,6 +123,7 @@ class Piccolo
 
    /*helper functions*/
    bool load_core(const char* in, bool peek);
+   bool load_game(const char* in);
    void set_instance_ptr(Piccolo* piccolo);
    core_option_t* get_options();
    unsigned get_option_count();
@@ -136,8 +137,9 @@ class PiccoloController
   public:
    PiccoloController(core_info_t* info);
    ~PiccoloController();
-   bool core_peek(const char* in);
+   bool peek_core(const char* in);
    bool load_core(const char* in);
+   bool load_game(const char* in);
    void core_deinit();
    core_option_t* get_options();
    unsigned get_option_count();

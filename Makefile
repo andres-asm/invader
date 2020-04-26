@@ -73,7 +73,7 @@ endif
 
 %.po: %.c
 
-	xgettext -k__ -j -lC --sort-output -o intl/invader.pot $^
+	xgettext -k_ -j -lC --sort-output -o intl/invader.pot $^
 	mkdir -p intl/en/LC_MESSAGES
 	msgmerge --update intl/en/invader.po intl/invader.pot
 	msgfmt --output-file=intl/en/LC_MESSAGES/invader.mo intl/en/invader.po

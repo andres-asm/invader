@@ -44,7 +44,7 @@ bool kami_core_list_init(const char* in)
    {
       controller = new PiccoloController(&core_info_list[i]);
       snprintf(buf, sizeof(buf), "%s/%s", in, list->file_names[i]);
-      controller->core_peek(buf);
+      controller->peek_core(buf);
 
 #ifdef DEBUG
       logger(LOG_DEBUG, tag, "file name: %s\n", core_info_list[i].file_name);
@@ -105,11 +105,9 @@ bool kami_init_audio()
    want.callback = NULL;
 
    logger(
-      LOG_INFO, tag,
-      "want - frequency: %d format: f %d s %d be %d sz %d channels: %d samples: %d\n", want.freq,
-      SDL_AUDIO_ISFLOAT(want.format), SDL_AUDIO_ISSIGNED(want.format),
-      SDL_AUDIO_ISBIGENDIAN(want.format), SDL_AUDIO_BITSIZE(want.format), want.channels,
-      want.samples);
+      LOG_INFO, tag, "want - frequency: %d format: f %d s %d be %d sz %d channels: %d samples: %d\n", want.freq,
+      SDL_AUDIO_ISFLOAT(want.format), SDL_AUDIO_ISSIGNED(want.format), SDL_AUDIO_ISBIGENDIAN(want.format),
+      SDL_AUDIO_BITSIZE(want.format), want.channels, want.samples);
    device = SDL_OpenAudioDevice(0, 0, &want, &have, 0);
    if (!device)
    {
@@ -120,11 +118,9 @@ bool kami_init_audio()
       logger(LOG_ERROR, tag, "opened audio device: %s\n", SDL_GetAudioDeviceName(0, 0));
 
    logger(
-      LOG_INFO, tag,
-      "have - frequency: %d format: f %d s %d be %d sz %d channels: %d samples: %d\n", have.freq,
-      SDL_AUDIO_ISFLOAT(have.format), SDL_AUDIO_ISSIGNED(have.format),
-      SDL_AUDIO_ISBIGENDIAN(have.format), SDL_AUDIO_BITSIZE(have.format), have.channels,
-      have.samples);
+      LOG_INFO, tag, "have - frequency: %d format: f %d s %d be %d sz %d channels: %d samples: %d\n", have.freq,
+      SDL_AUDIO_ISFLOAT(have.format), SDL_AUDIO_ISSIGNED(have.format), SDL_AUDIO_ISBIGENDIAN(have.format),
+      SDL_AUDIO_BITSIZE(have.format), have.channels, have.samples);
 
    SDL_PauseAudioDevice(device, 0);
    return true;

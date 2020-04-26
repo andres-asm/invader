@@ -11,7 +11,7 @@ static bool quit = false;
 static bool showDemoWindow = true;
 static bool showAnotherWindow = false;
 
-static bool core_running = false;
+static bool core_active = false;
 
 const char* core_entries[100];
 
@@ -63,6 +63,20 @@ static void tooltip(const char* desc)
    }
 }
 
+bool string_list_combo(const char* label, int* current_item, struct string_list* list, int popup_max_height_in_items)
+{
+   int ret = 0;
+   char** entries = (char**)calloc(list->size, sizeof(char*));
+   for (unsigned i = 0; i < list->size; i++)
+   {
+      entries[i] = list->elems[i].data;
+   }
+   if (ImGui::Combo(label, current_item, entries, list->size, 0))
+      return true;
+   else
+      return false;
+}
+
 static void window_core_control()
 {
    static int current_core = 0;
@@ -79,11 +93,12 @@ static void window_core_control()
    static bool current_core_full_path;
 
    unsigned option_count = controller->get_option_count();
+   core_option_t* options = controller->get_options();
 
-   ImGui::Begin(__("window_title_core_control"), NULL, 0);
+   ImGui::Begin(_("window_title_core_control"), NULL, 0);
 
    ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.40f);
-   ImGui::Combo(__("core_selector_label"), &current_core, core_entries, core_count);
+   ImGui::Combo(_("core_selector_label"), &current_core, core_entries, core_count);
 
    if (core_count != 0 && (previous_core != current_core) || previous_core == -1)
    {
@@ -92,34 +107,48 @@ static void window_core_control()
       controller->core_deinit();
       delete controller;
       controller = new PiccoloController(&current_core_info);
-      controller->core_peek(current_core_info.file_name);
+      controller->peek_core(current_core_info.file_name);
 
-      static bool core_running = false;
+      static bool core_active = false;
       current_core_supports_no_game = current_core_info.supports_no_game;
       previous_core = current_core;
    }
 
    if (!string_is_empty(current_core_label))
    {
-      ImGui::LabelText(__("core_current_version_label"), current_core_version);
-      tooltip(__("core_current_version_desc"));
-      ImGui::LabelText(__("core_current_extensions_label"), current_core_extensions);
-      tooltip(__("core_current_extensions_desc"));
+      ImGui::LabelText(_("core_current_version_label"), current_core_version);
+      tooltip(_("core_current_version_desc"));
+      ImGui::LabelText(_("core_current_extensions_label"), current_core_extensions);
+      tooltip(_("core_current_extensions_desc"));
 
-      if (current_core_supports_no_game && !core_running)
+      if (current_core_supports_no_game && !core_active)
       {
-         if (ImGui::Button(__("core_current_start_core_label")))
+         if (ImGui::Button(_("core_current_start_core_label")))
          {
             controller->load_core(current_core_info.file_name);
-            // if (core_load_game(NULL))
-            //   core_running = true;
+            core_active = controller->load_game(NULL);
          }
-         tooltip(__("core_current_start_core_desc"));
+         tooltip(_("core_current_start_core_desc"));
       }
       if (option_count > 0)
       {
-         if (ImGui::CollapsingHeader(__("core_current_options_label"), ImGuiTreeNodeFlags_None))
-            ;
+         if (ImGui::CollapsingHeader(_("core_current_options_label"), ImGuiTreeNodeFlags_None))
+         {
+            for (unsigned i = 0; i < option_count; i++)
+            {
+               core_option_t* option = &options[i];
+               char* description = option->description;
+               struct string_list* values = kami_core_option_get_values(option);
+
+               int index = kami_core_option_get_index(option, values);
+               if (string_list_combo(description, &index, values, 0))
+               {
+                  char* value = values->elems[index].data;
+                  kami_core_option_update(option, value);
+               }
+               string_list_free(values);
+            }
+         }
       }
    }
    ImGui::End();
@@ -149,7 +178,7 @@ static void imgui_draw_frame()
    // window_status();
    window_core_control();
    /*
-   if (core_running)
+   if (core_active)
       window_core();
 
    if (showDemoWindow)

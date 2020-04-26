@@ -20,7 +20,7 @@
 
 #include <libintl.h>
 #include <locale.h>
-#define __(str) gettext(str)
+#define _(str) gettext(str)
 
 #define WINDOW_WIDTH 1920
 #define WINDOW_HEIGHT 1080

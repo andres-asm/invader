@@ -28,7 +28,7 @@ bool PiccoloController::load_core(const char* in)
    return piccolo->load_core(in, false);
 }
 
-bool PiccoloController::core_peek(const char* in)
+bool PiccoloController::peek_core(const char* in)
 {
    piccolo->set_instance_ptr(piccolo);
    return piccolo->load_core(in, true);
@@ -42,4 +42,9 @@ core_option_t* PiccoloController::get_options()
 unsigned PiccoloController::get_option_count()
 {
    return piccolo->get_option_count();
+}
+
+bool PiccoloController::load_game(const char* in)
+{
+   return piccolo->load_game(in);
 }
