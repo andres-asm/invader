@@ -21,12 +21,6 @@ static const char* tag = "[core]";
 
 static Piccolo* piccolo_ptr;
 
-Piccolo::Piccolo(core_info_t* info, core_option_t* options)
-{
-   core_info = info;
-   core_options = options;
-}
-
 static void piccolo_logger(enum retro_log_level level, const char* fmt, ...)
 {
    va_list va;
@@ -39,6 +33,42 @@ static void piccolo_logger(enum retro_log_level level, const char* fmt, ...)
 
    fprintf(stderr, "[%c] --- %s %s", level_char[level], "[libretro]", buffer);
    fflush(stderr);
+}
+
+PiccoloController::~PiccoloController()
+{ }
+
+PiccoloController::PiccoloController(core_info_t* info, core_option_t* options)
+{
+   piccolo = new Piccolo(info, options);
+}
+
+void PiccoloController::core_deinit()
+{
+   delete piccolo;
+}
+
+bool PiccoloController::core_load(const char* in)
+{
+   piccolo->core_set_active(piccolo);
+   return piccolo->core_load(in, false);
+}
+
+bool PiccoloController::core_peek(const char* in)
+{
+   piccolo->core_set_active(piccolo);
+   return piccolo->core_load(in, true);
+}
+
+void Piccolo::core_set_active(Piccolo* piccolo)
+{
+   piccolo_ptr = piccolo;
+}
+
+Piccolo::Piccolo(core_info_t* info, core_option_t* options)
+{
+   core_info = info;
+   core_options = options;
 }
 
 void Piccolo::core_get_variables(void* data)
