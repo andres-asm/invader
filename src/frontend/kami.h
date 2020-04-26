@@ -10,14 +10,12 @@
 #include "libretro/piccolo.h"
 #include "util.h"
 
+/*kami class is the class controls a core completely, provides the complete I/O for the core including file I/O, video,
+ * audio, input. Implementation is GUI toolkit / paradygm specific*/
 class Kami
 {
-public:
-   Kami();
-   void Run(const char* title);
-   bool CoreListInit(const char* path);
-
 private:
+   /*variables*/
    PiccoloWrapper* piccolo;
    int current_core;
    int previous_core;
@@ -27,6 +25,19 @@ private:
    /*TODO: refactor this*/
    core_info_t core_list[100];
    const char* core_entries[100];
+
+public:
+   /*constructor*/
+   Kami()
+   {
+      this->piccolo = new PiccoloWrapper(&core_list[0]);
+      active = false;
+      current_core = 0;
+      previous_core = -1;
+      core_info = piccolo->get_info();
+   }
+   void Init(const char* title);
+   bool CoreListInit(const char* path);
 };
 
 extern Kami* kami;

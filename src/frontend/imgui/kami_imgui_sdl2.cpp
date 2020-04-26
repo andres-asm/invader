@@ -76,16 +76,7 @@ bool string_list_combo(const char* label, int* current_item, struct string_list*
       return false;
 }
 
-Kami::Kami()
-{
-   this->piccolo = new PiccoloWrapper(&core_list[0]);
-   current_core = 0;
-   previous_core = -1;
-   active = false;
-   core_info = piccolo->get_info();
-}
-
-void Kami::Run(const char* title)
+void Kami::Init(const char* title)
 {
    bool file_selector_open;
    const char* core_label = core_info->core_name;
@@ -177,8 +168,8 @@ static void imgui_draw_frame()
 
    // window_settings();
    // window_status();
-   kami->Run("Core 1");
-   kami2->Run("Core 2");
+   kami->Init("Core 1");
+   kami2->Init("Core 2");
    /*
    if (core_active)
       window_core();
