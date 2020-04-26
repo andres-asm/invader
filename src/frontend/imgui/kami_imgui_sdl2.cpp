@@ -77,9 +77,9 @@ bool string_list_combo(const char* label, int* current_item, struct string_list*
       return false;
 }
 
-KamiWindow::KamiWindow(PiccoloController* controller)
+KamiWindow::KamiWindow()
 {
-   this->controller = controller;
+   this->controller = new PiccoloController(&core_info_list[0]);
    current_core = 0;
    previous_core = -1;
    active = false;
@@ -218,8 +218,8 @@ int main(int argc, char* argv[])
    // logger(LOG_INFO, tag, "audio driver: %s\n", SDL_GetCurrentAudioDriver());
 
    kami_core_list_init("./cores");
-   kami = new KamiWindow(controller);
-   kami2 = new KamiWindow(controller2);
+   kami = new KamiWindow();
+   kami2 = new KamiWindow();
 
    for (unsigned i = 0; i < core_count; i++)
    {

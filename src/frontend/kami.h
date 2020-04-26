@@ -13,7 +13,7 @@
 class KamiWindow
 {
   public:
-   KamiWindow(PiccoloController* controller);
+   KamiWindow();
    void DrawWindow(const char* title);
 
   private:
