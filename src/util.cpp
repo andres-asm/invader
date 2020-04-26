@@ -28,8 +28,7 @@ void logger_set_level(unsigned level)
 const char* logger_get_level_name(unsigned level)
 {
    const char* levels[] = {
-      "log_level_desc_debug", "log_level_desc_info", "log_level_desc_warning",
-      "log_level_desc_error"};
+      "log_level_desc_debug", "log_level_desc_info", "log_level_desc_warning", "log_level_desc_error"};
    return levels[level];
 }
 
@@ -37,6 +36,10 @@ void logger(int level, const char* tag, const char* fmt, ...)
 {
    if (level >= log_level)
    {
+#ifndef DEBUG
+      if (level == LOG_DEBUG)
+         return;
+#endif
       va_list va;
       char buffer[4096] = {0};
       static const char* level_char = "diwe";

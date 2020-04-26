@@ -20,8 +20,7 @@ bool create_window(const char* app_name, unsigned width, unsigned height)
 #if __APPLE__
    /* GL 3.2 Core + GLSL 150 */
    glsl_version = "#version 150";
-   SDL_GL_SetAttribute(
-      SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG); /* Always required on Mac */
+   SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG); /* Always required on Mac */
    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
@@ -44,8 +43,7 @@ bool create_window(const char* app_name, unsigned width, unsigned height)
 
    uint32_t flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI;
 
-   mywindow = SDL_CreateWindow(
-      app_name, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags);
+   mywindow = SDL_CreateWindow(app_name, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags);
    if (mywindow == NULL)
    {
       logger(LOG_DEBUG, tag, "failed to create window: %s", SDL_GetError());

@@ -42,12 +42,11 @@ bool kami_core_list_init(const char* in)
       snprintf(buf, sizeof(buf), "%s/%s", in, list->file_names[i]);
       controller->peek_core(buf);
 
-#ifdef DEBUG
       logger(LOG_DEBUG, tag, "file name: %s\n", core_info_list[i].file_name);
       logger(LOG_DEBUG, tag, "core name: %s\n", core_info_list[i].core_name);
       logger(LOG_DEBUG, tag, "core version: %s\n", core_info_list[i].core_version);
       logger(LOG_DEBUG, tag, "valid extensions: %s\n", core_info_list[i].extensions);
-#endif
+
       core_count++;
    }
 

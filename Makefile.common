@@ -20,7 +20,6 @@ ifeq ($(WITH_GUI), imgui)
          ./deps/imgui/imgui_widgets.cpp \
          ./deps/imgui/imgui.cpp \
          ./src/backend/libretro/piccolo.cpp \
-         ./src/backend/libretro/piccolo_controller.cpp \
          ./src/frontend/common.cpp \
          ./src/frontend/imgui/imgui_impl_opengl3.cpp \
          ./src/frontend/imgui/imgui_impl_sdl.cpp \

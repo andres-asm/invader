@@ -9,8 +9,7 @@
 #define PRINT_PIXFMT(X) \
    X == RETRO_PIXEL_FORMAT_0RGB1555 \
       ? "0RGB1555" \
-      : X == RETRO_PIXEL_FORMAT_XRGB8888 ? "XRGB8888" \
-                                         : X == RETRO_PIXEL_FORMAT_RGB565 ? "RGB565" : "UNKNOWN"
+      : X == RETRO_PIXEL_FORMAT_XRGB8888 ? "XRGB8888" : X == RETRO_PIXEL_FORMAT_RGB565 ? "RGB565" : "UNKNOWN"
 
 #define ARRAY_SIZE(_ARR) ((int)(sizeof(_ARR) / sizeof(*_ARR)))
 
