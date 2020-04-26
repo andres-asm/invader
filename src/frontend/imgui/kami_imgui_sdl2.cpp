@@ -11,7 +11,6 @@ static bool quit = false;
 static bool showDemoWindow = true;
 static bool showAnotherWindow = false;
 
-const char* core_entries[100];
 static char filename[2048] = "";
 
 file_list_t* file_selector_list = NULL;
@@ -21,8 +20,8 @@ ImGuiIO io;
 
 GLuint texture;
 
-KamiWindow* kami;
-KamiWindow* kami2;
+Kami* kami;
+Kami* kami2;
 
 static void init_localization()
 {
@@ -77,16 +76,16 @@ bool string_list_combo(const char* label, int* current_item, struct string_list*
       return false;
 }
 
-KamiWindow::KamiWindow()
+Kami::Kami()
 {
-   this->controller = new PiccoloWrapper(&core_info_list[0]);
+   this->piccolo = new PiccoloWrapper(&core_list[0]);
    current_core = 0;
    previous_core = -1;
    active = false;
-   core_info = controller->get_info();
+   core_info = piccolo->get_info();
 }
 
-void KamiWindow::DrawWindow(const char* title)
+void Kami::Run(const char* title)
 {
    bool file_selector_open;
    const char* core_label = core_info->core_name;
@@ -97,8 +96,8 @@ void KamiWindow::DrawWindow(const char* title)
    bool block_extract = core_info->block_extract;
    bool full_path = core_info->full_path;
 
-   unsigned option_count = controller->get_option_count();
-   core_option_t* options = controller->get_options();
+   unsigned option_count = piccolo->get_option_count();
+   core_option_t* options = piccolo->get_options();
 
    ImGui::Begin(_(title), NULL, 0);
 
@@ -107,10 +106,10 @@ void KamiWindow::DrawWindow(const char* title)
 
    if (core_count != 0 && (previous_core != current_core) || previous_core == -1)
    {
-      core_info = &core_info_list[current_core];
+      core_info = &core_list[current_core];
 
-      controller = new PiccoloWrapper(core_info);
-      controller->peek_core(core_info->file_name);
+      piccolo = new PiccoloWrapper(core_info);
+      piccolo->peek_core(core_info->file_name);
       active = false;
       previous_core = current_core;
    }
@@ -126,8 +125,8 @@ void KamiWindow::DrawWindow(const char* title)
       {
          if (ImGui::Button(_("core_current_start_core_label")))
          {
-            controller->load_core(core_info->file_name);
-            active = controller->load_game(NULL);
+            piccolo->load_core(core_info->file_name);
+            active = piccolo->load_game(NULL);
          }
          tooltip(_("core_current_start_core_desc"));
       }
@@ -178,8 +177,8 @@ static void imgui_draw_frame()
 
    // window_settings();
    // window_status();
-   kami->DrawWindow("Core 1");
-   kami2->DrawWindow("Core 2");
+   kami->Run("Core 1");
+   kami2->Run("Core 2");
    /*
    if (core_active)
       window_core();
@@ -217,15 +216,12 @@ int main(int argc, char* argv[])
    // kami_init_audio();
    // logger(LOG_INFO, tag, "audio driver: %s\n", SDL_GetCurrentAudioDriver());
 
-   kami_core_list_init("./cores");
-   kami = new KamiWindow();
-   kami2 = new KamiWindow();
+   // kami_core_list_init("./cores");
+   kami = new Kami();
+   kami2 = new Kami();
 
-   for (unsigned i = 0; i < core_count; i++)
-   {
-      core_entries[i] = core_info_list[i].core_name;
-      logger(LOG_DEBUG, tag, "loading file %s\n", core_entries[i]);
-   }
+   kami->CoreListInit("./cores");
+   kami2->CoreListInit("./cores");
 
    while (!quit)
    {

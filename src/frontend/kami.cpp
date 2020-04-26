@@ -14,40 +14,41 @@
 
 core_frame_buffer_t frame_buffer;
 
-core_info_t core_info_list[100];
-
-unsigned core_count;
-unsigned current_core;
-
 static const char* tag = "[invader]";
 
 SDL_AudioSpec want, have;
 SDL_AudioDeviceID device;
 
-bool kami_core_list_init(const char* in)
+bool Kami::CoreListInit(const char* path)
 {
    char buf[PATH_MAX_LENGTH];
    file_list_t* list;
    list = (file_list_t*)calloc(1, sizeof(file_list_t));
 #ifdef _WIN32
-   get_file_list(in, list, ".dll", false);
+   get_file_list(path, list, ".dll", false);
 #else
-   get_file_list(in, list, ".so", false);
+   get_file_list(path, list, ".so", false);
 #endif
 
    logger(LOG_DEBUG, tag, "core count: %d\n", list->file_count);
    for (unsigned i = 0; i < list->file_count; i++)
    {
-      PiccoloWrapper* controller = new PiccoloWrapper(&core_info_list[i]);
-      snprintf(buf, sizeof(buf), "%s/%s", in, list->file_names[i]);
-      controller->peek_core(buf);
+      piccolo = new PiccoloWrapper(&core_list[i]);
+      snprintf(buf, sizeof(buf), "%s/%s", path, list->file_names[i]);
+      piccolo->peek_core(buf);
 
-      logger(LOG_DEBUG, tag, "file name: %s\n", core_info_list[i].file_name);
-      logger(LOG_DEBUG, tag, "core name: %s\n", core_info_list[i].core_name);
-      logger(LOG_DEBUG, tag, "core version: %s\n", core_info_list[i].core_version);
-      logger(LOG_DEBUG, tag, "valid extensions: %s\n", core_info_list[i].extensions);
+      logger(LOG_DEBUG, tag, "file name: %s\n", core_list[i].file_name);
+      logger(LOG_DEBUG, tag, "core name: %s\n", core_list[i].core_name);
+      logger(LOG_DEBUG, tag, "core version: %s\n", core_list[i].core_version);
+      logger(LOG_DEBUG, tag, "valid extensions: %s\n", core_list[i].extensions);
 
       core_count++;
+   }
+
+   for (unsigned i = 0; i < core_count; i++)
+   {
+      core_entries[i] = core_list[i].core_name;
+      logger(LOG_DEBUG, tag, "loading file %s\n", core_entries[i]);
    }
 
    return true;

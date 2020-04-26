@@ -10,32 +10,29 @@
 #include "libretro/piccolo.h"
 #include "util.h"
 
-class KamiWindow
+class Kami
 {
 public:
-   KamiWindow();
-   void DrawWindow(const char* title);
+   Kami();
+   void Run(const char* title);
+   bool CoreListInit(const char* path);
 
 private:
-   PiccoloWrapper* controller;
+   PiccoloWrapper* piccolo;
    int current_core;
    int previous_core;
    bool active;
+   int core_count;
    core_info_t* core_info;
+   /*TODO: refactor this*/
+   core_info_t core_list[100];
+   const char* core_entries[100];
 };
 
-extern KamiWindow* kami;
-extern KamiWindow* kami2;
-
-extern PiccoloWrapper* controller;
-extern PiccoloWrapper* controller2;
+extern Kami* kami;
+extern Kami* kami2;
 
 extern core_frame_buffer_t frame_buffer;
-
-extern core_info_t core_info_list[100];
-
-extern unsigned core_count;
-extern unsigned current_core;
 
 bool kami_core_list_init(const char* in);
 
