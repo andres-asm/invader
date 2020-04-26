@@ -48,3 +48,8 @@ bool PiccoloController::load_game(const char* in)
 {
    return piccolo->load_game(in);
 }
+
+core_info_t* PiccoloController::get_info()
+{
+   return piccolo->get_info();
+}

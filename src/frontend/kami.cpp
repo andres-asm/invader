@@ -16,8 +16,6 @@ core_frame_buffer_t frame_buffer;
 
 core_info_t core_info_list[100];
 
-core_info_t current_core_info;
-
 unsigned core_count;
 unsigned current_core;
 
@@ -27,6 +25,7 @@ SDL_AudioSpec want, have;
 SDL_AudioDeviceID device;
 
 PiccoloController* controller;
+PiccoloController* controller2;
 
 bool kami_core_list_init(const char* in)
 {
@@ -43,8 +42,10 @@ bool kami_core_list_init(const char* in)
    for (unsigned i = 0; i < list->file_count; i++)
    {
       controller = new PiccoloController(&core_info_list[i]);
+      controller2 = new PiccoloController(&core_info_list[i]);
       snprintf(buf, sizeof(buf), "%s/%s", in, list->file_names[i]);
       controller->peek_core(buf);
+      controller2->peek_core(buf);
 
 #ifdef DEBUG
       logger(LOG_DEBUG, tag, "file name: %s\n", core_info_list[i].file_name);

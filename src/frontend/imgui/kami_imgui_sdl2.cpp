@@ -11,10 +11,7 @@ static bool quit = false;
 static bool showDemoWindow = true;
 static bool showAnotherWindow = false;
 
-static bool core_active = false;
-
 const char* core_entries[100];
-
 static char filename[2048] = "";
 
 file_list_t* file_selector_list = NULL;
@@ -23,6 +20,9 @@ ImVec4 clearColor;
 ImGuiIO io;
 
 GLuint texture;
+
+KamiWindow* kami;
+KamiWindow* kami2;
 
 static void init_localization()
 {
@@ -77,59 +77,61 @@ bool string_list_combo(const char* label, int* current_item, struct string_list*
       return false;
 }
 
-static void window_core_control()
+KamiWindow::KamiWindow(PiccoloController* controller)
 {
-   static int current_core = 0;
-   static int previous_core = -1;
+   this->controller = controller;
+   current_core = 0;
+   previous_core = -1;
+   active = false;
+   core_info = controller->get_info();
+}
 
-   static const char* current_core_label = current_core_info.core_name;
-   static const char* current_core_version = current_core_info.core_version;
-   static const char* current_core_extensions = current_core_info.extensions;
+void KamiWindow::DrawWindow(const char* title)
+{
+   bool file_selector_open;
+   const char* core_label = core_info->core_name;
+   const char* core_version = core_info->core_version;
+   const char* supported_extensions = core_info->extensions;
 
-   static bool file_selector_open;
-
-   static bool current_core_supports_no_game;
-   static bool current_core_block_extract;
-   static bool current_core_full_path;
+   bool supports_no_game = core_info->supports_no_game;
+   bool block_extract = core_info->block_extract;
+   bool full_path = core_info->full_path;
 
    unsigned option_count = controller->get_option_count();
    core_option_t* options = controller->get_options();
 
-   ImGui::Begin(_("window_title_core_control"), NULL, 0);
+   ImGui::Begin(_(title), NULL, 0);
 
    ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.40f);
    ImGui::Combo(_("core_selector_label"), &current_core, core_entries, core_count);
 
    if (core_count != 0 && (previous_core != current_core) || previous_core == -1)
    {
-      current_core_info = core_info_list[current_core];
+      core_info = &core_info_list[current_core];
 
-      controller->core_deinit();
-      delete controller;
-      controller = new PiccoloController(&current_core_info);
-      controller->peek_core(current_core_info.file_name);
-
-      static bool core_active = false;
-      current_core_supports_no_game = current_core_info.supports_no_game;
+      controller = new PiccoloController(core_info);
+      controller->peek_core(core_info->file_name);
+      active = false;
       previous_core = current_core;
    }
 
-   if (!string_is_empty(current_core_label))
+   if (!string_is_empty(core_label))
    {
-      ImGui::LabelText(_("core_current_version_label"), current_core_version);
+      ImGui::LabelText(_("core_current_version_label"), core_version);
       tooltip(_("core_current_version_desc"));
-      ImGui::LabelText(_("core_current_extensions_label"), current_core_extensions);
+      ImGui::LabelText(_("core_current_extensions_label"), supported_extensions);
       tooltip(_("core_current_extensions_desc"));
 
-      if (current_core_supports_no_game && !core_active)
+      if (supports_no_game && !active)
       {
          if (ImGui::Button(_("core_current_start_core_label")))
          {
-            controller->load_core(current_core_info.file_name);
-            core_active = controller->load_game(NULL);
+            controller->load_core(core_info->file_name);
+            active = controller->load_game(NULL);
          }
          tooltip(_("core_current_start_core_desc"));
       }
+
       if (option_count > 0)
       {
          if (ImGui::CollapsingHeader(_("core_current_options_label"), ImGuiTreeNodeFlags_None))
@@ -176,7 +178,8 @@ static void imgui_draw_frame()
 
    // window_settings();
    // window_status();
-   window_core_control();
+   kami->DrawWindow("Core 1");
+   kami2->DrawWindow("Core 2");
    /*
    if (core_active)
       window_core();
@@ -215,6 +218,8 @@ int main(int argc, char* argv[])
    // logger(LOG_INFO, tag, "audio driver: %s\n", SDL_GetCurrentAudioDriver());
 
    kami_core_list_init("./cores");
+   kami = new KamiWindow(controller);
+   kami2 = new KamiWindow(controller2);
 
    for (unsigned i = 0; i < core_count; i++)
    {

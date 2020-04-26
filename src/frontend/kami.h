@@ -10,13 +10,30 @@
 #include "libretro/piccolo.h"
 #include "util.h"
 
+class KamiWindow
+{
+  public:
+   KamiWindow(PiccoloController* controller);
+   void DrawWindow(const char* title);
+
+  private:
+   PiccoloController* controller;
+   int current_core;
+   int previous_core;
+   bool active;
+   core_info_t* core_info;
+};
+
+extern KamiWindow* kami;
+extern KamiWindow* kami2;
+
 extern PiccoloController* controller;
+extern PiccoloController* controller2;
 
 extern core_frame_buffer_t frame_buffer;
 
 extern core_info_t core_info_list[100];
 
-extern core_info_t current_core_info;
 extern unsigned core_count;
 extern unsigned current_core;
 

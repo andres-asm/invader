@@ -127,6 +127,7 @@ class Piccolo
    void set_instance_ptr(Piccolo* piccolo);
    core_option_t* get_options();
    unsigned get_option_count();
+   core_info_t* get_info();
 };
 
 class PiccoloController
@@ -143,6 +144,7 @@ class PiccoloController
    void core_deinit();
    core_option_t* get_options();
    unsigned get_option_count();
+   core_info_t* get_info();
 };
 
 #endif

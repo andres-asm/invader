@@ -244,6 +244,11 @@ core_option_t* Piccolo::get_options()
    return core_options;
 }
 
+core_info_t* Piccolo::get_info()
+{
+   return core_info;
+}
+
 unsigned Piccolo::get_option_count()
 {
    return core_option_count;
@@ -256,6 +261,8 @@ bool Piccolo::load_core(const char* in, bool peek)
 
    core_option_count = 0;
    core_info->supports_no_game = false;
+   core_info->block_extract = false;
+   core_info->full_path = false;
 
    void (*set_environment)(retro_environment_t) = NULL;
    void (*set_video_refresh)(retro_video_refresh_t) = NULL;
