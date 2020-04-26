@@ -10,6 +10,8 @@
 #include "libretro/piccolo.h"
 #include "util.h"
 
+extern PiccoloController* controller;
+
 extern core_frame_buffer_t frame_buffer;
 
 extern core_info_t core_info_list[100];
@@ -18,8 +20,6 @@ extern core_option_t core_options[1000];
 extern core_info_t current_core_info;
 extern unsigned core_count;
 extern unsigned current_core;
-
-extern Piccolo* piccolo;
 
 bool kami_core_list_init(const char* in);
 

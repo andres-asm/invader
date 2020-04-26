@@ -466,6 +466,20 @@ NULL, NULL); break; case SETTING_INT: case SETTING_UINT:
 }
 */
 
+static void tooltip(const char* desc)
+{
+   ImGui::SameLine(0, 0);
+   ImGui::TextDisabled("(?)");
+   if (ImGui::IsItemHovered(0))
+   {
+      ImGui::BeginTooltip();
+      ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+      ImGui::TextUnformatted(desc, (const char*)NULL);
+      ImGui::PopTextWrapPos();
+      ImGui::EndTooltip();
+   }
+}
+
 static void window_core_control()
 {
    static int current_core = 0;
@@ -488,15 +502,36 @@ static void window_core_control()
 
    if (core_count != 0 && (previous_core != current_core) || previous_core == -1)
    {
-      delete piccolo;
-      piccolo = new Piccolo(&core_info_list[current_core], core_options);
-      piccolo->core_load(core_info_list[current_core].file_name, true);
+      current_core_info = core_info_list[current_core];
+
+      delete controller;
+      controller = new PiccoloController(&current_core_info, core_options);
+      controller->core_peek(current_core_info.file_name);
 
       static bool core_running = false;
       current_core_supports_no_game = current_core_info.supports_no_game;
       previous_core = current_core;
+      controller->core_deinit();
    }
 
+   if (!string_is_empty(current_core_label))
+   {
+      ImGui::LabelText(__("core_current_version_label"), current_core_version);
+      tooltip(__("core_current_version_desc"));
+      ImGui::LabelText(__("core_current_extensions_label"), current_core_extensions);
+      tooltip(__("core_current_extensions_desc"));
+
+      if (current_core_supports_no_game && !core_running)
+      {
+         if (ImGui::Button(__("core_current_start_core_label")))
+         {
+            controller->core_load(current_core_info.file_name);
+            // if (core_load_game(NULL))
+            //   core_running = true;
+         }
+         tooltip(__("core_current_start_core_desc"));
+      }
+   }
    ImGui::End();
 }
 

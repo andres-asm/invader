@@ -27,7 +27,7 @@ static const char* tag = "[invader]";
 SDL_AudioSpec want, have;
 SDL_AudioDeviceID device;
 
-Piccolo* piccolo;
+PiccoloController* controller;
 
 bool kami_core_list_init(const char* in)
 {
@@ -39,14 +39,15 @@ bool kami_core_list_init(const char* in)
 #else
    get_file_list(in, list, ".so", false);
 #endif
+
    logger(LOG_DEBUG, tag, "core count: %d\n", list->file_count);
    for (unsigned i = 0; i < list->file_count; i++)
    {
-      piccolo = new Piccolo(&core_info_list[i], core_options);
+      controller = new PiccoloController(&core_info_list[i], core_options);
       strlcpy(
          core_info_list[i].file_name, list->file_names[i], sizeof(core_info_list[i].file_name));
       snprintf(buf, sizeof(buf), "%s/%s", in, list->file_names[i]);
-      piccolo->core_load(buf, true);
+      controller->core_peek(buf);
 
 #ifdef DEBUG
       logger(LOG_DEBUG, tag, "file name: %s\n", core_info_list[i].file_name);
