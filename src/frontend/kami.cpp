@@ -43,8 +43,6 @@ bool kami_core_list_init(const char* in)
    for (unsigned i = 0; i < list->file_count; i++)
    {
       controller = new PiccoloController(&core_info_list[i]);
-      strlcpy(
-         core_info_list[i].file_name, list->file_names[i], sizeof(core_info_list[i].file_name));
       snprintf(buf, sizeof(buf), "%s/%s", in, list->file_names[i]);
       controller->core_peek(buf);
 

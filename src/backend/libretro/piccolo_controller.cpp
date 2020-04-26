@@ -34,7 +34,12 @@ bool PiccoloController::core_peek(const char* in)
    return piccolo->load_core(in, true);
 }
 
-core_option_t PiccoloController::get_options()
+core_option_t* PiccoloController::get_options()
 {
    return piccolo->get_options();
+}
+
+unsigned PiccoloController::get_option_count()
+{
+   return piccolo->get_option_count();
 }

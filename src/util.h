@@ -12,7 +12,7 @@
       : X == RETRO_PIXEL_FORMAT_XRGB8888 ? "XRGB8888" \
                                          : X == RETRO_PIXEL_FORMAT_RGB565 ? "RGB565" : "UNKNOWN"
 
-//#define ARRAY_SIZE(_ARR) ((int)(sizeof(_ARR) / sizeof(*_ARR)))
+#define ARRAY_SIZE(_ARR) ((int)(sizeof(_ARR) / sizeof(*_ARR)))
 
 enum logger_level
 {

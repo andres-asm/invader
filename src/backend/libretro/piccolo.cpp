@@ -193,6 +193,11 @@ core_option_t* Piccolo::get_options()
    return core_options;
 }
 
+unsigned Piccolo::get_option_count()
+{
+   return core_option_count;
+}
+
 bool Piccolo::load_core(const char* in, bool peek)
 {
    initialized = false;

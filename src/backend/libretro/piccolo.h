@@ -125,6 +125,7 @@ class Piccolo
    bool load_core(const char* in, bool peek);
    void set_instance_ptr(Piccolo* piccolo);
    core_option_t* get_options();
+   unsigned get_option_count();
 };
 
 class PiccoloController
@@ -138,7 +139,8 @@ class PiccoloController
    bool core_peek(const char* in);
    bool load_core(const char* in);
    void core_deinit();
-   core_option_t get_options();
+   core_option_t* get_options();
+   unsigned get_option_count();
 };
 
 #endif
