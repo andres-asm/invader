@@ -79,7 +79,7 @@ bool string_list_combo(const char* label, int* current_item, struct string_list*
 
 KamiWindow::KamiWindow()
 {
-   this->controller = new PiccoloController(&core_info_list[0]);
+   this->controller = new PiccoloWrapper(&core_info_list[0]);
    current_core = 0;
    previous_core = -1;
    active = false;
@@ -109,7 +109,7 @@ void KamiWindow::DrawWindow(const char* title)
    {
       core_info = &core_info_list[current_core];
 
-      controller = new PiccoloController(core_info);
+      controller = new PiccoloWrapper(core_info);
       controller->peek_core(core_info->file_name);
       active = false;
       previous_core = current_core;

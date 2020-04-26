@@ -38,7 +38,7 @@ bool kami_core_list_init(const char* in)
    logger(LOG_DEBUG, tag, "core count: %d\n", list->file_count);
    for (unsigned i = 0; i < list->file_count; i++)
    {
-      PiccoloController* controller = new PiccoloController(&core_info_list[i]);
+      PiccoloWrapper* controller = new PiccoloWrapper(&core_info_list[i]);
       snprintf(buf, sizeof(buf), "%s/%s", in, list->file_names[i]);
       controller->peek_core(buf);
 

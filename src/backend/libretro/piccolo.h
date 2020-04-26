@@ -156,16 +156,16 @@ public:
 
 /*piccolo controller is a wrapper for piccolo with the single purpose of making sure the correct instance pointer is set
  * in every function call to achieve multi-instancing*/
-class PiccoloController
+class PiccoloWrapper
 {
 private:
    Piccolo* piccolo;
 
 public:
    /*constructor*/
-   PiccoloController(core_info_t* info) { piccolo = new Piccolo(info); }
+   PiccoloWrapper(core_info_t* info) { piccolo = new Piccolo(info); }
    /*destructor*/
-   ~PiccoloController() { }
+   ~PiccoloWrapper() { }
 
    /*load core for use*/
    bool load_core(const char* in)

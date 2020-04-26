@@ -12,12 +12,12 @@
 
 class KamiWindow
 {
-  public:
+public:
    KamiWindow();
    void DrawWindow(const char* title);
 
-  private:
-   PiccoloController* controller;
+private:
+   PiccoloWrapper* controller;
    int current_core;
    int previous_core;
    bool active;
@@ -27,8 +27,8 @@ class KamiWindow
 extern KamiWindow* kami;
 extern KamiWindow* kami2;
 
-extern PiccoloController* controller;
-extern PiccoloController* controller2;
+extern PiccoloWrapper* controller;
+extern PiccoloWrapper* controller2;
 
 extern core_frame_buffer_t frame_buffer;
 
