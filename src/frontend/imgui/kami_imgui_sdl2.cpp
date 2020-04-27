@@ -389,6 +389,7 @@ int main(int argc, char* argv[])
       imgui_draw_frame();
    }
 
+   logger(LOG_DEBUG, tag, "shutting down\n");
    delete kami;
 
    imgui_shutdown();
