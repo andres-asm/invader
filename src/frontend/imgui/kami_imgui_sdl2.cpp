@@ -337,6 +337,35 @@ void Kami::Main(const char* title)
       }
    }
 
+   if (ImGui::Button("Delete.."))
+      ImGui::OpenPopup("Delete?");
+
+   if (ImGui::BeginPopupModal("Delete?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+   {
+      ImGui::Text("All those beautiful files will be deleted.\nThis operation cannot be undone!\n\n");
+      ImGui::Separator();
+
+      // static int dummy_i = 0;
+      // ImGui::Combo("Combo", &dummy_i, "Delete\0Delete harder\0");
+
+      static bool dont_ask_me_next_time = false;
+      ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+      ImGui::Checkbox("Don't ask me next time", &dont_ask_me_next_time);
+      ImGui::PopStyleVar();
+
+      if (ImGui::Button("OK", ImVec2(120, 0)))
+      {
+         ImGui::CloseCurrentPopup();
+      }
+      ImGui::SetItemDefaultFocus();
+      ImGui::SameLine();
+      if (ImGui::Button("Cancel", ImVec2(120, 0)))
+      {
+         ImGui::CloseCurrentPopup();
+      }
+      ImGui::EndPopup();
+   }
+
    ImGui::End();
    return;
 }
