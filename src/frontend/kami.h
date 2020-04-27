@@ -41,6 +41,7 @@ public:
       core_count = 0;
       core_loaded = false;
    }
+   ~Kami() { delete piccolo; }
    void Main(const char* title);
    bool CoreListInit(const char* path);
    int RenderVideo();
