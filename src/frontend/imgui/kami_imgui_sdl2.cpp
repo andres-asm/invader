@@ -154,10 +154,10 @@ int Kami::RenderVideo()
    switch (pixel_format)
    {
       case RETRO_PIXEL_FORMAT_XRGB8888:
+         glPixelStorei(GL_UNPACK_ROW_LENGTH, video_data->pitch / sizeof(uint32_t));
          glTexImage2D(
             GL_TEXTURE_2D, 0, GL_RGB8, video_data->width, video_data->height, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV,
             video_data->data);
-         glPixelStorei(GL_UNPACK_ROW_LENGTH, video_data->pitch / sizeof(uint32_t));
          break;
       case RETRO_PIXEL_FORMAT_RGB565:
          glPixelStorei(GL_UNPACK_ALIGNMENT, 1);

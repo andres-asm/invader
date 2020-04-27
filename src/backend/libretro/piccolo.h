@@ -174,7 +174,11 @@ public:
    /*constructor*/
    PiccoloWrapper() { }
    /*destructor*/
-   ~PiccoloWrapper() { delete piccolo; }
+   ~PiccoloWrapper()
+   {
+      piccolo->set_instance_ptr(piccolo);
+      delete piccolo;
+   }
 
    /*load core for use*/
    bool load_core(const char* in)

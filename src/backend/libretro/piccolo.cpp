@@ -12,7 +12,7 @@
 static const char* tag = "[core]";
 
 /*pointer to the current instance*/
-Piccolo* piccolo_ptr;
+static Piccolo* piccolo_ptr;
 
 /*set the current core instance*/
 void Piccolo::set_instance_ptr(Piccolo* piccolo)
@@ -174,7 +174,7 @@ bool Piccolo::load_game(const char* filename)
    /*supports no-game codepath*/
    if (!filename)
    {
-      if (this->retro_load_game(NULL))
+      if (retro_load_game(NULL))
       {
          logger(LOG_INFO, tag, "loading without content\n");
          return true;
@@ -188,13 +188,13 @@ bool Piccolo::load_game(const char* filename)
    else
    {
       logger(LOG_INFO, tag, "loading file %s\n", filename);
-      if (this->core_info.full_path)
+      if (core_info.full_path)
       {
          struct retro_game_info info;
          info.data = NULL;
          info.size = 0;
          info.path = filename;
-         if (!this->retro_load_game(&info))
+         if (!retro_load_game(&info))
             logger(LOG_ERROR, tag, "core error while opening file %s\n", filename);
          else
             return true;
@@ -214,7 +214,7 @@ bool Piccolo::load_game(const char* filename)
 
          if (!info.data || !fread((void*)info.data, info.size, 1, file))
             logger(LOG_ERROR, tag, "error reading file %s\n", filename);
-         if (!this->retro_load_game(&info))
+         if (!retro_load_game(&info))
             logger(LOG_ERROR, tag, "core error while opening file %s\n", filename);
          else
             return true;
@@ -266,8 +266,6 @@ bool Piccolo::load_core(const char* in, bool peek)
       logger(LOG_ERROR, tag, "filename cannot be null\n");
       return false;
    }
-
-   piccolo_ptr = this;
 
    option_count = 0;
    core_info.supports_no_game = false;
