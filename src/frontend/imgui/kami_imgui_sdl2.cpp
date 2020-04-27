@@ -15,6 +15,8 @@ ImGuiIO io;
 Kami* kami;
 Kami* kami2;
 
+static bool second_instance = true;
+
 void init_localization()
 {
    setlocale(LC_ALL, "");
@@ -352,7 +354,7 @@ void imgui_draw_frame()
    ImGui::NewFrame();
 
    kami->Main("Core 1");
-   // kami2->Main("Core 2");
+   kami2->Main("Core 2");
 
    bool demo = true;
    ImGui::ShowDemoWindow(&demo);
@@ -381,10 +383,13 @@ int main(int argc, char* argv[])
    set_default_style();
 
    kami = new Kami();
-   // kami2 = new Kami();
-
    kami->CoreListInit("./cores");
-   // kami2->CoreListInit("./cores");
+
+   if (second_instance)
+   {
+      kami2 = new Kami();
+      kami2->CoreListInit("./cores");
+   }
 
    while (!quit)
    {
