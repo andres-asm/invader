@@ -182,10 +182,9 @@ void Kami::Main(const char* title)
    bool block_extract = core_info->block_extract;
    bool full_path = core_info->full_path;
 
-   unsigned option_count = piccolo->get_option_count();
-   core_option_t* options = piccolo->get_options();
-
-   status = piccolo->get_status();
+   unsigned option_count;
+   core_option_t* options;
+   status;
 
    ImGui::Begin(_(title), NULL, ImGuiWindowFlags_AlwaysAutoResize);
 
@@ -201,6 +200,10 @@ void Kami::Main(const char* title)
       piccolo = new PiccoloWrapper();
       piccolo->peek_core(core_info->file_name);
       previous_core = current_core;
+
+      option_count = piccolo->get_option_count();
+      options = piccolo->get_options();
+      piccolo->get_status();
    }
 
    if (!string_is_empty(core_label))
