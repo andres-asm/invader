@@ -205,7 +205,7 @@ bool Piccolo::load_game(const char* filename)
          rewind(file);
 
          info.path = filename;
-         info.data = malloc(info.size);
+         info.data = calloc(1, info.size);
 
          if (!info.data || !fread((void*)info.data, info.size, 1, file))
             logger(LOG_ERROR, tag, "error reading file %s\n", filename);
@@ -359,11 +359,8 @@ bool Piccolo::load_core(const char* in, bool peek)
    return true;
 }
 
-void Piccolo::core_run(core_frame_buffer_t* video_data, audio_cb_t cb)
+void Piccolo::core_run(audio_cb_t cb)
 {
-   /*
-   piccolo.video_data = video_data;
-   piccolo.audio_callback = cb;*/
    if (status != CORE_STATUS_RUNNING)
       status = CORE_STATUS_RUNNING;
    piccolo_ptr->retro_run();

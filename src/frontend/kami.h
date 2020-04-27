@@ -22,7 +22,7 @@ private:
    int core_count;
    unsigned status;
    core_info_t* core_info;
-   core_info_t core_list[100];
+   core_info_t core_info_list[100];
    const char* core_entries[100];
    core_frame_buffer_t* video_data;
    GLuint texture;
@@ -48,7 +48,7 @@ public:
 extern Kami* kami;
 extern Kami* kami2;
 
-bool kami_core_list_init(const char* in);
+bool kami_core_info_list_init(const char* in);
 
 int kami_render_framebuffer(const core_frame_buffer_t* data, unsigned pixel_format);
 size_t kami_render_audio(const int16_t* data, size_t frames);

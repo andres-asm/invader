@@ -20,44 +20,43 @@ SDL_AudioDeviceID device;
 bool Kami::CoreListInit(const char* path)
 {
    char buf[PATH_MAX_LENGTH];
-   file_list_t* list;
-   list = (file_list_t*)calloc(1, sizeof(file_list_t));
+   file_list_t* core_list = (file_list_t*)calloc(1, sizeof(file_list_t));
 #ifdef _WIN32
-   get_file_list(path, list, ".dll", false);
+   get_file_list(path, core_list, ".dll", false);
 #else
-   get_file_list(path, list, ".so", false);
+   get_file_list(path, core_list, ".so", false);
 #endif
 
-   logger(LOG_DEBUG, tag, "core count: %d\n", list->file_count);
-   for (unsigned i = 0; i < list->file_count; i++)
+   logger(LOG_DEBUG, tag, "core count: %d\n", core_list->file_count);
+   for (unsigned i = 0; i < core_list->file_count; i++)
    {
       piccolo = new PiccoloWrapper();
-      snprintf(buf, sizeof(buf), "%s/%s", path, list->file_names[i]);
+      snprintf(buf, sizeof(buf), "%s/%s", path, core_list->file_names[i]);
       piccolo->peek_core(buf);
       core_info_t* info = piccolo->get_info();
 
-      strlcpy(core_list[i].file_name, info->file_name, sizeof(core_list[i].file_name));
-      strlcpy(core_list[i].core_name, info->core_name, sizeof(core_list[i].core_name));
-      strlcpy(core_list[i].core_version, info->core_version, sizeof(core_list[i].core_version));
-      strlcpy(core_list[i].extensions, info->extensions, sizeof(core_list[i].extensions));
-      core_list[i].supports_no_game = info->supports_no_game;
-      core_list[i].block_extract = info->block_extract;
-      core_list[i].full_path = info->full_path;
+      strlcpy(core_info_list[i].file_name, info->file_name, sizeof(core_info_list[i].file_name));
+      strlcpy(core_info_list[i].core_name, info->core_name, sizeof(core_info_list[i].core_name));
+      strlcpy(core_info_list[i].core_version, info->core_version, sizeof(core_info_list[i].core_version));
+      strlcpy(core_info_list[i].extensions, info->extensions, sizeof(core_info_list[i].extensions));
+      core_info_list[i].supports_no_game = info->supports_no_game;
+      core_info_list[i].block_extract = info->block_extract;
+      core_info_list[i].full_path = info->full_path;
 
-      logger(LOG_DEBUG, tag, "file name: %s\n", core_list[i].file_name);
-      logger(LOG_DEBUG, tag, "core name: %s\n", core_list[i].core_name);
-      logger(LOG_DEBUG, tag, "core version: %s\n", core_list[i].core_version);
-      logger(LOG_DEBUG, tag, "valid extensions: %s\n", core_list[i].extensions);
+      logger(LOG_DEBUG, tag, "file name: %s\n", core_info_list[i].file_name);
+      logger(LOG_DEBUG, tag, "core name: %s\n", core_info_list[i].core_name);
+      logger(LOG_DEBUG, tag, "core version: %s\n", core_info_list[i].core_version);
+      logger(LOG_DEBUG, tag, "valid extensions: %s\n", core_info_list[i].extensions);
 
       core_count++;
    }
 
    for (unsigned i = 0; i < core_count; i++)
    {
-      core_entries[i] = core_list[i].core_name;
+      core_entries[i] = core_info_list[i].core_name;
       logger(LOG_DEBUG, tag, "loading file %s\n", core_entries[i]);
    }
-
+   free(core_list);
    return true;
 }
 

@@ -8,10 +8,6 @@ static const char* tag = "[kami]";
 static const char* app_name = "invader";
 
 static bool quit = false;
-static bool showDemoWindow = true;
-static char filename[2048] = "";
-
-file_list_t* file_selector_list = NULL;
 
 ImVec4 clearColor;
 ImGuiIO io;
@@ -132,9 +128,11 @@ bool string_list_combo(const char* label, int* current_item, struct string_list*
       entries[i] = list->elems[i].data;
    }
    if (ImGui::Combo(label, current_item, entries, list->size, 0))
-      return true;
+      ret = true;
    else
-      return false;
+      ret = false;
+   free(entries);
+   return ret;
 }
 
 int Kami::RenderVideo()
@@ -196,7 +194,7 @@ void Kami::Main(const char* title)
       ImGui::Combo(_("core_selector_label"), &current_core, core_entries, core_count);
    if (core_count != 0 && (previous_core != current_core) || previous_core == -1)
    {
-      core_info = &core_list[current_core];
+      core_info = &core_info_list[current_core];
 
       piccolo = new PiccoloWrapper();
       piccolo->peek_core(core_info->file_name);
@@ -244,7 +242,7 @@ void Kami::Main(const char* title)
 
    if (status == CORE_STATUS_LOADED || status == CORE_STATUS_RUNNING)
    {
-      piccolo->core_run(NULL, NULL);
+      piccolo->core_run(NULL);
 
       unsigned width = core_info->av_info.geometry.base_width;
       unsigned height = core_info->av_info.geometry.base_height;
@@ -315,17 +313,9 @@ void imgui_draw_frame()
    ImGui_ImplSDL2_NewFrame(mywindow);
    ImGui::NewFrame();
 
-   // window_settings();
-   // window_status();
    kami->Main("Core 1");
    kami2->Main("Core 2");
-   /*
-   if (core_active)
-      window_core();
 
-   if (showDemoWindow)
-      igShowDemoWindow(&showDemoWindow);
-   */
    bool demo = true;
    ImGui::ShowDemoWindow(&demo);
    ImGui::Render();
@@ -342,7 +332,6 @@ int main(int argc, char* argv[])
    logger_set_level(LOG_DEBUG);
    init_localization();
 
-   // common_config_load();
    if (!create_window(app_name, WINDOW_WIDTH, WINDOW_HEIGHT))
       return -1;
    mywindow = get_window();
@@ -353,10 +342,6 @@ int main(int argc, char* argv[])
    imgui_setup();
    set_default_style();
 
-   // kami_init_audio();
-   // logger(LOG_INFO, tag, "audio driver: %s\n", SDL_GetCurrentAudioDriver());
-
-   // kami_core_list_init("./cores");
    kami = new Kami();
    kami2 = new Kami();
 
