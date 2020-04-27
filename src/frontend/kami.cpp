@@ -32,24 +32,25 @@ bool Kami::CoreListInit(const char* path)
    {
       piccolo = new PiccoloWrapper();
       snprintf(buf, sizeof(buf), "%s/%s", path, core_list->file_names[i]);
-      if (!piccolo->peek_core(buf))
-         continue;
-      core_info_t* info = piccolo->get_info();
+      if (piccolo->peek_core(buf))
+      {
+         core_info_t* info = piccolo->get_info();
 
-      strlcpy(core_info_list[i].file_name, info->file_name, sizeof(core_info_list[i].file_name));
-      strlcpy(core_info_list[i].core_name, info->core_name, sizeof(core_info_list[i].core_name));
-      strlcpy(core_info_list[i].core_version, info->core_version, sizeof(core_info_list[i].core_version));
-      strlcpy(core_info_list[i].extensions, info->extensions, sizeof(core_info_list[i].extensions));
-      core_info_list[i].supports_no_game = info->supports_no_game;
-      core_info_list[i].block_extract = info->block_extract;
-      core_info_list[i].full_path = info->full_path;
+         strlcpy(core_info_list[i].file_name, info->file_name, sizeof(core_info_list[i].file_name));
+         strlcpy(core_info_list[i].core_name, info->core_name, sizeof(core_info_list[i].core_name));
+         strlcpy(core_info_list[i].core_version, info->core_version, sizeof(core_info_list[i].core_version));
+         strlcpy(core_info_list[i].extensions, info->extensions, sizeof(core_info_list[i].extensions));
+         core_info_list[i].supports_no_game = info->supports_no_game;
+         core_info_list[i].block_extract = info->block_extract;
+         core_info_list[i].full_path = info->full_path;
 
-      logger(LOG_DEBUG, tag, "file name: %s\n", core_info_list[i].file_name);
-      logger(LOG_DEBUG, tag, "core name: %s\n", core_info_list[i].core_name);
-      logger(LOG_DEBUG, tag, "core version: %s\n", core_info_list[i].core_version);
-      logger(LOG_DEBUG, tag, "valid extensions: %s\n", core_info_list[i].extensions);
+         logger(LOG_DEBUG, tag, "file name: %s\n", core_info_list[i].file_name);
+         logger(LOG_DEBUG, tag, "core name: %s\n", core_info_list[i].core_name);
+         logger(LOG_DEBUG, tag, "core version: %s\n", core_info_list[i].core_version);
+         logger(LOG_DEBUG, tag, "valid extensions: %s\n", core_info_list[i].extensions);
 
-      core_count++;
+         core_count++;
+      }
    }
 
    for (unsigned i = 0; i < core_count; i++)
