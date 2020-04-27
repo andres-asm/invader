@@ -97,7 +97,7 @@ private:
    bool options_updated;
 
    core_option_t core_options[1000];
-   core_info_t* core_info;
+   core_info_t core_info;
    core_frame_buffer_t* video_data;
    audio_cb_t audio_callback;
 
@@ -134,7 +134,7 @@ private:
 
 public:
    /*constructor*/
-   Piccolo(core_info_t* info) { core_info = info; }
+   Piccolo() { }
 
    /*helper functions*/
    /*load core*/
@@ -146,13 +146,17 @@ public:
 
    /*accessors*/
    /*get core information*/
-   core_info_t* get_info() { return core_info; }
+   core_info_t* get_info() { return &core_info; }
    /*get core options array*/
    core_option_t* get_options() { return core_options; }
    /*get core options count*/
    unsigned get_option_count() { return option_count; }
+   /* get video data */
+   void set_options_updated() { options_updated = true; }
    /* get core status */
    unsigned get_status() { return status; }
+
+   core_frame_buffer_t* get_video_data() { return video_data; };
 
    /*set the current core instance*/
    void set_instance_ptr(Piccolo* piccolo);
@@ -167,7 +171,7 @@ private:
 
 public:
    /*constructor*/
-   PiccoloWrapper(core_info_t* info) { piccolo = new Piccolo(info); }
+   PiccoloWrapper() { piccolo = new Piccolo(); }
    /*destructor*/
    ~PiccoloWrapper() { }
 
@@ -211,12 +215,24 @@ public:
       piccolo->set_instance_ptr(piccolo);
       return piccolo->get_option_count();
    }
+   /* get video data */
+   void set_options_updated()
+   {
+      piccolo->set_instance_ptr(piccolo);
+      piccolo->set_options_updated();
+   }
    /* get core status */
    unsigned get_status()
    {
       piccolo->set_instance_ptr(piccolo);
       return piccolo->get_status();
    }
+   /* get video data */
+   core_frame_buffer_t* get_video_data()
+   {
+      piccolo->set_instance_ptr(piccolo);
+      return piccolo->get_video_data();
+   };
 
    /*core deinit*/
    void core_deinit()

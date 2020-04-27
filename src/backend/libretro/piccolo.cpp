@@ -87,7 +87,7 @@ bool Piccolo::core_set_environment(unsigned cmd, void* data)
    case RETRO_ENVIRONMENT_SET_SUPPORT_NO_GAME:
    {
       logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_SET_SUPPORT_NO_GAME: %s\n", PRINT_BOOLEAN(*(bool*)data));
-      piccolo_ptr->core_info->supports_no_game = *(bool*)data;
+      piccolo_ptr->core_info.supports_no_game = *(bool*)data;
       break;
    }
    case RETRO_ENVIRONMENT_SET_VARIABLES:
@@ -106,19 +106,19 @@ bool Piccolo::core_set_environment(unsigned cmd, void* data)
    case RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE:
    {
       if (piccolo_ptr->core_options)
-      {
          *(bool*)data = piccolo_ptr->options_updated;
+      else
+         *(bool*)data = false;
+      if (piccolo_ptr->options_updated)
          logger(
             LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE: %s\n",
             piccolo_ptr->options_updated ? "true" : "false");
-      } else
-         *(bool*)data = false;
       piccolo_ptr->options_updated = false;
       break;
    }
    case RETRO_ENVIRONMENT_SET_PIXEL_FORMAT:
       logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_SET_PIXEL_FORMAT: %s\n", PRINT_PIXFMT(*(int*)data));
-      piccolo_ptr->core_info->pixel_format = *(int*)data;
+      piccolo_ptr->core_info.pixel_format = *(int*)data;
       break;
    case RETRO_ENVIRONMENT_GET_LOG_INTERFACE:
    {
@@ -184,7 +184,7 @@ bool Piccolo::load_game(const char* filename)
    } else
    {
       logger(LOG_INFO, tag, "loading file %s\n", filename);
-      if (this->core_info->full_path)
+      if (this->core_info.full_path)
       {
          struct retro_game_info info;
          info.data = NULL;
@@ -245,11 +245,10 @@ size_t Piccolo::core_audio_sample_batch(const int16_t* data, size_t frames)
 
 void Piccolo::core_video_refresh(const void* data, unsigned width, unsigned height, size_t pitch)
 {
-   /*
    piccolo_ptr->video_data->data = data;
    piccolo_ptr->video_data->width = width;
    piccolo_ptr->video_data->height = height;
-   piccolo_ptr->video_data->pitch = pitch;*/
+   piccolo_ptr->video_data->pitch = pitch;
    return;
 }
 
@@ -260,9 +259,9 @@ bool Piccolo::load_core(const char* in, bool peek)
    piccolo_ptr = this;
 
    option_count = 0;
-   core_info->supports_no_game = false;
-   core_info->block_extract = false;
-   core_info->full_path = false;
+   core_info.supports_no_game = false;
+   core_info.block_extract = false;
+   core_info.full_path = false;
 
    void (*set_environment)(retro_environment_t) = NULL;
    void (*set_video_refresh)(retro_video_refresh_t) = NULL;
@@ -289,20 +288,20 @@ bool Piccolo::load_core(const char* in, bool peek)
    retro_api_version();
    retro_get_system_info(&system_info);
 
-   strlcpy(core_info->file_name, in, sizeof(core_info->file_name));
-   strlcpy(core_info->core_name, system_info.library_name, sizeof(core_info->core_name));
-   strlcpy(core_info->core_version, system_info.library_version, sizeof(core_info->core_version));
+   strlcpy(core_info.file_name, in, sizeof(core_info.file_name));
+   strlcpy(core_info.core_name, system_info.library_name, sizeof(core_info.core_name));
+   strlcpy(core_info.core_version, system_info.library_version, sizeof(core_info.core_version));
    if (system_info.valid_extensions)
-      strlcpy(core_info->extensions, system_info.valid_extensions, sizeof(core_info->extensions));
+      strlcpy(core_info.extensions, system_info.valid_extensions, sizeof(core_info.extensions));
    else
-      strlcpy(core_info->extensions, "N/A", sizeof(core_info->extensions));
-   core_info->full_path = system_info.need_fullpath;
-   core_info->block_extract = system_info.block_extract;
+      strlcpy(core_info.extensions, "N/A", sizeof(core_info.extensions));
+   core_info.full_path = system_info.need_fullpath;
+   core_info.block_extract = system_info.block_extract;
 
    logger(LOG_DEBUG, tag, "retro api version: %d\n", retro_api_version());
-   logger(LOG_DEBUG, tag, "core name: %s\n", core_info->core_name);
-   logger(LOG_DEBUG, tag, "core version: %s\n", core_info->core_version);
-   logger(LOG_DEBUG, tag, "valid extensions: %s\n", core_info->extensions);
+   logger(LOG_DEBUG, tag, "core name: %s\n", core_info.core_name);
+   logger(LOG_DEBUG, tag, "core version: %s\n", core_info.core_version);
+   logger(LOG_DEBUG, tag, "valid extensions: %s\n", core_info.extensions);
 
    set_environment(core_set_environment);
 
@@ -333,6 +332,8 @@ bool Piccolo::load_core(const char* in, bool peek)
    load_sym(set_audio_sample, retro_set_audio_sample);
    load_sym(set_audio_sample_batch, retro_set_audio_sample_batch);
 
+   retro_init();
+
    set_video_refresh(core_video_refresh);
    set_input_poll(core_input_poll);
    set_input_state(core_input_state);
@@ -341,11 +342,11 @@ bool Piccolo::load_core(const char* in, bool peek)
 
    retro_get_system_av_info(&av_info);
 
-   core_info->av_info.geometry.base_width = av_info.geometry.base_width;
-   core_info->av_info.geometry.base_height = av_info.geometry.base_height;
-   core_info->av_info.geometry.max_width = av_info.geometry.max_width;
-   core_info->av_info.geometry.max_height = av_info.geometry.max_height;
-   core_info->av_info.geometry.aspect_ratio = av_info.geometry.aspect_ratio;
+   core_info.av_info.geometry.base_width = av_info.geometry.base_width;
+   core_info.av_info.geometry.base_height = av_info.geometry.base_height;
+   core_info.av_info.geometry.max_width = av_info.geometry.max_width;
+   core_info.av_info.geometry.max_height = av_info.geometry.max_height;
+   core_info.av_info.geometry.aspect_ratio = av_info.geometry.aspect_ratio;
 
    logger(
       LOG_DEBUG, tag, "geometry: %ux%d/%ux%d %f\n", av_info.geometry.base_width, av_info.geometry.base_height,
@@ -353,7 +354,7 @@ bool Piccolo::load_core(const char* in, bool peek)
    logger(LOG_DEBUG, tag, "timing: %ffps %fHz\n", av_info.timing.fps, av_info.timing.sample_rate);
 
    status = CORE_STATUS_LOADED;
-   retro_init();
+   video_data = (core_frame_buffer_t*)calloc(1, sizeof(core_frame_buffer_t*));
 
    return true;
 }

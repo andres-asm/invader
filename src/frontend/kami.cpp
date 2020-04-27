@@ -31,9 +31,15 @@ bool Kami::CoreListInit(const char* path)
    logger(LOG_DEBUG, tag, "core count: %d\n", list->file_count);
    for (unsigned i = 0; i < list->file_count; i++)
    {
-      piccolo = new PiccoloWrapper(&core_list[i]);
+      piccolo = new PiccoloWrapper();
       snprintf(buf, sizeof(buf), "%s/%s", path, list->file_names[i]);
       piccolo->peek_core(buf);
+      core_info_t* info = piccolo->get_info();
+
+      strlcpy(core_list[i].file_name, info->file_name, sizeof(core_list[i].file_name));
+      strlcpy(core_list[i].core_name, info->core_name, sizeof(core_list[i].core_name));
+      strlcpy(core_list[i].core_version, info->core_version, sizeof(core_list[i].core_version));
+      strlcpy(core_list[i].extensions, info->extensions, sizeof(core_list[i].extensions));
 
       logger(LOG_DEBUG, tag, "file name: %s\n", core_list[i].file_name);
       logger(LOG_DEBUG, tag, "core name: %s\n", core_list[i].core_name);
@@ -52,19 +58,19 @@ bool Kami::CoreListInit(const char* path)
    return true;
 }
 
-void kami_core_option_update(core_option_t* option, const char* value)
+void Kami::OptionUpdate(core_option_t* option, const char* value)
 {
    logger(LOG_INFO, tag, "changing option %s to %s\n", option->description, value);
    strlcpy(option->value, value, sizeof(option->value));
-   // core_options_updated();
+   piccolo->set_options_updated();
 }
 
-struct string_list* kami_core_option_get_values(core_option_t* option)
+struct string_list* Kami::OptionGetValues(core_option_t* option)
 {
    return string_split(option->values, "|");
 }
 
-unsigned kami_core_option_get_index(core_option_t* option, struct string_list* values)
+unsigned Kami::OptionGetIndex(core_option_t* option, struct string_list* values)
 {
    unsigned index = 0;
    for (unsigned i = 0; i < values->size; i++)

@@ -22,17 +22,16 @@ private:
    int core_count;
    unsigned status;
    core_info_t* core_info;
-   /*TODO: refactor this*/
    core_info_t core_list[100];
    const char* core_entries[100];
-
-   core_frame_buffer_t video_data;
+   core_frame_buffer_t* video_data;
+   GLuint texture;
 
 public:
    /*constructor*/
    Kami()
    {
-      this->piccolo = new PiccoloWrapper(&core_list[0]);
+      this->piccolo = new PiccoloWrapper();
       status = CORE_STATUS_NONE;
       current_core = 0;
       previous_core = -1;
@@ -40,6 +39,10 @@ public:
    }
    void Main(const char* title);
    bool CoreListInit(const char* path);
+   int RenderVideo();
+   struct string_list* OptionGetValues(core_option_t* option);
+   unsigned OptionGetIndex(core_option_t* option, struct string_list* values);
+   void OptionUpdate(core_option_t* option, const char* value);
 };
 
 extern Kami* kami;
@@ -49,12 +52,6 @@ bool kami_core_list_init(const char* in);
 
 int kami_render_framebuffer(const core_frame_buffer_t* data, unsigned pixel_format);
 size_t kami_render_audio(const int16_t* data, size_t frames);
-
-void kami_core_option_update(core_option_t* option, const char* value);
-
-unsigned kami_core_option_get_index(core_option_t* option, struct string_list* values);
-
-struct string_list* kami_core_option_get_values(core_option_t* option);
 
 bool kami_init_audio();
 

@@ -18,8 +18,6 @@ file_list_t* file_selector_list = NULL;
 ImVec4 clearColor;
 ImGuiIO io;
 
-GLuint texture;
-
 Kami* kami;
 Kami* kami2;
 
@@ -62,6 +60,71 @@ static void tooltip(const char* desc)
    }
 }
 
+static void set_default_style()
+{
+   ImGuiStyle* style = &ImGui::GetStyle();
+
+   style->WindowPadding = ImVec2(15, 15);
+   style->WindowRounding = 0.0f;
+   style->FramePadding = ImVec2(5, 5);
+   style->FrameRounding = 0.0f;
+   style->ItemSpacing = ImVec2(12, 8);
+   style->ItemInnerSpacing = ImVec2(8, 6);
+   style->IndentSpacing = 25.0f;
+   style->ScrollbarSize = 10.0f;
+   style->ScrollbarRounding = 0.0f;
+   style->GrabMinSize = 10.0f;
+   style->GrabRounding = 0.0f;
+   style->TabRounding = 0.0f;
+
+   style->Colors[ImGuiCol_Text] = ImVec4(0.80f, 0.80f, 0.83f, 1.00f);
+   style->Colors[ImGuiCol_TextDisabled] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
+   style->Colors[ImGuiCol_Border] = ImVec4(0.16f, 0.15f, 0.17f, 1.00f);
+   style->Colors[ImGuiCol_WindowBg] = ImVec4(0.16f, 0.15f, 0.17f, 1.00f);
+   style->Colors[ImGuiCol_ChildBg] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
+   style->Colors[ImGuiCol_PopupBg] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
+   style->Colors[ImGuiCol_Border] = ImVec4(0.80f, 0.80f, 0.83f, 0.88f);
+   style->Colors[ImGuiCol_BorderShadow] = ImVec4(0.92f, 0.91f, 0.88f, 0.00f);
+   style->Colors[ImGuiCol_FrameBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
+   style->Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
+   style->Colors[ImGuiCol_FrameBgActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+   style->Colors[ImGuiCol_TitleBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
+   style->Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.70f, 0.70f, 0.70f, 0.70f);
+   style->Colors[ImGuiCol_TitleBgActive] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
+   style->Colors[ImGuiCol_MenuBarBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
+   style->Colors[ImGuiCol_ScrollbarBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
+   style->Colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
+   style->Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+   style->Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
+   style->Colors[ImGuiCol_PopupBg] = ImVec4(0.19f, 0.18f, 0.21f, 1.00f);
+   style->Colors[ImGuiCol_CheckMark] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
+   style->Colors[ImGuiCol_SliderGrab] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
+   style->Colors[ImGuiCol_SliderGrabActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
+   style->Colors[ImGuiCol_Button] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
+   style->Colors[ImGuiCol_ButtonHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
+   style->Colors[ImGuiCol_ButtonActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+   style->Colors[ImGuiCol_Header] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
+   style->Colors[ImGuiCol_HeaderHovered] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+   style->Colors[ImGuiCol_HeaderActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
+   style->Colors[ImGuiCol_Separator] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+   style->Colors[ImGuiCol_SeparatorHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
+   style->Colors[ImGuiCol_SeparatorActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+   style->Colors[ImGuiCol_ResizeGrip] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+   style->Colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+   style->Colors[ImGuiCol_ResizeGripActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
+   style->Colors[ImGuiCol_PlotLines] = ImVec4(0.40f, 0.39f, 0.38f, 0.63f);
+   style->Colors[ImGuiCol_PlotLinesHovered] = ImVec4(0.25f, 1.00f, 0.00f, 1.00f);
+   style->Colors[ImGuiCol_PlotHistogram] = ImVec4(0.40f, 0.39f, 0.38f, 0.63f);
+   style->Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(0.25f, 1.00f, 0.00f, 1.00f);
+   style->Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.25f, 1.00f, 0.00f, 0.43f);
+   style->Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(1.00f, 0.98f, 0.95f, 0.73f);
+   style->Colors[ImGuiCol_Tab] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
+   style->Colors[ImGuiCol_TabHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
+   style->Colors[ImGuiCol_TabActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+
+   clearColor = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+}
+
 bool string_list_combo(const char* label, int* current_item, struct string_list* list, int popup_max_height_in_items)
 {
    int ret = 0;
@@ -74,6 +137,42 @@ bool string_list_combo(const char* label, int* current_item, struct string_list*
       return true;
    else
       return false;
+}
+
+int Kami::RenderVideo()
+{
+   unsigned pixel_format = core_info->pixel_format;
+   core_frame_buffer_t* video_data = piccolo->get_video_data();
+
+   if (!texture)
+      glGenTextures(1, &texture);
+
+   glBindTexture(GL_TEXTURE_2D, texture);
+   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+   switch (pixel_format)
+   {
+   case RETRO_PIXEL_FORMAT_XRGB8888:
+      glTexImage2D(
+         GL_TEXTURE_2D, 0, GL_RGB8, video_data->width, video_data->height, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV,
+         video_data->data);
+      glPixelStorei(GL_UNPACK_ROW_LENGTH, video_data->pitch / sizeof(uint32_t));
+      break;
+   case RETRO_PIXEL_FORMAT_RGB565:
+      glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+      glPixelStorei(GL_UNPACK_ROW_LENGTH, video_data->pitch / sizeof(uint16_t));
+      glTexImage2D(
+         GL_TEXTURE_2D, 0, GL_RGB565, video_data->width, video_data->height, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5,
+         video_data->data);
+      break;
+   default:
+      logger(LOG_DEBUG, tag, "pixel format: %s (%d) unhandled\n", PRINT_PIXFMT(pixel_format), pixel_format);
+   }
+
+   return ((int)texture);
 }
 
 void Kami::Main(const char* title)
@@ -92,16 +191,16 @@ void Kami::Main(const char* title)
 
    status = piccolo->get_status();
 
-   ImGui::Begin(_(title), NULL, 0);
+   ImGui::Begin(_(title), NULL, ImGuiWindowFlags_AlwaysAutoResize);
 
    ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.40f);
-   ImGui::Combo(_("core_selector_label"), &current_core, core_entries, core_count);
-   logger(LOG_DEBUG, tag, "status: %d\n", status);
+   if (status != CORE_STATUS_RUNNING)
+      ImGui::Combo(_("core_selector_label"), &current_core, core_entries, core_count);
    if (core_count != 0 && (previous_core != current_core) || previous_core == -1)
    {
       core_info = &core_list[current_core];
 
-      piccolo = new PiccoloWrapper(core_info);
+      piccolo = new PiccoloWrapper();
       piccolo->peek_core(core_info->file_name);
       previous_core = current_core;
    }
@@ -130,28 +229,16 @@ void Kami::Main(const char* title)
          {
             piccolo->load_core(core_info->file_name);
             piccolo->load_game(NULL);
+            core_info = piccolo->get_info();
          }
          tooltip(_("core_current_start_core_desc"));
-      }
-
-      if (option_count > 0)
+      } else if (status != CORE_STATUS_RUNNING)
       {
-         if (ImGui::CollapsingHeader(_("core_current_options_label"), ImGuiTreeNodeFlags_None))
+         if (ImGui::Button(_("core_current_load_content_label")))
          {
-            for (unsigned i = 0; i < option_count; i++)
-            {
-               core_option_t* option = &options[i];
-               char* description = option->description;
-               struct string_list* values = kami_core_option_get_values(option);
-
-               int index = kami_core_option_get_index(option, values);
-               if (string_list_combo(description, &index, values, 0))
-               {
-                  char* value = values->elems[index].data;
-                  kami_core_option_update(option, value);
-               }
-               string_list_free(values);
-            }
+            piccolo->load_core(core_info->file_name);
+            piccolo->load_game("rom.nes");
+            core_info = piccolo->get_info();
          }
       }
    }
@@ -159,6 +246,51 @@ void Kami::Main(const char* title)
    if (status == CORE_STATUS_LOADED || status == CORE_STATUS_RUNNING)
    {
       piccolo->core_run(NULL, NULL);
+
+      unsigned width = core_info->av_info.geometry.base_width;
+      unsigned height = core_info->av_info.geometry.base_height;
+
+      float aspect = core_info->av_info.geometry.aspect_ratio;
+
+      ImTextureID image_texture = (void*)(intptr_t)this->RenderVideo();
+      if (option_count > 0 && ImGui::CollapsingHeader(_("core_current_options_label"), ImGuiTreeNodeFlags_None))
+      {
+         logger(LOG_DEBUG, tag, "option_count: %d\n", option_count);
+         for (unsigned i = 0; i < option_count; i++)
+         {
+            core_option_t* option = &options[i];
+            char* description = option->description;
+            struct string_list* values = OptionGetValues(option);
+
+            int index = OptionGetIndex(option, values);
+            if (string_list_combo(description, &index, values, 0))
+            {
+               char* value = values->elems[index].data;
+               OptionUpdate(option, value);
+            }
+         }
+      }
+
+      if (ImGui::CollapsingHeader(_("core_current_info_label"), ImGuiTreeNodeFlags_None))
+      {
+         if (ImGui::CollapsingHeader(_("core_current_info_video_label"), ImGuiTreeNodeFlags_None))
+         {
+            core_frame_buffer_t* video_data = piccolo->get_video_data();
+            int base_width = core_info->av_info.geometry.base_width;
+            int base_height = core_info->av_info.geometry.base_height;
+            float aspect = core_info->av_info.geometry.aspect_ratio;
+
+            ImGui::InputInt(_("framebuffer_width_label"), &base_width, 0, 0, ImGuiInputTextFlags_ReadOnly);
+            tooltip(_("framebuffer_width_desc"));
+            ImGui::InputInt(_("framebuffer_height_label"), &base_height, 0, 0, ImGuiInputTextFlags_ReadOnly);
+            tooltip(_("framebuffer_height_desc"));
+            ImGui::InputFloat(_("framebuffer_aspect_label"), &aspect, 0, 0, "%.3f", ImGuiInputTextFlags_ReadOnly);
+            tooltip(_("framebuffer_aspect_desc"));
+         }
+      }
+      ImGui::Image(
+         image_texture, ImVec2((float)height * 2 * aspect, (float)height * 2), ImVec2(0.0f, 0.0f), ImVec2(1.0f, 1.0f),
+         ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
    }
 
    ImGui::End();
@@ -187,7 +319,7 @@ static void imgui_draw_frame()
    // window_settings();
    // window_status();
    kami->Main("Core 1");
-   // kami2->Main("Core 2");
+   kami2->Main("Core 2");
    /*
    if (core_active)
       window_core();
@@ -220,7 +352,7 @@ int main(int argc, char* argv[])
    glsl_version = get_glsl_version();
 
    imgui_setup();
-   // imgui_set_default_style();
+   set_default_style();
 
    // kami_init_audio();
    // logger(LOG_INFO, tag, "audio driver: %s\n", SDL_GetCurrentAudioDriver());
