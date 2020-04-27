@@ -194,6 +194,8 @@ void Kami::Main(const char* title)
       ImGui::Combo(_("core_selector_label"), &current_core, core_entries, core_count);
    if (core_count != 0 && (previous_core != current_core) || previous_core == -1)
    {
+      if (piccolo)
+         delete piccolo;
       core_info = &core_info_list[current_core];
 
       piccolo = new PiccoloWrapper();
