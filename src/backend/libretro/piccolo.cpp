@@ -20,13 +20,13 @@ void Piccolo::set_instance_ptr(Piccolo* piccolo)
 
 void Piccolo::core_get_variables(void* data)
 {
-   if (piccolo_ptr->core_option_count == 0)
+   if (piccolo_ptr->option_count == 0)
       return;
 
    struct retro_variable* var = (struct retro_variable*)data;
    var->value = NULL;
 
-   for (int i = 0; i < piccolo_ptr->core_option_count; i++)
+   for (int i = 0; i < piccolo_ptr->option_count; i++)
    {
       if (!strcmp(var->key, piccolo_ptr->core_options[i].key))
          var->value = piccolo_ptr->core_options[i].value;
@@ -39,7 +39,7 @@ void Piccolo::core_set_variables(void* data)
    const char* values;
    const char* value;
 
-   piccolo_ptr->core_option_count = 0;
+   piccolo_ptr->option_count = 0;
 
    struct retro_variable* vars = (struct retro_variable*)data;
 
@@ -50,13 +50,13 @@ void Piccolo::core_set_variables(void* data)
    while (var->key)
    {
       var++;
-      piccolo_ptr->core_option_count++;
+      piccolo_ptr->option_count++;
    }
    core_option_t* core_options = piccolo_ptr->core_options;
 
-   logger(LOG_DEBUG, tag, "variables: %u\n", piccolo_ptr->core_option_count);
+   logger(LOG_DEBUG, tag, "variables: %u\n", piccolo_ptr->option_count);
 
-   for (unsigned i = 0; i < piccolo_ptr->core_option_count; i++)
+   for (unsigned i = 0; i < piccolo_ptr->option_count; i++)
    {
       unsigned j = 0;
       strlcpy(core_options[i].key, vars[i].key, sizeof(core_options[i].key));
@@ -239,15 +239,17 @@ void Piccolo::core_audio_sample(int16_t left, int16_t right)
 
 size_t Piccolo::core_audio_sample_batch(const int16_t* data, size_t frames)
 {
-   return piccolo_ptr->audio_callback(data, frames);
+   // return piccolo_ptr->audio_callback(data, frames);
+   return 0;
 }
 
 void Piccolo::core_video_refresh(const void* data, unsigned width, unsigned height, size_t pitch)
 {
+   /*
    piccolo_ptr->video_data->data = data;
    piccolo_ptr->video_data->width = width;
    piccolo_ptr->video_data->height = height;
-   piccolo_ptr->video_data->pitch = pitch;
+   piccolo_ptr->video_data->pitch = pitch;*/
    return;
 }
 
@@ -257,7 +259,7 @@ bool Piccolo::load_core(const char* in, bool peek)
 
    piccolo_ptr = this;
 
-   core_option_count = 0;
+   option_count = 0;
    core_info->supports_no_game = false;
    core_info->block_extract = false;
    core_info->full_path = false;
@@ -354,4 +356,14 @@ bool Piccolo::load_core(const char* in, bool peek)
    retro_init();
 
    return true;
+}
+
+void Piccolo::core_run(core_frame_buffer_t* video_data, audio_cb_t cb)
+{
+   /*
+   piccolo.video_data = video_data;
+   piccolo.audio_callback = cb;*/
+   if (status != CORE_STATUS_RUNNING)
+      status = CORE_STATUS_RUNNING;
+   piccolo_ptr->retro_run();
 }

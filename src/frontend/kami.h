@@ -19,31 +19,31 @@ private:
    PiccoloWrapper* piccolo;
    int current_core;
    int previous_core;
-   bool active;
    int core_count;
+   unsigned status;
    core_info_t* core_info;
    /*TODO: refactor this*/
    core_info_t core_list[100];
    const char* core_entries[100];
+
+   core_frame_buffer_t video_data;
 
 public:
    /*constructor*/
    Kami()
    {
       this->piccolo = new PiccoloWrapper(&core_list[0]);
-      active = false;
+      status = CORE_STATUS_NONE;
       current_core = 0;
       previous_core = -1;
       core_info = piccolo->get_info();
    }
-   void Init(const char* title);
+   void Main(const char* title);
    bool CoreListInit(const char* path);
 };
 
 extern Kami* kami;
 extern Kami* kami2;
-
-extern core_frame_buffer_t frame_buffer;
 
 bool kami_core_list_init(const char* in);
 

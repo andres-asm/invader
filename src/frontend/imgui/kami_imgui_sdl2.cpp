@@ -76,7 +76,7 @@ bool string_list_combo(const char* label, int* current_item, struct string_list*
       return false;
 }
 
-void Kami::Init(const char* title)
+void Kami::Main(const char* title)
 {
    bool file_selector_open;
    const char* core_label = core_info->core_name;
@@ -90,18 +90,19 @@ void Kami::Init(const char* title)
    unsigned option_count = piccolo->get_option_count();
    core_option_t* options = piccolo->get_options();
 
+   status = piccolo->get_status();
+
    ImGui::Begin(_(title), NULL, 0);
 
    ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.40f);
    ImGui::Combo(_("core_selector_label"), &current_core, core_entries, core_count);
-
+   logger(LOG_DEBUG, tag, "status: %d\n", status);
    if (core_count != 0 && (previous_core != current_core) || previous_core == -1)
    {
       core_info = &core_list[current_core];
 
       piccolo = new PiccoloWrapper(core_info);
       piccolo->peek_core(core_info->file_name);
-      active = false;
       previous_core = current_core;
    }
 
@@ -112,12 +113,23 @@ void Kami::Init(const char* title)
       ImGui::LabelText(_("core_current_extensions_label"), supported_extensions);
       tooltip(_("core_current_extensions_desc"));
 
-      if (supports_no_game && !active)
+      /* Core flags */
+      if (ImGui::CollapsingHeader(_("core_current_flags_label"), ImGuiTreeNodeFlags_None))
+      {
+         ImGui::Checkbox(_("core_current_supports_no_game_label"), &supports_no_game);
+         tooltip(_("core_current_supports_no_game_desc"));
+         ImGui::Checkbox(_("core_current_block_extract_label"), &block_extract);
+         tooltip(_("core_current_block_extract_desc"));
+         ImGui::Checkbox(_("core_current_full_path_label"), &full_path);
+         tooltip(_("core_current_full_path_desc"));
+      }
+
+      if (supports_no_game && status != CORE_STATUS_RUNNING)
       {
          if (ImGui::Button(_("core_current_start_core_label")))
          {
             piccolo->load_core(core_info->file_name);
-            active = piccolo->load_game(NULL);
+            piccolo->load_game(NULL);
          }
          tooltip(_("core_current_start_core_desc"));
       }
@@ -143,6 +155,12 @@ void Kami::Init(const char* title)
          }
       }
    }
+
+   if (status == CORE_STATUS_LOADED || status == CORE_STATUS_RUNNING)
+   {
+      piccolo->core_run(NULL, NULL);
+   }
+
    ImGui::End();
 }
 
@@ -168,8 +186,8 @@ static void imgui_draw_frame()
 
    // window_settings();
    // window_status();
-   kami->Init("Core 1");
-   kami2->Init("Core 2");
+   kami->Main("Core 1");
+   // kami2->Main("Core 2");
    /*
    if (core_active)
       window_core();

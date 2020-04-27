@@ -12,8 +12,6 @@
 
 #include "kami.h"
 
-core_frame_buffer_t frame_buffer;
-
 static const char* tag = "[invader]";
 
 SDL_AudioSpec want, have;

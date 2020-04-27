@@ -92,8 +92,8 @@ class Piccolo
 private:
    /*variables*/
    void* library_handle;
-   enum core_status status;
-   unsigned core_option_count;
+   unsigned status;
+   unsigned option_count;
    bool options_updated;
 
    core_option_t core_options[1000];
@@ -141,6 +141,8 @@ public:
    bool load_core(const char* in, bool peek);
    /*load game*/
    bool load_game(const char* in);
+   /*run core*/
+   void core_run(core_frame_buffer_t* video_data, audio_cb_t cb);
 
    /*accessors*/
    /*get core information*/
@@ -148,7 +150,9 @@ public:
    /*get core options array*/
    core_option_t* get_options() { return core_options; }
    /*get core options count*/
-   unsigned get_option_count() { return core_option_count; }
+   unsigned get_option_count() { return option_count; }
+   /* get core status */
+   unsigned get_status() { return status; }
 
    /*set the current core instance*/
    void set_instance_ptr(Piccolo* piccolo);
@@ -185,6 +189,8 @@ public:
       piccolo->set_instance_ptr(piccolo);
       return piccolo->load_game(in);
    }
+   /*core run*/
+   void core_run(core_frame_buffer_t* video_data, audio_cb_t cb) { piccolo->core_run(video_data, cb); }
 
    /*accessors*/
    /*get core information*/
@@ -204,6 +210,12 @@ public:
    {
       piccolo->set_instance_ptr(piccolo);
       return piccolo->get_option_count();
+   }
+   /* get core status */
+   unsigned get_status()
+   {
+      piccolo->set_instance_ptr(piccolo);
+      return piccolo->get_status();
    }
 
    /*core deinit*/
