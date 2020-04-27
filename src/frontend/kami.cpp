@@ -30,7 +30,8 @@ bool Kami::CoreListInit(const char* path)
    logger(LOG_DEBUG, tag, "core count: %d\n", core_list->file_count);
    for (unsigned i = 0; i < core_list->file_count; i++)
    {
-      piccolo = new PiccoloWrapper();
+      if (piccolo)
+         piccolo = new PiccoloWrapper();
       snprintf(buf, sizeof(buf), "%s/%s", path, core_list->file_names[i]);
       if (piccolo->peek_core(buf))
       {
@@ -51,6 +52,7 @@ bool Kami::CoreListInit(const char* path)
 
          core_count++;
       }
+      delete piccolo;
    }
 
    logger(LOG_DEBUG, tag, "cores found: %d\n", core_count);
