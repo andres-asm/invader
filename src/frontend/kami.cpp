@@ -53,6 +53,7 @@ bool Kami::CoreListInit(const char* path)
       }
    }
 
+   logger(LOG_DEBUG, tag, "cores found: %d\n", core_count);
    for (unsigned i = 0; i < core_count; i++)
    {
       core_entries[i] = core_info_list[i].core_name;
