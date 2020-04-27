@@ -175,7 +175,7 @@ int Kami::RenderVideo()
 
 void Kami::Main(const char* title)
 {
-   const char* core_label;
+   const char* core_name;
    const char* core_version;
    const char* supported_extensions;
 
@@ -191,7 +191,7 @@ void Kami::Main(const char* title)
 
    if (core_loaded)
    {
-      core_label = core_info->core_name;
+      core_name = core_info->core_name;
       const char* core_version = core_info->core_version;
       const char* supported_extensions = core_info->extensions;
 
@@ -264,6 +264,12 @@ void Kami::Main(const char* title)
                ImVec2(1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
             if (ImGui::CollapsingHeader(_("core_current_info_label"), ImGuiTreeNodeFlags_None))
             {
+               ImGui::LabelText(_("core_current_label"), core_name);
+               tooltip(_("core_current_desc"));
+               ImGui::LabelText(_("core_current_version_label"), core_version);
+               tooltip(_("core_current_version_desc"));
+               ImGui::LabelText(_("core_current_extensions_label"), supported_extensions);
+               tooltip(_("core_current_extensions_desc"));
                if (ImGui::CollapsingHeader(_("core_current_info_video_label"), ImGuiTreeNodeFlags_None))
                {
                   core_frame_buffer_t* video_data = piccolo->get_video_data();
@@ -280,7 +286,6 @@ void Kami::Main(const char* title)
             }
             if (option_count > 0 && ImGui::CollapsingHeader(_("core_current_options_label"), ImGuiTreeNodeFlags_None))
             {
-               logger(LOG_DEBUG, tag, "option_count: %d\n", option_count);
                for (unsigned i = 0; i < option_count; i++)
                {
                   core_option_t* option = &options[i];
