@@ -389,6 +389,8 @@ int main(int argc, char* argv[])
       imgui_draw_frame();
    }
 
+   delete kami;
+
    imgui_shutdown();
    destroy_window();
 
