@@ -41,6 +41,8 @@ bool Kami::CoreListInit(const char* path)
       strlcpy(core_list[i].core_version, info->core_version, sizeof(core_list[i].core_version));
       strlcpy(core_list[i].extensions, info->extensions, sizeof(core_list[i].extensions));
       core_list[i].supports_no_game = info->supports_no_game;
+      core_list[i].block_extract = info->block_extract;
+      core_list[i].full_path = info->full_path;
 
       logger(LOG_DEBUG, tag, "file name: %s\n", core_list[i].file_name);
       logger(LOG_DEBUG, tag, "core name: %s\n", core_list[i].core_name);
