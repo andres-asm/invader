@@ -30,8 +30,7 @@ bool Kami::CoreListInit(const char* path)
    logger(LOG_DEBUG, tag, "core count: %d\n", core_list->file_count);
    for (unsigned i = 0; i < core_list->file_count; i++)
    {
-      if (piccolo)
-         piccolo = new PiccoloWrapper();
+      piccolo = new PiccoloWrapper();
       snprintf(buf, sizeof(buf), "%s/%s", path, core_list->file_names[i]);
       if (piccolo->peek_core(buf))
       {
@@ -49,7 +48,6 @@ bool Kami::CoreListInit(const char* path)
          logger(LOG_DEBUG, tag, "core name: %s\n", core_info_list[i].core_name);
          logger(LOG_DEBUG, tag, "core version: %s\n", core_info_list[i].core_version);
          logger(LOG_DEBUG, tag, "valid extensions: %s\n", core_info_list[i].extensions);
-
          core_count++;
       }
       delete piccolo;

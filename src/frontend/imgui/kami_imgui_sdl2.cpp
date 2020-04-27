@@ -182,9 +182,10 @@ void Kami::Main(const char* title)
    bool block_extract = core_info->block_extract;
    bool full_path = core_info->full_path;
 
-   unsigned option_count;
-   core_option_t* options;
-   status;
+   unsigned option_count = piccolo->get_option_count();
+   core_option_t* options = piccolo->get_options();
+
+   status = piccolo->get_status();
 
    ImGui::Begin(_(title), NULL, ImGuiWindowFlags_AlwaysAutoResize);
 
@@ -193,17 +194,11 @@ void Kami::Main(const char* title)
       ImGui::Combo(_("core_selector_label"), &current_core, core_entries, core_count);
    if (core_count != 0 && (previous_core != current_core) || previous_core == -1)
    {
-      if (piccolo)
-         delete piccolo;
       core_info = &core_info_list[current_core];
 
       piccolo = new PiccoloWrapper();
       piccolo->peek_core(core_info->file_name);
       previous_core = current_core;
-
-      option_count = piccolo->get_option_count();
-      options = piccolo->get_options();
-      piccolo->get_status();
    }
 
    if (!string_is_empty(core_label))
@@ -319,7 +314,7 @@ void imgui_draw_frame()
    ImGui::NewFrame();
 
    kami->Main("Core 1");
-   kami2->Main("Core 2");
+   // kami2->Main("Core 2");
 
    bool demo = true;
    ImGui::ShowDemoWindow(&demo);
@@ -348,10 +343,10 @@ int main(int argc, char* argv[])
    set_default_style();
 
    kami = new Kami();
-   kami2 = new Kami();
+   // kami2 = new Kami();
 
    kami->CoreListInit("./cores");
-   kami2->CoreListInit("./cores");
+   // kami2->CoreListInit("./cores");
 
    while (!quit)
    {

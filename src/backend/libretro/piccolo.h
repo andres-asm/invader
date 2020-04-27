@@ -135,6 +135,7 @@ private:
 public:
    /*constructor*/
    Piccolo() { }
+   ~Piccolo() { }
 
    /*helper functions*/
    /*load core*/
@@ -173,7 +174,7 @@ public:
    /*constructor*/
    PiccoloWrapper() { piccolo = new Piccolo(); }
    /*destructor*/
-   ~PiccoloWrapper() { }
+   ~PiccoloWrapper() { delete piccolo; }
 
    /*load core for use*/
    bool load_core(const char* in)
