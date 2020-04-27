@@ -9,8 +9,6 @@ static const char* app_name = "invader";
 
 static bool quit = false;
 static bool showDemoWindow = true;
-static bool showAnotherWindow = false;
-
 static char filename[2048] = "";
 
 file_list_t* file_selector_list = NULL;
@@ -21,21 +19,21 @@ ImGuiIO io;
 Kami* kami;
 Kami* kami2;
 
-static void init_localization()
+void init_localization()
 {
    setlocale(LC_ALL, "");
    bindtextdomain("invader", "./intl/");
    textdomain("invader");
 }
 
-static void imgui_shutdown()
+void imgui_shutdown()
 {
    ImGui_ImplOpenGL3_Shutdown();
    ImGui_ImplSDL2_Shutdown();
    ImGui::DestroyContext(NULL);
 }
 
-static void imgui_setup()
+void imgui_setup()
 {
    ImGui::CreateContext(NULL);
    io = ImGui::GetIO();
@@ -46,7 +44,7 @@ static void imgui_setup()
    io.Fonts->AddFontDefault();
 }
 
-static void tooltip(const char* desc)
+void tooltip(const char* desc)
 {
    ImGui::SameLine(0, 0);
    ImGui::TextDisabled("(?)");
@@ -60,7 +58,7 @@ static void tooltip(const char* desc)
    }
 }
 
-static void set_default_style()
+void set_default_style()
 {
    ImGuiStyle* style = &ImGui::GetStyle();
 
@@ -232,7 +230,8 @@ void Kami::Main(const char* title)
             core_info = piccolo->get_info();
          }
          tooltip(_("core_current_start_core_desc"));
-      } else if (status != CORE_STATUS_RUNNING)
+      }
+      if (status != CORE_STATUS_RUNNING)
       {
          if (ImGui::Button(_("core_current_load_content_label")))
          {
@@ -296,7 +295,7 @@ void Kami::Main(const char* title)
    ImGui::End();
 }
 
-static void imgui_draw_frame()
+void imgui_draw_frame()
 {
    SDL_Event e;
 

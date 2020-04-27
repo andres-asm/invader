@@ -194,7 +194,11 @@ public:
       return piccolo->load_game(in);
    }
    /*core run*/
-   void core_run(core_frame_buffer_t* video_data, audio_cb_t cb) { piccolo->core_run(video_data, cb); }
+   void core_run(core_frame_buffer_t* video_data, audio_cb_t cb)
+   {
+      piccolo->set_instance_ptr(piccolo);
+      piccolo->core_run(video_data, cb);
+   }
 
    /*accessors*/
    /*get core information*/
