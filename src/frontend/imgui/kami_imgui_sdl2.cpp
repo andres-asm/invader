@@ -223,6 +223,7 @@ void Kami::Main(const char* title)
             {
                if (ImGui::Button(_("core_current_start_core_label")))
                {
+                  piccolo->unload_core();
                   piccolo->load_core(core_info->file_name);
                   piccolo->load_game(NULL);
                   core_info = piccolo->get_info();
@@ -231,6 +232,7 @@ void Kami::Main(const char* title)
             }
             if (ImGui::Button(_("core_current_load_content_label")))
             {
+               piccolo->unload_core();
                core_info = &core_info_list[current_core];
                piccolo->load_core(core_info->file_name);
                piccolo->load_game("rom.nes");

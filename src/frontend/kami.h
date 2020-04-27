@@ -33,15 +33,17 @@ public:
    /*constructor*/
    Kami()
    {
-      this->piccolo = new PiccoloWrapper();
       status = CORE_STATUS_NONE;
       current_core = 0;
       previous_core = -1;
-      core_info = piccolo->get_info();
       core_count = 0;
       core_loaded = false;
+      core_info = piccolo->get_info();
+      this->piccolo = new PiccoloWrapper();
    }
+
    ~Kami() { delete piccolo; }
+
    void Main(const char* title);
    bool CoreListInit(const char* path);
    int RenderVideo();
