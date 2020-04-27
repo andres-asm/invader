@@ -20,6 +20,7 @@ SDL_AudioDeviceID device;
 bool Kami::CoreListInit(const char* path)
 {
    char buf[PATH_MAX_LENGTH];
+   bool peeked = false;
    file_list_t* core_list = (file_list_t*)calloc(1, sizeof(file_list_t));
 #ifdef _WIN32
    get_file_list(path, core_list, ".dll", false);
@@ -32,7 +33,8 @@ bool Kami::CoreListInit(const char* path)
    for (unsigned i = 0; i < core_list->file_count; i++)
    {
       snprintf(buf, sizeof(buf), "%s/%s", path, core_list->file_names[i]);
-      if (piccolo->peek_core(buf))
+      peeked = piccolo->peek_core(buf);
+      if (peeked)
       {
          core_info_t* info = piccolo->get_info();
 
@@ -49,8 +51,8 @@ bool Kami::CoreListInit(const char* path)
          logger(LOG_DEBUG, tag, "core version: %s\n", core_info_list[i].core_version);
          logger(LOG_DEBUG, tag, "valid extensions: %s\n", core_info_list[i].extensions);
          core_count++;
-         piccolo->unload_core();
       }
+      piccolo->unload_core();
    }
 
    logger(LOG_DEBUG, tag, "cores found: %d\n", core_count);
@@ -119,7 +121,8 @@ bool kami_init_audio()
       logger(LOG_ERROR, tag, "failed to open audio device: %s\n", SDL_GetError());
       SDL_Quit();
       return false;
-   } else
+   }
+   else
       logger(LOG_ERROR, tag, "opened audio device: %s\n", SDL_GetAudioDeviceName(0, 0));
 
    logger(
