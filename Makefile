@@ -39,7 +39,7 @@ else
 ifneq ($(OS),Windows_NT)
    CFLAGS += -O3 -pedantic -D_GNU_SOURCE
 else
-   CFLAGS += -O3 -pedantic
+   CFLAGS += -O3
 endif
 endif
 

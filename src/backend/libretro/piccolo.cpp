@@ -245,10 +245,10 @@ size_t Piccolo::core_audio_sample_batch(const int16_t* data, size_t frames)
 
 void Piccolo::core_video_refresh(const void* data, unsigned width, unsigned height, size_t pitch)
 {
-   piccolo_ptr->video_data->data = data;
-   piccolo_ptr->video_data->width = width;
-   piccolo_ptr->video_data->height = height;
-   piccolo_ptr->video_data->pitch = pitch;
+   piccolo_ptr->video_data.data = data;
+   piccolo_ptr->video_data.width = width;
+   piccolo_ptr->video_data.height = height;
+   piccolo_ptr->video_data.pitch = pitch;
    return;
 }
 
@@ -354,7 +354,6 @@ bool Piccolo::load_core(const char* in, bool peek)
    logger(LOG_DEBUG, tag, "timing: %ffps %fHz\n", av_info.timing.fps, av_info.timing.sample_rate);
 
    status = CORE_STATUS_LOADED;
-   video_data = (core_frame_buffer_t*)calloc(1, sizeof(core_frame_buffer_t*));
 
    return true;
 }

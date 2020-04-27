@@ -98,7 +98,7 @@ private:
 
    core_option_t core_options[1000];
    core_info_t core_info;
-   core_frame_buffer_t* video_data;
+   core_frame_buffer_t video_data;
    audio_cb_t audio_callback;
 
    /*libretro variables*/
@@ -156,7 +156,7 @@ public:
    /* get core status */
    unsigned get_status() { return status; }
 
-   core_frame_buffer_t* get_video_data() { return video_data; };
+   core_frame_buffer_t* get_video_data() { return &video_data; };
 
    /*set the current core instance*/
    void set_instance_ptr(Piccolo* piccolo);
