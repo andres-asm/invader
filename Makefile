@@ -38,8 +38,10 @@ endif
 else
 ifneq ($(OS),Windows_NT)
    CFLAGS += -O3 -pedantic -D_GNU_SOURCE
+   CXXFLAGS += -O3 -pedantic -DGNU_SOURCE
 else
-   CFLAGS += -O3
+   CFLAGS += -O3 -pedantic -DGNU_SOURCE
+   CXXFLAGS += -O3 -pedantic -DGNU_SOURCE
 endif
 endif
 
