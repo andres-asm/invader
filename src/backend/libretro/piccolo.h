@@ -172,19 +172,21 @@ private:
 
 public:
    /*constructor*/
-   PiccoloWrapper() { piccolo = new Piccolo(); }
+   PiccoloWrapper() { }
    /*destructor*/
    ~PiccoloWrapper() { delete piccolo; }
 
    /*load core for use*/
    bool load_core(const char* in)
    {
+      piccolo = new Piccolo();
       piccolo->set_instance_ptr(piccolo);
       return piccolo->load_core(in, false);
    }
    /*load core to peek for core information*/
    bool peek_core(const char* in)
    {
+      piccolo = new Piccolo();
       piccolo->set_instance_ptr(piccolo);
       return piccolo->load_core(in, true);
    }
@@ -240,9 +242,10 @@ public:
    };
 
    /*core deinit*/
-   void core_deinit()
+   void unload_core()
    {
       piccolo->set_instance_ptr(piccolo);
+      /*TODO: hookup actual core unloading*/
       delete piccolo;
    }
 };

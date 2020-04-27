@@ -36,7 +36,7 @@ BraceWrapping:
   AfterUnion: true
   AfterExternBlock: false
   BeforeCatch: true
-  BeforeElse: false
+  BeforeElse: true
   IndentBraces: false
   SplitEmptyFunction: false
   SplitEmptyRecord: false
@@ -64,7 +64,7 @@ ForEachMacros:
   - Q_FOREACH
   - BOOST_FOREACH
 IncludeBlocks: Preserve
-IndentCaseLabels: false
+IndentCaseLabels: true
 IndentGotoLabels: false
 IndentPPDirectives: BeforeHash
 IndentWidth: 3

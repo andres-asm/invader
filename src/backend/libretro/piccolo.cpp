@@ -1,8 +1,10 @@
 #include <compat/strl.h>
+#include <lists/string_list.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <string/stdstring.h>
 
 #include "piccolo.h"
 #include "util.h"
@@ -84,85 +86,85 @@ bool Piccolo::core_set_environment(unsigned cmd, void* data)
 {
    switch (cmd)
    {
-   case RETRO_ENVIRONMENT_SET_SUPPORT_NO_GAME:
-   {
-      logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_SET_SUPPORT_NO_GAME: %s\n", PRINT_BOOLEAN(*(bool*)data));
-      piccolo_ptr->core_info.supports_no_game = *(bool*)data;
-      break;
-   }
-   case RETRO_ENVIRONMENT_SET_VARIABLES:
-   {
-      logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_SET_VARIABLES:\n");
-      piccolo_ptr->core_set_variables(data);
-      break;
-   }
-   case RETRO_ENVIRONMENT_GET_VARIABLE:
-   {
-      struct retro_variable* var = (struct retro_variable*)data;
-      piccolo_ptr->core_get_variables(data);
-      logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_VARIABLE: %s=%s\n", var->key, var->value);
-      break;
-   }
-   case RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE:
-   {
-      if (piccolo_ptr->core_options)
-         *(bool*)data = piccolo_ptr->options_updated;
-      else
-         *(bool*)data = false;
-      if (piccolo_ptr->options_updated)
-         logger(
-            LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE: %s\n",
-            piccolo_ptr->options_updated ? "true" : "false");
-      piccolo_ptr->options_updated = false;
-      break;
-   }
-   case RETRO_ENVIRONMENT_SET_PIXEL_FORMAT:
-      logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_SET_PIXEL_FORMAT: %s\n", PRINT_PIXFMT(*(int*)data));
-      piccolo_ptr->core_info.pixel_format = *(int*)data;
-      break;
-   case RETRO_ENVIRONMENT_GET_LOG_INTERFACE:
-   {
-      logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_LOG_INTERFACE\n");
-      struct retro_log_callback* callback = (struct retro_log_callback*)data;
-      callback->log = internal_logger;
-      break;
-   }
-   case RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY:
-   {
-      logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY\n", "./");
-      *(const char**)data = "C:\\";
-      break;
-   }
-   case RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY:
-   {
-      logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY %s\n", "./");
-      *(const char**)data = "C:\\";
-      break;
-   }
-   case RETRO_ENVIRONMENT_GET_CONTENT_DIRECTORY:
-   {
-      logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_CONTENT_DIRECTORY\n", "./");
-      *(const char**)data = "C:\\";
-      break;
-   }
-   case RETRO_ENVIRONMENT_GET_CORE_OPTIONS_VERSION:
-      *(unsigned*)data = 0;
-      logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_CORE_OPTIONS_VERSION: %d\n", *(unsigned*)data);
-      break;
-   case RETRO_ENVIRONMENT_GET_CAN_DUPE:
-      *(bool*)data = true;
-      break;
-   case RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS:
-      logger(LOG_DEBUG, tag, "RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS unhandled\n");
-      break;
-   case RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL:
-      logger(LOG_DEBUG, tag, "RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL unhandled\n");
-      break;
-   case RETRO_ENVIRONMENT_GET_FASTFORWARDING:
-      logger(LOG_DEBUG, tag, "RETRO_ENVIRONMENT_GET_FASTFORWARDING unhandled\n");
-      break;
-   default:
-      logger(LOG_DEBUG, tag, "unknown command: %d\n", cmd);
+      case RETRO_ENVIRONMENT_SET_SUPPORT_NO_GAME:
+      {
+         logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_SET_SUPPORT_NO_GAME: %s\n", PRINT_BOOLEAN(*(bool*)data));
+         piccolo_ptr->core_info.supports_no_game = *(bool*)data;
+         break;
+      }
+      case RETRO_ENVIRONMENT_SET_VARIABLES:
+      {
+         logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_SET_VARIABLES:\n");
+         piccolo_ptr->core_set_variables(data);
+         break;
+      }
+      case RETRO_ENVIRONMENT_GET_VARIABLE:
+      {
+         struct retro_variable* var = (struct retro_variable*)data;
+         piccolo_ptr->core_get_variables(data);
+         logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_VARIABLE: %s=%s\n", var->key, var->value);
+         break;
+      }
+      case RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE:
+      {
+         if (piccolo_ptr->core_options)
+            *(bool*)data = piccolo_ptr->options_updated;
+         else
+            *(bool*)data = false;
+         if (piccolo_ptr->options_updated)
+            logger(
+               LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE: %s\n",
+               piccolo_ptr->options_updated ? "true" : "false");
+         piccolo_ptr->options_updated = false;
+         break;
+      }
+      case RETRO_ENVIRONMENT_SET_PIXEL_FORMAT:
+         logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_SET_PIXEL_FORMAT: %s\n", PRINT_PIXFMT(*(int*)data));
+         piccolo_ptr->core_info.pixel_format = *(int*)data;
+         break;
+      case RETRO_ENVIRONMENT_GET_LOG_INTERFACE:
+      {
+         logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_LOG_INTERFACE\n");
+         struct retro_log_callback* callback = (struct retro_log_callback*)data;
+         callback->log = internal_logger;
+         break;
+      }
+      case RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY:
+      {
+         logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY\n", "./");
+         *(const char**)data = "C:\\";
+         break;
+      }
+      case RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY:
+      {
+         logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY %s\n", "./");
+         *(const char**)data = "C:\\";
+         break;
+      }
+      case RETRO_ENVIRONMENT_GET_CONTENT_DIRECTORY:
+      {
+         logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_CONTENT_DIRECTORY\n", "./");
+         *(const char**)data = "C:\\";
+         break;
+      }
+      case RETRO_ENVIRONMENT_GET_CORE_OPTIONS_VERSION:
+         *(unsigned*)data = 0;
+         logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_CORE_OPTIONS_VERSION: %d\n", *(unsigned*)data);
+         break;
+      case RETRO_ENVIRONMENT_GET_CAN_DUPE:
+         *(bool*)data = true;
+         break;
+      case RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS:
+         logger(LOG_DEBUG, tag, "RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS unhandled\n");
+         break;
+      case RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL:
+         logger(LOG_DEBUG, tag, "RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL unhandled\n");
+         break;
+      case RETRO_ENVIRONMENT_GET_FASTFORWARDING:
+         logger(LOG_DEBUG, tag, "RETRO_ENVIRONMENT_GET_FASTFORWARDING unhandled\n");
+         break;
+      default:
+         logger(LOG_DEBUG, tag, "unknown command: %d\n", cmd);
    }
    return true;
 }
@@ -176,12 +178,14 @@ bool Piccolo::load_game(const char* filename)
       {
          logger(LOG_INFO, tag, "loading without content\n");
          return true;
-      } else
+      }
+      else
       {
          logger(LOG_ERROR, tag, "loading failed\n");
          return false;
       }
-   } else
+   }
+   else
    {
       logger(LOG_INFO, tag, "loading file %s\n", filename);
       if (this->core_info.full_path)
@@ -194,7 +198,8 @@ bool Piccolo::load_game(const char* filename)
             logger(LOG_ERROR, tag, "core error while opening file %s\n", filename);
          else
             return true;
-      } else
+      }
+      else
       {
          struct retro_game_info info;
          FILE* file = fopen(filename, "rb");
@@ -255,6 +260,12 @@ void Piccolo::core_video_refresh(const void* data, unsigned width, unsigned heig
 bool Piccolo::load_core(const char* in, bool peek)
 {
    status = CORE_STATUS_NONE;
+
+   if (string_is_empty(in))
+   {
+      logger(LOG_ERROR, tag, "filename cannot be null\n");
+      return false;
+   }
 
    piccolo_ptr = this;
 

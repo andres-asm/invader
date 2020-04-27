@@ -27,6 +27,8 @@ private:
    core_frame_buffer_t* video_data;
    GLuint texture;
 
+   bool core_loaded;
+
 public:
    /*constructor*/
    Kami()
@@ -37,6 +39,7 @@ public:
       previous_core = -1;
       core_info = piccolo->get_info();
       core_count = 0;
+      core_loaded = false;
    }
    void Main(const char* title);
    bool CoreListInit(const char* path);

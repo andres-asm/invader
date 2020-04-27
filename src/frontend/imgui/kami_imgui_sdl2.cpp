@@ -151,21 +151,21 @@ int Kami::RenderVideo()
 
    switch (pixel_format)
    {
-   case RETRO_PIXEL_FORMAT_XRGB8888:
-      glTexImage2D(
-         GL_TEXTURE_2D, 0, GL_RGB8, video_data->width, video_data->height, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV,
-         video_data->data);
-      glPixelStorei(GL_UNPACK_ROW_LENGTH, video_data->pitch / sizeof(uint32_t));
-      break;
-   case RETRO_PIXEL_FORMAT_RGB565:
-      glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-      glPixelStorei(GL_UNPACK_ROW_LENGTH, video_data->pitch / sizeof(uint16_t));
-      glTexImage2D(
-         GL_TEXTURE_2D, 0, GL_RGB565, video_data->width, video_data->height, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5,
-         video_data->data);
-      break;
-   default:
-      logger(LOG_DEBUG, tag, "pixel format: %s (%d) unhandled\n", PRINT_PIXFMT(pixel_format), pixel_format);
+      case RETRO_PIXEL_FORMAT_XRGB8888:
+         glTexImage2D(
+            GL_TEXTURE_2D, 0, GL_RGB8, video_data->width, video_data->height, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV,
+            video_data->data);
+         glPixelStorei(GL_UNPACK_ROW_LENGTH, video_data->pitch / sizeof(uint32_t));
+         break;
+      case RETRO_PIXEL_FORMAT_RGB565:
+         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+         glPixelStorei(GL_UNPACK_ROW_LENGTH, video_data->pitch / sizeof(uint16_t));
+         glTexImage2D(
+            GL_TEXTURE_2D, 0, GL_RGB565, video_data->width, video_data->height, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5,
+            video_data->data);
+         break;
+      default:
+         logger(LOG_DEBUG, tag, "pixel format: %s (%d) unhandled\n", PRINT_PIXFMT(pixel_format), pixel_format);
    }
 
    return ((int)texture);
@@ -173,40 +173,126 @@ int Kami::RenderVideo()
 
 void Kami::Main(const char* title)
 {
-   bool file_selector_open;
-   const char* core_label = core_info->core_name;
-   const char* core_version = core_info->core_version;
-   const char* supported_extensions = core_info->extensions;
+   const char* core_label;
+   const char* core_version;
+   const char* supported_extensions;
 
-   bool supports_no_game = core_info->supports_no_game;
-   bool block_extract = core_info->block_extract;
-   bool full_path = core_info->full_path;
+   bool supports_no_game;
+   bool block_extract;
+   bool full_path;
 
-   unsigned option_count = piccolo->get_option_count();
-   core_option_t* options = piccolo->get_options();
-
-   status = piccolo->get_status();
+   unsigned option_count;
+   core_option_t* options;
 
    ImGui::Begin(_(title), NULL, ImGuiWindowFlags_AlwaysAutoResize);
-
    ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.40f);
-   if (status != CORE_STATUS_RUNNING)
-      ImGui::Combo(_("core_selector_label"), &current_core, core_entries, core_count);
-   if (core_count != 0 && (previous_core != current_core) || previous_core == -1)
-   {
-      core_info = &core_info_list[current_core];
 
-      piccolo = new PiccoloWrapper();
-      piccolo->peek_core(core_info->file_name);
-      previous_core = current_core;
-   }
-
-   if (!string_is_empty(core_label))
+   if (core_loaded)
    {
-      ImGui::LabelText(_("core_current_version_label"), core_version);
-      tooltip(_("core_current_version_desc"));
-      ImGui::LabelText(_("core_current_extensions_label"), supported_extensions);
-      tooltip(_("core_current_extensions_desc"));
+      core_label = core_info->core_name;
+      const char* core_version = core_info->core_version;
+      const char* supported_extensions = core_info->extensions;
+
+      bool supports_no_game = core_info->supports_no_game;
+      bool block_extract = core_info->block_extract;
+      bool full_path = core_info->full_path;
+
+      unsigned option_count = piccolo->get_option_count();
+      core_option_t* options = piccolo->get_options();
+      status = piccolo->get_status();
+
+      switch (status)
+      {
+         case CORE_STATUS_NONE:
+         {
+            ImGui::Combo(_("core_selector_label"), &current_core, core_entries, core_count);
+            tooltip(_("core_selector_desc"));
+            if (previous_core != current_core || previous_core == -1)
+            {
+               core_info = &core_info_list[current_core];
+               piccolo->unload_core();
+               core_loaded = piccolo->peek_core(core_info->file_name);
+               previous_core = current_core;
+            }
+            ImGui::LabelText(_("core_current_version_label"), core_version);
+            tooltip(_("core_current_version_desc"));
+            ImGui::LabelText(_("core_current_extensions_label"), supported_extensions);
+            tooltip(_("core_current_extensions_desc"));
+
+            if (supports_no_game)
+            {
+               if (ImGui::Button(_("core_current_start_core_label")))
+               {
+                  piccolo->load_core(core_info->file_name);
+                  piccolo->load_game(NULL);
+                  core_info = piccolo->get_info();
+               }
+               tooltip(_("core_current_start_core_desc"));
+            }
+            if (ImGui::Button(_("core_current_load_content_label")))
+            {
+               core_info = &core_info_list[current_core];
+               piccolo->load_core(core_info->file_name);
+               piccolo->load_game("rom.nes");
+               core_info = piccolo->get_info();
+            }
+            tooltip(_("core_current_load_content_desc"));
+
+            break;
+         }
+         case CORE_STATUS_LOADED:
+         case CORE_STATUS_RUNNING:
+         {
+            piccolo->core_run(NULL);
+
+            unsigned width = core_info->av_info.geometry.base_width;
+            unsigned height = core_info->av_info.geometry.base_height;
+
+            float aspect = core_info->av_info.geometry.aspect_ratio;
+
+            ImTextureID image_texture = (void*)(intptr_t)this->RenderVideo();
+            ImGui::Image(
+               image_texture, ImVec2((float)height * 2 * aspect, (float)height * 2), ImVec2(0.0f, 0.0f),
+               ImVec2(1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
+            if (ImGui::CollapsingHeader(_("core_current_info_label"), ImGuiTreeNodeFlags_None))
+            {
+               if (ImGui::CollapsingHeader(_("core_current_info_video_label"), ImGuiTreeNodeFlags_None))
+               {
+                  core_frame_buffer_t* video_data = piccolo->get_video_data();
+                  int base_width = core_info->av_info.geometry.base_width;
+                  int base_height = core_info->av_info.geometry.base_height;
+                  float aspect = core_info->av_info.geometry.aspect_ratio;
+
+                  ImGui::InputInt(_("framebuffer_width_label"), &base_width, 0, 0, ImGuiInputTextFlags_ReadOnly);
+                  tooltip(_("framebuffer_width_desc"));
+                  ImGui::InputInt(_("framebuffer_height_label"), &base_height, 0, 0, ImGuiInputTextFlags_ReadOnly);
+                  tooltip(_("framebuffer_height_desc"));
+                  ImGui::InputFloat(_("framebuffer_aspect_label"), &aspect, 0, 0, "%.3f", ImGuiInputTextFlags_ReadOnly);
+                  tooltip(_("framebuffer_aspect_desc"));
+               }
+            }
+            if (option_count > 0 && ImGui::CollapsingHeader(_("core_current_options_label"), ImGuiTreeNodeFlags_None))
+            {
+               logger(LOG_DEBUG, tag, "option_count: %d\n", option_count);
+               for (unsigned i = 0; i < option_count; i++)
+               {
+                  core_option_t* option = &options[i];
+                  char* description = option->description;
+                  struct string_list* values = OptionGetValues(option);
+
+                  int index = OptionGetIndex(option, values);
+                  if (string_list_combo(description, &index, values, 0))
+                  {
+                     char* value = values->elems[index].data;
+                     OptionUpdate(option, value);
+                  }
+               }
+            }
+         }
+         break;
+         default:
+            break;
+      }
 
       /* Core flags */
       if (ImGui::CollapsingHeader(_("core_current_flags_label"), ImGuiTreeNodeFlags_None))
@@ -218,79 +304,29 @@ void Kami::Main(const char* title)
          ImGui::Checkbox(_("core_current_full_path_label"), &full_path);
          tooltip(_("core_current_full_path_desc"));
       }
-
-      if (supports_no_game && status != CORE_STATUS_RUNNING)
-      {
-         if (ImGui::Button(_("core_current_start_core_label")))
-         {
-            piccolo->load_core(core_info->file_name);
-            piccolo->load_game(NULL);
-            core_info = piccolo->get_info();
-         }
-         tooltip(_("core_current_start_core_desc"));
-      }
-      if (status != CORE_STATUS_RUNNING)
-      {
-         if (ImGui::Button(_("core_current_load_content_label")))
-         {
-            piccolo->load_core(core_info->file_name);
-            piccolo->load_game("rom.nes");
-            core_info = piccolo->get_info();
-         }
-      }
    }
-
-   if (status == CORE_STATUS_LOADED || status == CORE_STATUS_RUNNING)
+   else
    {
-      piccolo->core_run(NULL);
-
-      unsigned width = core_info->av_info.geometry.base_width;
-      unsigned height = core_info->av_info.geometry.base_height;
-
-      float aspect = core_info->av_info.geometry.aspect_ratio;
-
-      ImTextureID image_texture = (void*)(intptr_t)this->RenderVideo();
-      if (option_count > 0 && ImGui::CollapsingHeader(_("core_current_options_label"), ImGuiTreeNodeFlags_None))
+      if (core_count > 0)
       {
-         logger(LOG_DEBUG, tag, "option_count: %d\n", option_count);
-         for (unsigned i = 0; i < option_count; i++)
-         {
-            core_option_t* option = &options[i];
-            char* description = option->description;
-            struct string_list* values = OptionGetValues(option);
+         ImGui::Combo(_("core_selector_label"), &current_core, core_entries, core_count);
 
-            int index = OptionGetIndex(option, values);
-            if (string_list_combo(description, &index, values, 0))
-            {
-               char* value = values->elems[index].data;
-               OptionUpdate(option, value);
-            }
+         if (previous_core == -1)
+         {
+            core_info = &core_info_list[0];
+
+            core_loaded = piccolo->peek_core(core_info->file_name);
+            previous_core = current_core;
          }
       }
-
-      if (ImGui::CollapsingHeader(_("core_current_info_label"), ImGuiTreeNodeFlags_None))
+      else
       {
-         if (ImGui::CollapsingHeader(_("core_current_info_video_label"), ImGuiTreeNodeFlags_None))
-         {
-            core_frame_buffer_t* video_data = piccolo->get_video_data();
-            int base_width = core_info->av_info.geometry.base_width;
-            int base_height = core_info->av_info.geometry.base_height;
-            float aspect = core_info->av_info.geometry.aspect_ratio;
-
-            ImGui::InputInt(_("framebuffer_width_label"), &base_width, 0, 0, ImGuiInputTextFlags_ReadOnly);
-            tooltip(_("framebuffer_width_desc"));
-            ImGui::InputInt(_("framebuffer_height_label"), &base_height, 0, 0, ImGuiInputTextFlags_ReadOnly);
-            tooltip(_("framebuffer_height_desc"));
-            ImGui::InputFloat(_("framebuffer_aspect_label"), &aspect, 0, 0, "%.3f", ImGuiInputTextFlags_ReadOnly);
-            tooltip(_("framebuffer_aspect_desc"));
-         }
+         /*TODO: add no cores label*/
       }
-      ImGui::Image(
-         image_texture, ImVec2((float)height * 2 * aspect, (float)height * 2), ImVec2(0.0f, 0.0f), ImVec2(1.0f, 1.0f),
-         ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
    }
 
    ImGui::End();
+   return;
 }
 
 void imgui_draw_frame()
