@@ -249,10 +249,14 @@ void Kami::Main(const char* title)
          {
             piccolo->core_run(NULL);
 
-            unsigned width = core_info->av_info.geometry.base_width;
-            unsigned height = core_info->av_info.geometry.base_height;
+            int width = core_info->av_info.geometry.base_width;
+            int height = core_info->av_info.geometry.base_height;
+            float aspect;
 
-            float aspect = core_info->av_info.geometry.aspect_ratio;
+            if (core_info->av_info.geometry.aspect_ratio == 0)
+               aspect = (float)core_info->av_info.geometry.base_width / core_info->av_info.geometry.base_height;
+            else
+               aspect = core_info->av_info.geometry.aspect_ratio;
 
             ImTextureID image_texture = (void*)(intptr_t)this->RenderVideo();
             ImGui::Image(
@@ -263,9 +267,8 @@ void Kami::Main(const char* title)
                if (ImGui::CollapsingHeader(_("core_current_info_video_label"), ImGuiTreeNodeFlags_None))
                {
                   core_frame_buffer_t* video_data = piccolo->get_video_data();
-                  int base_width = core_info->av_info.geometry.base_width;
-                  int base_height = core_info->av_info.geometry.base_height;
-                  float aspect = core_info->av_info.geometry.aspect_ratio;
+                  int base_width = width;
+                  int base_height = height;
 
                   ImGui::InputInt(_("framebuffer_width_label"), &base_width, 0, 0, ImGuiInputTextFlags_ReadOnly);
                   tooltip(_("framebuffer_width_desc"));
