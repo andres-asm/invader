@@ -32,7 +32,8 @@ bool Kami::CoreListInit(const char* path)
    {
       piccolo = new PiccoloWrapper();
       snprintf(buf, sizeof(buf), "%s/%s", path, core_list->file_names[i]);
-      piccolo->peek_core(buf);
+      if (!piccolo->peek_core(buf))
+         continue;
       core_info_t* info = piccolo->get_info();
 
       strlcpy(core_info_list[i].file_name, info->file_name, sizeof(core_info_list[i].file_name));

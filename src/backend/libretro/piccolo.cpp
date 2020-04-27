@@ -277,7 +277,7 @@ bool Piccolo::load_core(const char* in, bool peek)
 
    if (!library_handle)
    {
-      logger(LOG_ERROR, tag, "failed to load library: %s\n");
+      logger(LOG_ERROR, tag, "failed to load library: %s\n", in);
       return false;
    }
 
