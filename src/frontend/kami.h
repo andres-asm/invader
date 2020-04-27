@@ -36,6 +36,7 @@ public:
       current_core = 0;
       previous_core = -1;
       core_info = piccolo->get_info();
+      core_count = 0;
    }
    void Main(const char* title);
    bool CoreListInit(const char* path);
