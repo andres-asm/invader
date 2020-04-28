@@ -187,6 +187,12 @@ int Kami::RenderVideo()
             GL_TEXTURE_2D, 0, GL_RGB565, video_data->width, video_data->height, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5,
             video_data->data);
          break;
+      case RETRO_PIXEL_FORMAT_0RGB1555:
+         glPixelStorei(GL_UNPACK_ROW_LENGTH, video_data->pitch / sizeof(uint16_t));
+         glTexImage2D(
+            GL_TEXTURE_2D, 0, GL_RGB8, video_data->width, video_data->height, 0, GL_BGRA, GL_UNSIGNED_SHORT_1_5_5_5_REV,
+            video_data->data);
+         break;
       default:
          logger(LOG_DEBUG, tag, "pixel format: %s (%d) unhandled\n", PRINT_PIXFMT(pixel_format), pixel_format);
    }
