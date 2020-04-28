@@ -237,6 +237,10 @@ msgstr "System directory"
 msgid "directory_system_label"
 msgstr ""
 
+#: src/frontend/intl/settings.def.c:106
+msgid "file_selector_label"
+msgstr "Select the file that you want to load"
+
 #: src/frontend/intl/settings.def.c:104 src/frontend/intl/settings.def.c:105
 #: src/frontend/intl/settings.def.c:103
 msgid "framebuffer_aspect_desc"

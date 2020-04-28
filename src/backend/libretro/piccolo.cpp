@@ -187,13 +187,13 @@ bool Piccolo::load_game(const char* filename)
    }
    else
    {
-      logger(LOG_INFO, tag, "loading file %s\n", filename);
       if (core_info.full_path)
       {
          struct retro_game_info info;
          info.data = NULL;
          info.size = 0;
          info.path = filename;
+         logger(LOG_INFO, tag, "loading file %s\n", info.path);
          if (!retro_load_game(&info))
             logger(LOG_ERROR, tag, "core error while opening file %s\n", filename);
          else

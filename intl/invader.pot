@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-27 17:57-0500\n"
+"POT-Creation-Date: 2020-04-27 20:26-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -250,6 +250,10 @@ msgstr ""
 
 #: src/frontend/intl/settings.def.c:25 src/frontend/intl/settings.def.c:23
 msgid "directory_system_label"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:106
+msgid "file_selector_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:104 src/frontend/intl/settings.def.c:105

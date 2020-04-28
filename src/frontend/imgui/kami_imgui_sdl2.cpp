@@ -1,6 +1,7 @@
 #include "imgui.h"
 #include "imgui_impl_opengl3.h"
 #include "imgui_impl_sdl.h"
+#include <file/file_path.h>
 
 #include "kami.h"
 
@@ -121,9 +122,29 @@ void set_default_style()
    clearColor = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 }
 
+bool file_list(const char* label, int* current_item, file_list_t* list, int popup_max_height_in_items)
+{
+   bool ret = false;
+   char** entries = (char**)calloc(list->file_count, sizeof(char*));
+   for (unsigned i = 0; i < list->file_count; i++)
+   {
+      entries[i] = list->file_names[i];
+   }
+
+   ImGui::PushItemWidth(-FLT_MIN);
+   if (ImGui::ListBox(label, current_item, entries, list->file_count, popup_max_height_in_items))
+      ret = true;
+   else
+      ret = false;
+   ImGui::PopItemWidth();
+
+   free(entries);
+   return ret;
+}
+
 bool string_list_combo(const char* label, int* current_item, struct string_list* list, int popup_max_height_in_items)
 {
-   int ret = 0;
+   bool ret = false;
    char** entries = (char**)calloc(list->size, sizeof(char*));
    for (unsigned i = 0; i < list->size; i++)
    {
@@ -223,7 +244,7 @@ void Kami::Main(const char* title)
 
             if (supports_no_game)
             {
-               if (ImGui::Button(_("core_current_start_core_label")))
+               if (ImGui::Button(_("core_current_start_core_label"), ImVec2(120, 0)))
                {
                   piccolo->unload_core();
                   piccolo->load_core(core_info->file_name);
@@ -232,16 +253,25 @@ void Kami::Main(const char* title)
                }
                tooltip(_("core_current_start_core_desc"));
             }
-            if (ImGui::Button(_("core_current_load_content_label")))
+            if (
+               !(string_is_equal(supported_extensions, "N/A"))
+               && ImGui::Button(_("core_current_load_content_label"), ImVec2(120, 0)))
+            {
+               if (!file_open_dialog_is_open)
+               {
+                  ImGui::OpenPopup(_("window_title_file_selector"));
+                  file_open_dialog_is_open = true;
+               }
+            }
+            tooltip(_("core_current_load_content_desc"));
+            if (!file_open_dialog_is_open && file_open_dialog_result_ok)
             {
                piccolo->unload_core();
                core_info = &core_info_list[current_core];
                piccolo->load_core(core_info->file_name);
-               piccolo->load_game("rom.nes");
+               piccolo->load_game(content_file_name);
                core_info = piccolo->get_info();
             }
-            tooltip(_("core_current_load_content_desc"));
-
             break;
          }
          case CORE_STATUS_LOADED:
@@ -337,35 +367,64 @@ void Kami::Main(const char* title)
       }
    }
 
-   if (ImGui::Button("Delete.."))
-      ImGui::OpenPopup("Delete?");
-
-   if (ImGui::BeginPopupModal("Delete?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+   if (file_open_dialog_is_open)
    {
-      ImGui::Text("All those beautiful files will be deleted.\nThis operation cannot be undone!\n\n");
-      ImGui::Separator();
-
-      // static int dummy_i = 0;
-      // ImGui::Combo("Combo", &dummy_i, "Delete\0Delete harder\0");
-
-      static bool dont_ask_me_next_time = false;
-      ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
-      ImGui::Checkbox("Don't ask me next time", &dont_ask_me_next_time);
-      ImGui::PopStyleVar();
-
-      if (ImGui::Button("OK", ImVec2(120, 0)))
+      if (ImGui::BeginPopupModal(_("window_title_file_selector"), NULL, ImGuiWindowFlags_AlwaysAutoResize))
       {
-         ImGui::CloseCurrentPopup();
+         static file_list_t* list = NULL;
+         static int index = 0;
+
+         static char cur[PATH_MAX_LENGTH];
+         static char old[PATH_MAX_LENGTH];
+
+         const char* dir = "./";
+
+         ImGui::Text(_("file_selector_label"));
+
+         if (!list)
+         {
+            strlcpy(cur, dir, sizeof(cur));
+            logger(LOG_DEBUG, tag, "path: %s\n", cur);
+            list = (file_list_t*)calloc(1, sizeof(file_list_t));
+            get_file_list(cur, list, "", true);
+         }
+         else
+         {
+            if (file_list("", &index, list, 10))
+            {
+               fill_pathname_join(cur, old, list->file_names[index], sizeof(cur));
+               if (path_is_directory(cur))
+               {
+                  get_file_list(cur, list, "", true);
+                  strlcpy(old, cur, sizeof(old));
+               }
+            }
+         }
+         ImGui::Separator();
+         /*
+                  static bool dont_ask_me_next_time = false;
+                  ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+                  ImGui::Checkbox("Don't ask me next time", &dont_ask_me_next_time);
+                  ImGui::PopStyleVar();
+         */
+         if (ImGui::Button(_("button_select_label"), ImVec2(240, 0)))
+         {
+            file_open_dialog_result_ok = true;
+            file_open_dialog_is_open = false;
+            strlcpy(content_file_name, cur, sizeof(content_file_name));
+            ImGui::CloseCurrentPopup();
+         }
+         ImGui::SetItemDefaultFocus();
+         ImGui::SameLine();
+         if (ImGui::Button("Cancel", ImVec2(240, 0)))
+         {
+            file_open_dialog_result_ok = false;
+            file_open_dialog_is_open = false;
+            ImGui::CloseCurrentPopup();
+         }
+         ImGui::EndPopup();
       }
-      ImGui::SetItemDefaultFocus();
-      ImGui::SameLine();
-      if (ImGui::Button("Cancel", ImVec2(120, 0)))
-      {
-         ImGui::CloseCurrentPopup();
-      }
-      ImGui::EndPopup();
    }
-
    ImGui::End();
    return;
 }

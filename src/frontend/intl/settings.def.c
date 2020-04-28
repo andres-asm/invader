@@ -101,3 +101,6 @@ static void localization_strings()
    _("framebuffer_height_desc");
    _("framebuffer_aspect_label");
    _("framebuffer_aspect_desc");
+
+   /* long_labels */
+   _("file_selector_label");

@@ -28,6 +28,10 @@ private:
    GLuint texture;
 
    bool core_loaded;
+   bool file_open_dialog_is_open;
+   bool file_open_dialog_result_ok;
+
+   char content_file_name[PATH_MAX_LENGTH];
 
 public:
    /*constructor*/
@@ -50,6 +54,7 @@ public:
    struct string_list* OptionGetValues(core_option_t* option);
    unsigned OptionGetIndex(core_option_t* option, struct string_list* values);
    void OptionUpdate(core_option_t* option, const char* value);
+   bool OpenFile(char* output, size_t size, const char* dir);
 };
 
 extern Kami* kami;
