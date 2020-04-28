@@ -3,20 +3,54 @@
 #include "imgui_impl_sdl.h"
 #include <file/file_path.h>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+
 #include "kami.h"
 
 static const char* tag = "[kami]";
 static const char* app_name = "invader";
+
+static const char* gamepad_texture = "./assets/gamepad/generic/base.png";
 
 static bool quit = false;
 
 ImVec4 clearColor;
 ImGuiIO io;
 
-Kami* kami;
+Kami* kami1;
 Kami* kami2;
 
+GLuint kami1_output;
+GLuint kami2_output;
+
 static bool second_instance = true;
+
+bool load_texture(const char* filename, GLuint* out_texture, int* out_width, int* out_height)
+{
+   int image_width = 0;
+   int image_height = 0;
+   unsigned char* image_data = stbi_load(filename, &image_width, &image_height, NULL, 4);
+   if (image_data == NULL)
+      return false;
+
+   GLuint image_texture;
+   glGenTextures(1, &image_texture);
+   glBindTexture(GL_TEXTURE_2D, image_texture);
+
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+   glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image_width, image_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
+   stbi_image_free(image_data);
+
+   *out_texture = image_texture;
+   *out_width = image_width;
+   *out_height = image_height;
+
+   return true;
+}
 
 void init_localization()
 {
@@ -455,7 +489,7 @@ void imgui_draw_frame()
    ImGui_ImplSDL2_NewFrame(mywindow);
    ImGui::NewFrame();
 
-   kami->Main("Core 1");
+   kami1->Main("Core 1");
    kami2->Main("Core 2");
 
    bool demo = true;
@@ -484,8 +518,8 @@ int main(int argc, char* argv[])
    imgui_setup();
    set_default_style();
 
-   kami = new Kami();
-   kami->CoreListInit("./cores");
+   kami1 = new Kami();
+   kami1->CoreListInit("./cores");
 
    if (second_instance)
    {
@@ -499,7 +533,9 @@ int main(int argc, char* argv[])
    }
 
    logger(LOG_DEBUG, tag, "shutting down\n");
-   delete kami;
+   delete kami1;
+   if (second_instance)
+      delete kami2;
 
    imgui_shutdown();
    destroy_window();

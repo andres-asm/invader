@@ -25,6 +25,7 @@ private:
    core_info_t core_info_list[100];
    const char* core_entries[100];
    core_frame_buffer_t* video_data;
+   /*TODO: this shouldn't be a part of this class*/
    GLuint texture;
 
    bool core_loaded;

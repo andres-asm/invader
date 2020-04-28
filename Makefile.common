@@ -35,4 +35,4 @@ endif
 SOURCES_LOCALIZATION = \
       ./src/frontend/intl/settings.def.c
 
-INCLUDE += -I./deps/libretro/include -I./src/ -I./src/backend/ -I./src/frontend/
+INCLUDE += -I./deps/libretro/include -I./src/ -I./src/backend/ -I./src/frontend/ -I./deps/stb
