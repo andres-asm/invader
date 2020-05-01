@@ -10,6 +10,36 @@
 #include "libretro/piccolo.h"
 #include "util.h"
 
+#include <vector>
+
+enum gamepad_assets
+{
+   GAMEPAD_BASE = 0,
+   GAMEPAD_B,
+   GAMEPAD_A,
+   GAMEPAD_LAST,
+};
+
+extern const char* gamepad_asset_names[];
+
+class KamiAsset
+{
+private:
+   GLuint data;
+   int width;
+   int height;
+   float aspect;
+
+public:
+   KamiAsset() = default;
+   void Load(const char* filename);
+   void Render();
+   int get_width() { return width; }
+   int get_height() { return height; }
+   float get_aspect() { return aspect; }
+   GLuint get_texture() { return data; }
+};
+
 /*kami class is the class controls a core completely, provides the complete I/O for the core including file I/O, video,
  * audio, input. Implementation is GUI toolkit / paradygm specific*/
 class Kami
@@ -34,6 +64,9 @@ private:
 
    char content_file_name[PATH_MAX_LENGTH];
 
+   std::vector<KamiAsset> gamepad_assets;
+   KamiAsset asset;
+
 public:
    /*constructor*/
    Kami()
@@ -56,6 +89,10 @@ public:
    unsigned OptionGetIndex(core_option_t* option, struct string_list* values);
    void OptionUpdate(core_option_t* option, const char* value);
    bool OpenFile(char* output, size_t size, const char* dir);
+   void TextureListInit(const char* path);
+   /*TODO: add an asset list and use that as an argument*/
+
+   void blend_test();
 };
 
 extern Kami* kami;

@@ -79,6 +79,10 @@ typedef struct core_option
    char values[PATH_MAX_LENGTH];
 } core_option_t;
 
+/*controller info*/
+typedef struct retro_controller_info controller_info_t;
+typedef struct retro_controller_description controller_description_t;
+
 enum core_status
 {
    CORE_STATUS_NONE = 0,
@@ -100,6 +104,9 @@ private:
    core_info_t core_info;
    core_frame_buffer_t video_data;
    audio_cb_t audio_callback;
+
+   controller_info_t* controller_info;
+   size_t controller_info_size;
 
    /*libretro variables*/
    struct retro_system_info system_info;

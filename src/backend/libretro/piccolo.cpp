@@ -163,6 +163,40 @@ bool Piccolo::core_set_environment(unsigned cmd, void* data)
       case RETRO_ENVIRONMENT_GET_FASTFORWARDING:
          logger(LOG_DEBUG, tag, "RETRO_ENVIRONMENT_GET_FASTFORWARDING unhandled\n");
          break;
+      case RETRO_ENVIRONMENT_SET_CONTROLLER_INFO:
+      {
+         unsigned count = 0;
+         controller_info_t* info = (controller_info_t*)data;
+         for (count = 0; info[count].types; count++)
+            ;
+
+         logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_SET_CONTROLLER_INFO: controller ports: %d\n", count);
+         controller_info_t* new_info = NULL;
+
+         if (piccolo_ptr->controller_info)
+            free(piccolo_ptr->controller_info);
+         piccolo_ptr->controller_info = NULL;
+         piccolo_ptr->controller_info_size = count;
+
+         new_info = (controller_info_t*)calloc(count, sizeof(*new_info));
+         if (!new_info)
+            return false;
+
+         piccolo_ptr->controller_info = new_info;
+         memcpy(piccolo_ptr->controller_info, info, count * sizeof(*piccolo_ptr->controller_info));
+
+         for (unsigned i = 0; info[i].types; i++)
+         {
+            for (unsigned j = 0; j < info[i].num_types; j++)
+            {
+               logger(
+                  LOG_INFO, tag, "RETRO_ENVIRONMENT_SET_CONTROLLER_INFO: creating device %s on port: %d\n",
+                  piccolo_ptr->controller_info[i].types[j].desc, i + 1);
+            }
+         }
+
+         break;
+      }
       default:
          logger(LOG_DEBUG, tag, "unknown command: %d\n", cmd);
    }

@@ -11,7 +11,8 @@
 static const char* tag = "[kami]";
 static const char* app_name = "invader";
 
-static const char* gamepad_texture = "./assets/gamepad/generic/base.png";
+static const char* asset_dir = "./assets/gamepad/generic";
+static const char* gamepad_texture = "base.png";
 
 static bool quit = false;
 
@@ -25,6 +26,12 @@ GLuint kami1_output;
 GLuint kami2_output;
 
 static bool second_instance = true;
+
+const char* gamepad_asset_names[] = {
+   "base.png",
+   "b.png",
+   "a.png",
+};
 
 bool load_texture(const char* filename, GLuint* out_texture, int* out_width, int* out_height)
 {
@@ -88,6 +95,78 @@ void tooltip(const char* desc)
       ImGui::TextUnformatted(desc, (const char*)NULL);
       ImGui::PopTextWrapPos();
       ImGui::EndTooltip();
+   }
+}
+
+void KamiAsset::Load(const char* filename)
+{
+   width = 0;
+   height = 0;
+   aspect = 0;
+
+   logger(LOG_DEBUG, tag, "filename %s\n", filename);
+   unsigned char* image_data = stbi_load(filename, &width, &height, NULL, 4);
+   if (image_data == NULL)
+      return;
+
+   aspect = (float)width / height;
+
+   GLuint texture;
+   glGenTextures(1, &texture);
+   glBindTexture(GL_TEXTURE_2D, texture);
+
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+   glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
+   stbi_image_free(image_data);
+
+   data = texture;
+}
+
+void KamiAsset::Render()
+{
+   int widget_width = ImGui::GetWindowWidth() * 0.25f;
+   int widget_height = widget_width / aspect;
+   ImGui::Image((void*)(intptr_t)data, ImVec2(widget_width, widget_height));
+}
+
+void Kami::blend_test()
+{
+   KamiAsset asset;
+   GLuint data1, data2;
+   asset = gamepad_assets.at(0);
+   data1 = asset.get_texture();
+
+   int widget_width = asset.get_width();
+   int widget_height = asset.get_height();
+
+   ImVec2 p = ImGui::GetCursorScreenPos();
+   ImGui::Image((void*)(intptr_t)data1, ImVec2(widget_width, widget_height));
+
+   for (unsigned i = 0; i < GAMEPAD_LAST; i++)
+   {
+      if (true)
+      {
+         asset = gamepad_assets.at(i);
+         data2 = asset.get_texture();
+         ImGui::GetWindowDrawList()->AddImage(
+            (void*)(intptr_t)data2, p, ImVec2(p.x + widget_width, p.y + widget_height), ImVec2(0, 0), ImVec2(1, 1));
+      }
+   }
+}
+
+void Kami::TextureListInit(const char* path)
+{
+   char filename[PATH_MAX_LENGTH];
+
+   for (unsigned i = 0; i < GAMEPAD_LAST; i++)
+   {
+      fill_pathname_join(filename, asset_dir, gamepad_asset_names[i], sizeof(filename));
+      KamiAsset* asset = new KamiAsset();
+      asset->Load(filename);
+      gamepad_assets.push_back(*asset);
    }
 }
 
@@ -201,8 +280,8 @@ int Kami::RenderVideo()
       glGenTextures(1, &texture);
 
    glBindTexture(GL_TEXTURE_2D, texture);
-   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
@@ -332,6 +411,15 @@ void Kami::Main(const char* title)
             ImGui::Image(
                image_texture, ImVec2((float)height * 2 * aspect, (float)height * 2), ImVec2(0.0f, 0.0f),
                ImVec2(1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
+            if (ImGui::CollapsingHeader(_("core_current_input_label"), ImGuiTreeNodeFlags_None))
+            {
+               /*ImGui::Columns(2, "", false);
+               gamepad_assets[0].Render();
+               ImGui::NextColumn();
+               gamepad_assets[1].Render();*/
+               blend_test();
+               ImGui::Columns(1);
+            }
             if (ImGui::CollapsingHeader(_("core_current_info_label"), ImGuiTreeNodeFlags_None))
             {
                ImGui::LabelText(_("core_current_label"), core_name);
@@ -520,11 +608,13 @@ int main(int argc, char* argv[])
 
    kami1 = new Kami();
    kami1->CoreListInit("./cores");
+   kami1->TextureListInit(asset_dir);
 
    if (second_instance)
    {
       kami2 = new Kami();
       kami2->CoreListInit("./cores");
+      kami2->TextureListInit(asset_dir);
    }
 
    while (!quit)
