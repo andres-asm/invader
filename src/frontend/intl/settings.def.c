@@ -85,8 +85,11 @@ static void localization_strings()
    _("core_current_filename_label");
    _("core_current_filename_desc");
    _("core_current_info_label");
+   _("core_current_info_desc");
    _("core_current_info_video_label");
    _("core_current_info_video_desc");
+   _("core_current_input_label");
+   _("core_current_input_desc");
 
    /* window buttons */
    _("button_cancel_label");
