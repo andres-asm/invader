@@ -283,7 +283,7 @@ bool controller_combo(
       ret = true;
    else
       ret = false;
-   return true;
+   return ret;
 }
 
 int Kami::RenderVideo()
@@ -452,11 +452,14 @@ void Kami::Main(const char* title)
 
                      /*TODO: get the actual current device from the core at init and make sure to get the one from
                       * setting once settings are implemented, also change 16 to a define somewhere*/
-                     static int current_device[16];
+                     static int current_device[MAX_PORTS];
 
-                     controller_combo(
-                        _("core_current_port_current_device_label"), &current_device[i], controllers->types,
-                        controllers->num_types, controller_port_count);
+                     if (controller_combo(
+                            _("core_current_port_current_device_label"), &current_device[i], controllers->types,
+                            controllers->num_types, controller_port_count))
+                     {
+                        ControllerUpdate(i, current_device[i]);
+                     }
                      tooltip(_("core_current_port_current_device_desc"));
                      ImGui::Columns(1);
                   }

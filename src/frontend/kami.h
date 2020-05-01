@@ -88,8 +88,10 @@ public:
    unsigned OptionGetIndex(core_option_t* option, struct string_list* values);
    void OptionUpdate(core_option_t* option, const char* value);
    bool OpenFile(char* output, size_t size, const char* dir);
+   void ControllerUpdate(int port, int device) { piccolo->set_controller_port_device(port, device); }
+
+   /*TODO remove from this class not required*/
    void TextureListInit(const char* path);
-   /*TODO: add an asset list and use that as an argument*/
 };
 
 extern Kami* kami;
