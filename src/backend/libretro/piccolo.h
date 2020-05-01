@@ -13,6 +13,8 @@ extern "C" void dylib_close(dylib_t lib);
 extern "C" char* dylib_error(void);
 extern "C" function_t dylib_proc(dylib_t lib, const char* proc);
 
+#define MAX_PORTS 16
+
 #define load_sym(V, S) \
    do \
    { \
@@ -108,6 +110,8 @@ private:
    controller_info_t* controller_info;
    size_t controller_info_size;
 
+   int controller_port_device[MAX_PORTS];
+
    /*libretro variables*/
    struct retro_system_info system_info;
    struct retro_system_av_info av_info;
@@ -169,6 +173,13 @@ public:
    controller_info_t* get_controller_info() { return controller_info; }
    /*get input port count*/
    size_t get_controller_port_count() { return controller_info_size; }
+   /*set device in port*/
+   void set_controller_port_device(int port, int device)
+   {
+      controller_port_device[port] = device;
+      retro_set_controller_port_device(port, device);
+   }
+
    /*set the current core instance*/
    void set_instance_ptr(Piccolo* piccolo);
 };
@@ -265,6 +276,12 @@ public:
    {
       piccolo->set_instance_ptr(piccolo);
       return piccolo->get_controller_port_count();
+   }
+   /*set device in port*/
+   void set_controller_port_device(int port, int device)
+   {
+      piccolo->set_instance_ptr(piccolo);
+      piccolo->set_controller_port_device(port, device);
    }
 
    /*core deinit*/
