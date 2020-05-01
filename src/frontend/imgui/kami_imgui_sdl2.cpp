@@ -33,6 +33,9 @@ const char* gamepad_asset_names[] = {
    "a.png",
 };
 
+std::vector<Asset> gamepad_assets;
+Asset asset;
+
 bool load_texture(const char* filename, GLuint* out_texture, int* out_width, int* out_height)
 {
    int image_width = 0;
@@ -98,7 +101,7 @@ void tooltip(const char* desc)
    }
 }
 
-void KamiAsset::Load(const char* filename)
+void Asset::Load(const char* filename)
 {
    width = 0;
    height = 0;
@@ -125,34 +128,29 @@ void KamiAsset::Load(const char* filename)
    data = texture;
 }
 
-void KamiAsset::Render()
+void Asset::Render(unsigned width, unsigned height)
 {
-   int widget_width = ImGui::GetWindowWidth() * 0.25f;
-   int widget_height = widget_width / aspect;
-   ImGui::Image((void*)(intptr_t)data, ImVec2(widget_width, widget_height));
+   ImGui::Image((void*)(intptr_t)data, ImVec2(width, height));
 }
 
-void Kami::blend_test()
+void RenderGamepad(Kami* kami, unsigned port, unsigned width, unsigned height)
 {
-   KamiAsset asset;
-   GLuint data1, data2;
+   Asset asset;
+   GLuint base, result;
    asset = gamepad_assets.at(0);
-   data1 = asset.get_texture();
-
-   int widget_width = asset.get_width();
-   int widget_height = asset.get_height();
+   base = asset.get_texture();
 
    ImVec2 p = ImGui::GetCursorScreenPos();
-   ImGui::Image((void*)(intptr_t)data1, ImVec2(widget_width, widget_height));
+   ImGui::Image((void*)(intptr_t)base, ImVec2(width, height));
 
    for (unsigned i = 0; i < GAMEPAD_LAST; i++)
    {
       if (true)
       {
          asset = gamepad_assets.at(i);
-         data2 = asset.get_texture();
+         result = asset.get_texture();
          ImGui::GetWindowDrawList()->AddImage(
-            (void*)(intptr_t)data2, p, ImVec2(p.x + widget_width, p.y + widget_height), ImVec2(0, 0), ImVec2(1, 1));
+            (void*)(intptr_t)result, p, ImVec2(p.x + width, p.y + height), ImVec2(0, 0), ImVec2(1, 1));
       }
    }
 }
@@ -164,7 +162,7 @@ void Kami::TextureListInit(const char* path)
    for (unsigned i = 0; i < GAMEPAD_LAST; i++)
    {
       fill_pathname_join(filename, asset_dir, gamepad_asset_names[i], sizeof(filename));
-      KamiAsset* asset = new KamiAsset();
+      Asset* asset = new Asset();
       asset->Load(filename);
       gamepad_assets.push_back(*asset);
    }
@@ -413,11 +411,18 @@ void Kami::Main(const char* title)
                ImVec2(1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
             if (ImGui::CollapsingHeader(_("core_current_input_label"), ImGuiTreeNodeFlags_None))
             {
-               /*ImGui::Columns(2, "", false);
-               gamepad_assets[0].Render();
+               ImGui::Columns(2, "", false);
+               unsigned width = ImGui::GetWindowWidth() * 0.25f;
+               unsigned height = width / gamepad_assets[0].get_aspect();
+
+               /* TODO: remove this, asset rendering example
+               gamepad_assets[0].Render(width, height);
+               gamepad_assets[1].Render(width, height);
+               */
+
+               RenderGamepad(this, 0, width, height);
+
                ImGui::NextColumn();
-               gamepad_assets[1].Render();*/
-               blend_test();
                ImGui::Columns(1);
             }
             if (ImGui::CollapsingHeader(_("core_current_info_label"), ImGuiTreeNodeFlags_None))

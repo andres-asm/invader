@@ -22,7 +22,7 @@ enum gamepad_assets
 
 extern const char* gamepad_asset_names[];
 
-class KamiAsset
+class Asset
 {
 private:
    GLuint data;
@@ -31,9 +31,11 @@ private:
    float aspect;
 
 public:
-   KamiAsset() = default;
+   Asset() = default;
    void Load(const char* filename);
-   void Render();
+   void Render(unsigned width, unsigned height);
+
+   /*accessors are used when you need to get the data directly, for instance when blending two assets*/
    int get_width() { return width; }
    int get_height() { return height; }
    float get_aspect() { return aspect; }
@@ -64,9 +66,6 @@ private:
 
    char content_file_name[PATH_MAX_LENGTH];
 
-   std::vector<KamiAsset> gamepad_assets;
-   KamiAsset asset;
-
 public:
    /*constructor*/
    Kami()
@@ -91,8 +90,6 @@ public:
    bool OpenFile(char* output, size_t size, const char* dir);
    void TextureListInit(const char* path);
    /*TODO: add an asset list and use that as an argument*/
-
-   void blend_test();
 };
 
 extern Kami* kami;
