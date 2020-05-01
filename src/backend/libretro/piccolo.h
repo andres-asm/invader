@@ -97,8 +97,8 @@ private:
    /*variables*/
    void* library_handle;
    unsigned status;
-   unsigned option_count;
    bool options_updated;
+   size_t option_count;
 
    core_option_t core_options[1000];
    core_info_t core_info;
@@ -158,14 +158,17 @@ public:
    /*get core options array*/
    core_option_t* get_options() { return core_options; }
    /*get core options count*/
-   unsigned get_option_count() { return option_count; }
-   /* get video data */
+   size_t get_option_count() { return option_count; }
+   /*get video data*/
    void set_options_updated() { options_updated = true; }
-   /* get core status */
+   /*get core status*/
    unsigned get_status() { return status; }
-
-   core_frame_buffer_t* get_video_data() { return &video_data; };
-
+   /*get video data*/
+   core_frame_buffer_t* get_video_data() { return &video_data; }
+   /*get input port info*/
+   controller_info_t* get_controller_info() { return controller_info; }
+   /*get input port count*/
+   size_t get_controller_port_count() { return controller_info_size; }
    /*set the current core instance*/
    void set_instance_ptr(Piccolo* piccolo);
 };
@@ -228,7 +231,7 @@ public:
       return piccolo->get_options();
    }
    /*get core options count*/
-   unsigned get_option_count()
+   size_t get_option_count()
    {
       piccolo->set_instance_ptr(piccolo);
       return piccolo->get_option_count();
@@ -251,6 +254,18 @@ public:
       piccolo->set_instance_ptr(piccolo);
       return piccolo->get_video_data();
    };
+   /*get input port info*/
+   controller_info_t* get_controller_info()
+   {
+      piccolo->set_instance_ptr(piccolo);
+      return piccolo->get_controller_info();
+   }
+   /*get input port count*/
+   size_t get_controller_port_count()
+   {
+      piccolo->set_instance_ptr(piccolo);
+      return piccolo->get_controller_port_count();
+   }
 
    /*core deinit*/
    void unload_core()
