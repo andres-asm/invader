@@ -20,21 +20,25 @@ msgstr "Audio sync"
 
 #: src/frontend/intl/settings.def.c:92 src/frontend/intl/settings.def.c:94
 #: src/frontend/intl/settings.def.c:95 src/frontend/intl/settings.def.c:93
+#: src/frontend/intl/settings.def.c:96
 msgid "button_cancel_desc"
 msgstr "Cancel current operation"
 
 #: src/frontend/intl/settings.def.c:91 src/frontend/intl/settings.def.c:93
 #: src/frontend/intl/settings.def.c:94 src/frontend/intl/settings.def.c:92
+#: src/frontend/intl/settings.def.c:95
 msgid "button_cancel_label"
 msgstr "Cancel"
 
 #: src/frontend/intl/settings.def.c:94 src/frontend/intl/settings.def.c:96
 #: src/frontend/intl/settings.def.c:97 src/frontend/intl/settings.def.c:95
+#: src/frontend/intl/settings.def.c:98
 msgid "button_select_desc"
 msgstr "Select file"
 
 #: src/frontend/intl/settings.def.c:93 src/frontend/intl/settings.def.c:95
 #: src/frontend/intl/settings.def.c:96 src/frontend/intl/settings.def.c:94
+#: src/frontend/intl/settings.def.c:97
 msgid "button_select_label"
 msgstr "Select"
 
@@ -95,7 +99,7 @@ msgstr ""
 msgid "core_current_full_path_label"
 msgstr "Requires full path"
 
-#: src/frontend/intl/settings.def.c:90
+#: src/frontend/intl/settings.def.c:90 src/frontend/intl/settings.def.c:88
 msgid "core_current_info_desc"
 msgstr "Currently active core information"
 
@@ -104,12 +108,22 @@ msgid "core_current_info_label"
 msgstr "Core information"
 
 #: src/frontend/intl/settings.def.c:91 src/frontend/intl/settings.def.c:89
+#: src/frontend/intl/settings.def.c:90
 msgid "core_current_info_video_desc"
-msgstr "Currently active core vide output information"
+msgstr "Currently active core video output information"
 
 #: src/frontend/intl/settings.def.c:90 src/frontend/intl/settings.def.c:88
+#: src/frontend/intl/settings.def.c:89
 msgid "core_current_info_video_label"
 msgstr "Video framebuffer information"
+
+#: src/frontend/intl/settings.def.c:92
+msgid "core_current_input_desc"
+msgstr "Currently active core input status and options"
+
+#: src/frontend/intl/settings.def.c:91 src/frontend/intl/settings.def.c:92
+msgid "core_current_input_label"
+msgstr "Core input"
 
 #: src/frontend/intl/settings.def.c:62 src/frontend/intl/settings.def.c:63
 #: src/frontend/intl/settings.def.c:64
@@ -237,37 +251,37 @@ msgstr "System directory"
 msgid "directory_system_label"
 msgstr ""
 
-#: src/frontend/intl/settings.def.c:106
+#: src/frontend/intl/settings.def.c:106 src/frontend/intl/settings.def.c:109
 msgid "file_selector_label"
 msgstr "Select the file that you want to load"
 
 #: src/frontend/intl/settings.def.c:104 src/frontend/intl/settings.def.c:105
-#: src/frontend/intl/settings.def.c:103
+#: src/frontend/intl/settings.def.c:103 src/frontend/intl/settings.def.c:106
 msgid "framebuffer_aspect_desc"
 msgstr "Core current aspect ratio"
 
 #: src/frontend/intl/settings.def.c:103 src/frontend/intl/settings.def.c:104
-#: src/frontend/intl/settings.def.c:102
+#: src/frontend/intl/settings.def.c:102 src/frontend/intl/settings.def.c:105
 msgid "framebuffer_aspect_label"
 msgstr "Aspect"
 
 #: src/frontend/intl/settings.def.c:102 src/frontend/intl/settings.def.c:103
-#: src/frontend/intl/settings.def.c:101
+#: src/frontend/intl/settings.def.c:101 src/frontend/intl/settings.def.c:104
 msgid "framebuffer_height_desc"
 msgstr "Core current height"
 
 #: src/frontend/intl/settings.def.c:101 src/frontend/intl/settings.def.c:102
-#: src/frontend/intl/settings.def.c:100
+#: src/frontend/intl/settings.def.c:100 src/frontend/intl/settings.def.c:103
 msgid "framebuffer_height_label"
 msgstr "Height"
 
 #: src/frontend/intl/settings.def.c:100 src/frontend/intl/settings.def.c:101
-#: src/frontend/intl/settings.def.c:99
+#: src/frontend/intl/settings.def.c:99 src/frontend/intl/settings.def.c:102
 msgid "framebuffer_width_desc"
 msgstr "Core current width"
 
 #: src/frontend/intl/settings.def.c:99 src/frontend/intl/settings.def.c:100
-#: src/frontend/intl/settings.def.c:98
+#: src/frontend/intl/settings.def.c:98 src/frontend/intl/settings.def.c:101
 msgid "framebuffer_width_label"
 msgstr "Width"
 

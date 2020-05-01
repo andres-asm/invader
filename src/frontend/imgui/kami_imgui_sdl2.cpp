@@ -133,7 +133,7 @@ void Asset::Render(unsigned width, unsigned height)
    ImGui::Image((void*)(intptr_t)data, ImVec2(width, height));
 }
 
-void RenderGamepad(Kami* kami, unsigned port, unsigned width, unsigned height)
+void RenderInputDeviceStatus(Kami* kami, unsigned port, unsigned width, unsigned height)
 {
    Asset asset;
    GLuint base, result;
@@ -179,7 +179,7 @@ void set_default_style()
    style->ItemSpacing = ImVec2(12, 8);
    style->ItemInnerSpacing = ImVec2(8, 6);
    style->IndentSpacing = 25.0f;
-   style->ScrollbarSize = 10.0f;
+   style->ScrollbarSize = 4.0f;
    style->ScrollbarRounding = 0.0f;
    style->GrabMinSize = 10.0f;
    style->GrabRounding = 0.0f;
@@ -201,9 +201,9 @@ void set_default_style()
    style->Colors[ImGuiCol_TitleBgActive] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
    style->Colors[ImGuiCol_MenuBarBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
    style->Colors[ImGuiCol_ScrollbarBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-   style->Colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
-   style->Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-   style->Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
+   style->Colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.80f, 0.80f, 0.83f, 0.50f);
+   style->Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.80f, 0.80f, 0.83f, 0.75f);
+   style->Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.80f, 0.80f, 0.83f, 1.00f);
    style->Colors[ImGuiCol_PopupBg] = ImVec4(0.19f, 0.18f, 0.21f, 1.00f);
    style->Colors[ImGuiCol_CheckMark] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
    style->Colors[ImGuiCol_SliderGrab] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
@@ -337,7 +337,7 @@ void Kami::Main(const char* title)
       bool block_extract = core_info->block_extract;
       bool full_path = core_info->full_path;
 
-      unsigned option_count = piccolo->get_option_count();
+      size_t option_count = piccolo->get_option_count();
       core_option_t* options = piccolo->get_options();
       status = piccolo->get_status();
 
@@ -420,7 +420,7 @@ void Kami::Main(const char* title)
                gamepad_assets[1].Render(width, height);
                */
 
-               RenderGamepad(this, 0, width, height);
+               RenderInputDeviceStatus(this, 0, width, height);
 
                ImGui::NextColumn();
                ImGui::Columns(1);
@@ -433,6 +433,7 @@ void Kami::Main(const char* title)
                tooltip(_("core_current_version_desc"));
                ImGui::LabelText(_("core_current_extensions_label"), supported_extensions);
                tooltip(_("core_current_extensions_desc"));
+               ImGui::Indent(ImGui::GetTreeNodeToLabelSpacing());
                if (ImGui::CollapsingHeader(_("core_current_info_video_label"), ImGuiTreeNodeFlags_None))
                {
                   core_frame_buffer_t* video_data = piccolo->get_video_data();
@@ -446,6 +447,7 @@ void Kami::Main(const char* title)
                   ImGui::InputFloat(_("framebuffer_aspect_label"), &aspect, 0, 0, "%.3f", ImGuiInputTextFlags_ReadOnly);
                   tooltip(_("framebuffer_aspect_desc"));
                }
+               ImGui::Unindent();
             }
             if (option_count > 0 && ImGui::CollapsingHeader(_("core_current_options_label"), ImGuiTreeNodeFlags_None))
             {
