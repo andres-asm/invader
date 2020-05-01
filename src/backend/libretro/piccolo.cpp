@@ -155,8 +155,18 @@ bool Piccolo::core_set_environment(unsigned cmd, void* data)
          *(bool*)data = true;
          break;
       case RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS:
-         logger(LOG_DEBUG, tag, "RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS unhandled\n");
-         break;
+      {
+         const input_descriptor_t* new_descriptors = NULL;
+         unsigned count = 0;
+
+         new_descriptors = (const struct retro_input_descriptor*)data;
+
+         for (count = 0; new_descriptors->description; new_descriptors++)
+            count++;
+
+         piccolo_ptr->input_descriptors = (input_descriptor_t*)calloc(count, sizeof(input_descriptor_t));
+      }
+      break;
       case RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL:
          logger(LOG_DEBUG, tag, "RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL unhandled\n");
          break;
@@ -194,7 +204,6 @@ bool Piccolo::core_set_environment(unsigned cmd, void* data)
                   piccolo_ptr->controller_info[i].types[j].desc, i + 1);
             }
          }
-
          break;
       }
       default:

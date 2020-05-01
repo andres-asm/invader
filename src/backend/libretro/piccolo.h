@@ -92,6 +92,9 @@ enum core_status
    CORE_STATUS_RUNNING
 };
 
+/*button descriptors*/
+typedef struct retro_input_descriptor input_descriptor_t;
+
 /*piccolo class is the class that interacts with the libretro core directly*/
 class Piccolo
 {
@@ -109,6 +112,8 @@ private:
 
    controller_info_t* controller_info;
    size_t controller_info_size;
+
+   input_descriptor_t* input_descriptors;
 
    int controller_port_device[MAX_PORTS];
 
