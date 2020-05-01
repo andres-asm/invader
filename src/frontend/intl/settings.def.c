@@ -90,6 +90,10 @@ static void localization_strings()
    _("core_current_info_video_desc");
    _("core_current_input_label");
    _("core_current_input_desc");
+   _("core_current_port_label");
+   _("core_current_port desc");
+   _("core_current_port_current_device_label")
+   _("core_current_port_current_device_desc")
 
    /* window buttons */
    _("button_cancel_label");

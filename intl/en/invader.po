@@ -20,25 +20,29 @@ msgstr "Audio sync"
 
 #: src/frontend/intl/settings.def.c:92 src/frontend/intl/settings.def.c:94
 #: src/frontend/intl/settings.def.c:95 src/frontend/intl/settings.def.c:93
-#: src/frontend/intl/settings.def.c:96
+#: src/frontend/intl/settings.def.c:96 src/frontend/intl/settings.def.c:98
+#: src/frontend/intl/settings.def.c:100
 msgid "button_cancel_desc"
 msgstr "Cancel current operation"
 
 #: src/frontend/intl/settings.def.c:91 src/frontend/intl/settings.def.c:93
 #: src/frontend/intl/settings.def.c:94 src/frontend/intl/settings.def.c:92
-#: src/frontend/intl/settings.def.c:95
+#: src/frontend/intl/settings.def.c:95 src/frontend/intl/settings.def.c:97
+#: src/frontend/intl/settings.def.c:99
 msgid "button_cancel_label"
 msgstr "Cancel"
 
 #: src/frontend/intl/settings.def.c:94 src/frontend/intl/settings.def.c:96
 #: src/frontend/intl/settings.def.c:97 src/frontend/intl/settings.def.c:95
-#: src/frontend/intl/settings.def.c:98
+#: src/frontend/intl/settings.def.c:98 src/frontend/intl/settings.def.c:100
+#: src/frontend/intl/settings.def.c:102
 msgid "button_select_desc"
 msgstr "Select file"
 
 #: src/frontend/intl/settings.def.c:93 src/frontend/intl/settings.def.c:95
 #: src/frontend/intl/settings.def.c:96 src/frontend/intl/settings.def.c:94
-#: src/frontend/intl/settings.def.c:97
+#: src/frontend/intl/settings.def.c:97 src/frontend/intl/settings.def.c:99
+#: src/frontend/intl/settings.def.c:101
 msgid "button_select_label"
 msgstr "Select"
 
@@ -150,6 +154,23 @@ msgstr "Currently selected core supported extensions"
 msgid "core_current_options_label"
 msgstr "Core options"
 
+#: src/frontend/intl/settings.def.c:94
+msgid "core_current_port desc"
+msgstr "Core input port"
+
+#: src/frontend/intl/settings.def.c:96
+msgid "core_current_port_current_device_desc"
+msgstr ""
+"Currently selected device"
+
+#: src/frontend/intl/settings.def.c:95
+msgid "core_current_port_current_device_label"
+msgstr "Device"
+
+#: src/frontend/intl/settings.def.c:93
+msgid "core_current_port_label"
+msgstr "Port:"
+
 #: src/frontend/intl/settings.def.c:85 src/frontend/intl/settings.def.c:86
 #: src/frontend/intl/settings.def.c:84
 msgid "core_current_select_content_desc"
@@ -252,36 +273,43 @@ msgid "directory_system_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:106 src/frontend/intl/settings.def.c:109
+#: src/frontend/intl/settings.def.c:111 src/frontend/intl/settings.def.c:113
 msgid "file_selector_label"
 msgstr "Select the file that you want to load"
 
 #: src/frontend/intl/settings.def.c:104 src/frontend/intl/settings.def.c:105
 #: src/frontend/intl/settings.def.c:103 src/frontend/intl/settings.def.c:106
+#: src/frontend/intl/settings.def.c:108 src/frontend/intl/settings.def.c:110
 msgid "framebuffer_aspect_desc"
 msgstr "Core current aspect ratio"
 
 #: src/frontend/intl/settings.def.c:103 src/frontend/intl/settings.def.c:104
 #: src/frontend/intl/settings.def.c:102 src/frontend/intl/settings.def.c:105
+#: src/frontend/intl/settings.def.c:107 src/frontend/intl/settings.def.c:109
 msgid "framebuffer_aspect_label"
 msgstr "Aspect"
 
 #: src/frontend/intl/settings.def.c:102 src/frontend/intl/settings.def.c:103
 #: src/frontend/intl/settings.def.c:101 src/frontend/intl/settings.def.c:104
+#: src/frontend/intl/settings.def.c:106 src/frontend/intl/settings.def.c:108
 msgid "framebuffer_height_desc"
 msgstr "Core current height"
 
 #: src/frontend/intl/settings.def.c:101 src/frontend/intl/settings.def.c:102
 #: src/frontend/intl/settings.def.c:100 src/frontend/intl/settings.def.c:103
+#: src/frontend/intl/settings.def.c:105 src/frontend/intl/settings.def.c:107
 msgid "framebuffer_height_label"
 msgstr "Height"
 
 #: src/frontend/intl/settings.def.c:100 src/frontend/intl/settings.def.c:101
 #: src/frontend/intl/settings.def.c:99 src/frontend/intl/settings.def.c:102
+#: src/frontend/intl/settings.def.c:104 src/frontend/intl/settings.def.c:106
 msgid "framebuffer_width_desc"
 msgstr "Core current width"
 
 #: src/frontend/intl/settings.def.c:99 src/frontend/intl/settings.def.c:100
 #: src/frontend/intl/settings.def.c:98 src/frontend/intl/settings.def.c:101
+#: src/frontend/intl/settings.def.c:103 src/frontend/intl/settings.def.c:105
 msgid "framebuffer_width_label"
 msgstr "Width"
 

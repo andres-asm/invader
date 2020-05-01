@@ -261,12 +261,29 @@ bool string_list_combo(const char* label, int* current_item, struct string_list*
    {
       entries[i] = list->elems[i].data;
    }
-   if (ImGui::Combo(label, current_item, entries, list->size, 0))
+   if (ImGui::Combo(label, current_item, entries, list->size, popup_max_height_in_items))
       ret = true;
    else
       ret = false;
    free(entries);
    return ret;
+}
+
+bool controller_combo(
+   const char* label, int* current_item, const controller_description_t* list, size_t size,
+   int popup_max_height_in_items)
+{
+   bool ret = false;
+   char** entries = (char**)calloc(size, sizeof(char*));
+   for (unsigned i = 0; i < size; i++)
+   {
+      entries[i] = (char*)list[i].desc;
+   }
+   if (ImGui::Combo(label, current_item, entries, size, popup_max_height_in_items))
+      ret = true;
+   else
+      ret = false;
+   return true;
 }
 
 int Kami::RenderVideo()
@@ -341,6 +358,9 @@ void Kami::Main(const char* title)
       core_option_t* options = piccolo->get_options();
       status = piccolo->get_status();
 
+      size_t controller_port_count = piccolo->get_controller_port_count();
+      controller_info_t* controllers = piccolo->get_controller_info();
+
       switch (status)
       {
          case CORE_STATUS_NONE:
@@ -411,19 +431,37 @@ void Kami::Main(const char* title)
                ImVec2(1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
             if (ImGui::CollapsingHeader(_("core_current_input_label"), ImGuiTreeNodeFlags_None))
             {
-               ImGui::Columns(2, "", false);
-               unsigned width = ImGui::GetWindowWidth() * 0.25f;
-               unsigned height = width / gamepad_assets[0].get_aspect();
-
-               /* TODO: remove this, asset rendering example
+               /*TODO: remove this, asset rendering example
                gamepad_assets[0].Render(width, height);
                gamepad_assets[1].Render(width, height);
                */
+               ImGui::Indent(ImGui::GetTreeNodeToLabelSpacing());
+               for (unsigned i = 0; i < controller_port_count; i++)
+               {
+                  char buf[100];
+                  snprintf(buf, sizeof(buf), "%s %d\n", _("core_current_port_label"), i + 1);
+                  if (ImGui::CollapsingHeader(buf, ImGuiTreeNodeFlags_None))
+                  {
+                     ImGui::Columns(2, "", false);
+                     unsigned width = ImGui::GetWindowWidth() * 0.25f;
+                     unsigned height = width / gamepad_assets[0].get_aspect();
+                     ImGui::SetColumnWidth(-1, width + ImGui::GetTreeNodeToLabelSpacing());
+                     RenderInputDeviceStatus(this, 0, width, height);
 
-               RenderInputDeviceStatus(this, 0, width, height);
+                     ImGui::NextColumn();
 
-               ImGui::NextColumn();
-               ImGui::Columns(1);
+                     /*TODO: get the actual current device from the core at init and make sure to get the one from
+                      * setting once settings are implemented, also change 16 to a define somewhere*/
+                     static int current_device[16];
+
+                     controller_combo(
+                        _("core_current_port_current_device_label"), &current_device[i], controllers->types,
+                        controllers->num_types, controller_port_count);
+                     tooltip(_("core_current_port_current_device_desc"));
+                     ImGui::Columns(1);
+                  }
+               }
+               ImGui::Unindent();
             }
             if (ImGui::CollapsingHeader(_("core_current_info_label"), ImGuiTreeNodeFlags_None))
             {
@@ -433,6 +471,7 @@ void Kami::Main(const char* title)
                tooltip(_("core_current_version_desc"));
                ImGui::LabelText(_("core_current_extensions_label"), supported_extensions);
                tooltip(_("core_current_extensions_desc"));
+
                ImGui::Indent(ImGui::GetTreeNodeToLabelSpacing());
                if (ImGui::CollapsingHeader(_("core_current_info_video_label"), ImGuiTreeNodeFlags_None))
                {
