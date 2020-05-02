@@ -88,6 +88,28 @@ unsigned Kami::OptionGetIndex(core_option_t* option, struct string_list* values)
    return index;
 }
 
+void Kami::ParseInputDescriptors()
+{
+   input_descriptor_t* new_descriptors = piccolo->get_input_descriptors();
+   unsigned port = 0;
+   unsigned id = 0;
+   unsigned idx = 0;
+   const char* desc;
+
+   for (unsigned i = 0; i < piccolo->get_input_descriptor_count(); i++)
+   {
+      port = new_descriptors[i].port;
+      id = new_descriptors[i].id;
+      idx = new_descriptors[i].index;
+      desc = new_descriptors[i].description;
+
+      input_descriptors[port][id].port = port;
+      input_descriptors[port][id].id = id;
+      input_descriptors[port][id].index = idx;
+      input_descriptors[port][id].description = desc;
+   }
+}
+
 size_t kami_render_audio(const int16_t* data, size_t frames)
 {
    SDL_QueueAudio(device, data, 4 * frames);

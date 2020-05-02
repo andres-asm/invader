@@ -56,6 +56,9 @@ private:
    core_info_t* core_info;
    core_info_t core_info_list[100];
    const char* core_entries[100];
+
+   input_descriptor_t input_descriptors[MAX_PORTS][MAX_IDS];
+
    core_frame_buffer_t* video_data;
    /*TODO: this shouldn't be a part of this class*/
    GLuint texture;
@@ -88,7 +91,8 @@ public:
    unsigned OptionGetIndex(core_option_t* option, struct string_list* values);
    void OptionUpdate(core_option_t* option, const char* value);
    bool OpenFile(char* output, size_t size, const char* dir);
-   void ControllerUpdate(int port, int device) { piccolo->set_controller_port_device(port, device); }
+   void ControllerPortUpdate(int port, int device) { piccolo->set_controller_port_device(port, device); }
+   void ParseInputDescriptors();
 
    /*TODO remove from this class not required*/
    void TextureListInit(const char* path);

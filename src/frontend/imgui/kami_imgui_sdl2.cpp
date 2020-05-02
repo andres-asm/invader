@@ -458,9 +458,18 @@ void Kami::Main(const char* title)
                             _("core_current_port_current_device_label"), &current_device[i], controllers->types,
                             controllers->num_types, controller_port_count))
                      {
-                        ControllerUpdate(i, current_device[i]);
+                        ControllerPortUpdate(i, current_device[i]);
+                        ParseInputDescriptors();
                      }
                      tooltip(_("core_current_port_current_device_desc"));
+                     for (unsigned j = 0; j < MAX_IDS; j++)
+                     {
+                        if (!string_is_empty(input_descriptors[i][j].description))
+                        {
+                           ImGui::Button(input_descriptors[i][j].description, ImVec2(240, 0));
+                        }
+                     }
+
                      ImGui::Columns(1);
                   }
                }
