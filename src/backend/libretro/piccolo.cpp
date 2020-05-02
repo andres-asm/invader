@@ -159,12 +159,22 @@ bool Piccolo::core_set_environment(unsigned cmd, void* data)
          const input_descriptor_t* new_descriptors = NULL;
          unsigned count = 0;
 
-         new_descriptors = (const struct retro_input_descriptor*)data;
+         new_descriptors = (const input_descriptor_t*)data;
 
          for (count = 0; new_descriptors->description; new_descriptors++)
             count++;
 
+         new_descriptors = (const input_descriptor_t*)data;
          piccolo_ptr->input_descriptors = (input_descriptor_t*)calloc(count, sizeof(input_descriptor_t));
+         for (unsigned i = 0; i < count; i++)
+         {
+            piccolo_ptr->input_descriptors[i].port = new_descriptors[i].port;
+            piccolo_ptr->input_descriptors[i].device = new_descriptors[i].device;
+            piccolo_ptr->input_descriptors[i].id = new_descriptors[i].id;
+            piccolo_ptr->input_descriptors[i].index = new_descriptors[i].index;
+            piccolo_ptr->input_descriptors[i].description = new_descriptors[i].description;
+         }
+         piccolo_ptr->input_descriptors_size = count;
       }
       break;
       case RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL:

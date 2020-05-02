@@ -14,6 +14,7 @@ extern "C" char* dylib_error(void);
 extern "C" function_t dylib_proc(dylib_t lib, const char* proc);
 
 #define MAX_PORTS 16
+#define MAX_IDS 24
 
 #define load_sym(V, S) \
    do \
@@ -114,6 +115,7 @@ private:
    size_t controller_info_size;
 
    input_descriptor_t* input_descriptors;
+   size_t input_descriptors_size;
 
    int controller_port_device[MAX_PORTS];
 
@@ -184,7 +186,10 @@ public:
       controller_port_device[port] = device;
       retro_set_controller_port_device(port, device);
    }
-
+   /*get input descriptors*/
+   input_descriptor_t* get_input_descriptors() { return input_descriptors; }
+   /*get the count of set input descriptors*/
+   size_t get_input_descriptor_count() { return input_descriptors_size; }
    /*set the current core instance*/
    void set_instance_ptr(Piccolo* piccolo);
 };
@@ -287,6 +292,18 @@ public:
    {
       piccolo->set_instance_ptr(piccolo);
       piccolo->set_controller_port_device(port, device);
+   }
+   /*get input descriptors*/
+   input_descriptor_t* get_input_descriptors()
+   {
+      piccolo->set_instance_ptr(piccolo);
+      return piccolo->get_input_descriptors();
+   }
+   /*get the count of set input descriptors*/
+   size_t get_input_descriptor_count()
+   {
+      piccolo->set_instance_ptr(piccolo);
+      return piccolo->get_input_descriptor_count();
    }
 
    /*core deinit*/
