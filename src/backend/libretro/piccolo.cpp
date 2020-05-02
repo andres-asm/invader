@@ -277,9 +277,13 @@ bool Piccolo::load_game(const char* filename)
    return false;
 }
 
-/*TODO: hook this up*/
 void Piccolo::core_input_poll()
 {
+   if (piccolo_ptr->poll_callback)
+      piccolo_ptr->poll_callback();
+   else
+      logger(LOG_ERROR, tag, "input poll callback not set\n");
+
    return;
 }
 

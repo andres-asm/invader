@@ -56,6 +56,9 @@ typedef struct core_frame_buffer
 /*audio callback*/
 typedef size_t (*audio_cb_t)(const int16_t*, size_t);
 
+/*input poll callback*/
+typedef void (*input_poll_t)();
+
 /*core information*/
 typedef struct core_info
 {
@@ -111,6 +114,8 @@ private:
    core_frame_buffer_t video_data;
    audio_cb_t audio_callback;
 
+   input_poll_t poll_callback;
+
    controller_info_t* controller_info;
    size_t controller_info_size;
 
@@ -145,10 +150,23 @@ private:
    static void core_get_variables(void* data);
    static void core_video_refresh(const void* data, unsigned width, unsigned height, size_t pitch);
    static void core_input_poll();
+   static int16_t core_input_state(unsigned port, unsigned device, unsigned index, unsigned id);
    static void core_audio_sample(int16_t left, int16_t right);
    static size_t core_audio_sample_batch(const int16_t* data, size_t frames);
-   static int16_t core_input_state(unsigned port, unsigned device, unsigned index, unsigned id);
    static bool core_set_environment(unsigned cmd, void* data);
+
+   /* Polls input. */
+   // typedef void (RETRO_CALLCONV *retro_input_poll_t)(void);
+
+   /* Queries for input for player 'port'. device will be masked with
+    * RETRO_DEVICE_MASK.
+    *
+    * Specialization of devices such as RETRO_DEVICE_JOYPAD_MULTITAP that
+    * have been set with retro_set_controller_port_device()
+    * will still use the higher level RETRO_DEVICE_JOYPAD to request input.
+    */
+   // typedef int16_t (RETRO_CALLCONV *retro_input_state_t)(unsigned port, unsigned device,
+   //      unsigned index, unsigned id);
 
 public:
    /*constructor*/
@@ -190,6 +208,10 @@ public:
    input_descriptor_t* get_input_descriptors() { return input_descriptors; }
    /*get the count of set input descriptors*/
    size_t get_input_descriptor_count() { return input_descriptors_size; }
+
+   /*set the input poll callback*/
+   void set_input_poll_callback(input_poll_t cb) { poll_callback = cb; }
+
    /*set the current core instance*/
    void set_instance_ptr(Piccolo* piccolo);
 };
@@ -304,6 +326,12 @@ public:
    {
       piccolo->set_instance_ptr(piccolo);
       return piccolo->get_input_descriptor_count();
+   }
+   /*set the input poll callback*/
+   void set_input_poll_callback(input_poll_t cb)
+   {
+      piccolo->set_instance_ptr(piccolo);
+      piccolo->set_input_poll_callback(cb);
    }
 
    /*core deinit*/
