@@ -12,7 +12,6 @@ static const char* tag = "[kami]";
 static const char* app_name = "invader";
 
 static const char* asset_dir = "./assets/gamepad/generic";
-static const char* gamepad_texture = "base.png";
 
 static bool quit = false;
 
@@ -27,14 +26,12 @@ GLuint kami2_output;
 
 static bool second_instance = true;
 
-const char* gamepad_asset_names[] = {
-   "base.png",
-   "b.png",
-   "a.png",
-};
-
-std::vector<Asset> gamepad_assets;
+std::vector<Asset> device_gamepad_inputs;
 Asset asset;
+
+const char* device_gamepad_asset_names[] = {"base.png", "b.png",    "y.png",     "select.png", "start.png", "up.png",
+                                            "down.png", "left.png", "right.png", "a.png",      "x.png",     "l.png",
+                                            "r.png",    "l2.png",   "r2.png",    "l3.png",     "r3.png"};
 
 bool load_texture(const char* filename, GLuint* out_texture, int* out_width, int* out_height)
 {
@@ -48,8 +45,10 @@ bool load_texture(const char* filename, GLuint* out_texture, int* out_width, int
    glGenTextures(1, &image_texture);
    glBindTexture(GL_TEXTURE_2D, image_texture);
 
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
    glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image_width, image_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
@@ -135,9 +134,10 @@ void Asset::Render(unsigned width, unsigned height)
 
 void RenderInputDeviceStatus(Kami* kami, unsigned port, unsigned width, unsigned height)
 {
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    Asset asset;
    GLuint base, result;
-   asset = gamepad_assets.at(0);
+   asset = device_gamepad_inputs.at(0);
    base = asset.get_texture();
 
    ImVec2 p = ImGui::GetCursorScreenPos();
@@ -147,8 +147,10 @@ void RenderInputDeviceStatus(Kami* kami, unsigned port, unsigned width, unsigned
    {
       if (true)
       {
-         asset = gamepad_assets.at(i);
+         asset = device_gamepad_inputs.at(i + 1);
          result = asset.get_texture();
+         /*uncomment this to test all the textures
+         ImGui::Image((void*)(intptr_t)result, ImVec2(width, height));*/
          ImGui::GetWindowDrawList()->AddImage(
             (void*)(intptr_t)result, p, ImVec2(p.x + width, p.y + height), ImVec2(0, 0), ImVec2(1, 1));
       }
@@ -159,12 +161,12 @@ void Kami::TextureListInit(const char* path)
 {
    char filename[PATH_MAX_LENGTH];
 
-   for (unsigned i = 0; i < GAMEPAD_LAST; i++)
+   for (unsigned i = 0; i <= GAMEPAD_LAST; i++)
    {
-      fill_pathname_join(filename, asset_dir, gamepad_asset_names[i], sizeof(filename));
+      fill_pathname_join(filename, asset_dir, device_gamepad_asset_names[i], sizeof(filename));
       Asset* asset = new Asset();
       asset->Load(filename);
-      gamepad_assets.push_back(*asset);
+      device_gamepad_inputs.push_back(*asset);
    }
 }
 
@@ -328,6 +330,11 @@ int Kami::RenderVideo()
    return ((int)texture);
 }
 
+void Kami::InputPoll()
+{
+   logger(LOG_DEBUG, tag, "poll input\n");
+}
+
 void Kami::Main(const char* title)
 {
    const char* core_name;
@@ -385,6 +392,7 @@ void Kami::Main(const char* title)
                {
                   piccolo->unload_core();
                   piccolo->load_core(core_info->file_name);
+                  piccolo->set_input_poll_callback(InputPoll);
                   piccolo->load_game(NULL);
                   core_info = piccolo->get_info();
                }
@@ -406,6 +414,7 @@ void Kami::Main(const char* title)
                piccolo->unload_core();
                core_info = &core_info_list[current_core];
                piccolo->load_core(core_info->file_name);
+               piccolo->set_input_poll_callback(InputPoll);
                piccolo->load_game(content_file_name);
                core_info = piccolo->get_info();
             }
@@ -432,8 +441,8 @@ void Kami::Main(const char* title)
             if (ImGui::CollapsingHeader(_("core_current_input_label"), ImGuiTreeNodeFlags_None))
             {
                /*TODO: remove this, asset rendering example
-               gamepad_assets[0].Render(width, height);
-               gamepad_assets[1].Render(width, height);
+               device_gamepad_inputs[0].Render(width, height);
+               device_gamepad_inputs[1].Render(width, height);
                */
                ImGui::Indent(ImGui::GetTreeNodeToLabelSpacing());
                for (unsigned i = 0; i < controller_port_count; i++)
@@ -443,13 +452,12 @@ void Kami::Main(const char* title)
                   if (ImGui::CollapsingHeader(buf, ImGuiTreeNodeFlags_None))
                   {
                      ImGui::Columns(2, "", false);
-                     unsigned width = ImGui::GetWindowWidth() * 0.25f;
-                     unsigned height = width / gamepad_assets[0].get_aspect();
+                     unsigned width = device_gamepad_inputs[0].get_width() / 2;
+                     unsigned height = width / device_gamepad_inputs[0].get_aspect();
                      ImGui::SetColumnWidth(-1, width + ImGui::GetTreeNodeToLabelSpacing());
                      RenderInputDeviceStatus(this, 0, width, height);
 
                      ImGui::NextColumn();
-
                      /*TODO: get the actual current device from the core at init and make sure to get the one from
                       * setting once settings are implemented, also change 16 to a define somewhere*/
                      static int current_device[MAX_PORTS];

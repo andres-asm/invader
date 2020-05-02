@@ -12,15 +12,28 @@
 
 #include <vector>
 
-enum gamepad_assets
+enum device_gamepad_enum
 {
-   GAMEPAD_BASE = 0,
-   GAMEPAD_B,
+   GAMEPAD_B = RETRO_DEVICE_ID_JOYPAD_B,
+   GAMEPAD_Y,
+   GAMEPAD_SELECT,
+   GAMEPAD_START,
+   GAMEPAD_UP,
+   GAMEPAD_DOWN,
+   GAMEPAD_LEFT,
+   GAMEPAD_RIGHT,
    GAMEPAD_A,
-   GAMEPAD_LAST,
+   GAMEPAD_X,
+   GAMEPAD_L,
+   GAMEPAD_R,
+   GAMEPAD_L2,
+   GAMEPAD_R2,
+   GAMEPAD_L3,
+   GAMEPAD_R3,
+   GAMEPAD_LAST
 };
 
-extern const char* gamepad_asset_names[];
+extern const char* device_gamepad_asset_names[];
 
 class Asset
 {
@@ -93,6 +106,8 @@ public:
    bool OpenFile(char* output, size_t size, const char* dir);
    void ControllerPortUpdate(int port, int device) { piccolo->set_controller_port_device(port, device); }
    void ParseInputDescriptors();
+
+   static void InputPoll();
 
    /*TODO remove from this class not required*/
    void TextureListInit(const char* path);
