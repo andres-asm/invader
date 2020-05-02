@@ -37,6 +37,8 @@ void logger(int level, const char* tag, const char* fmt, ...)
    static char previous_log[4096];
    static char current_log[4096];
 
+   static unsigned spam_count;
+
    if (level >= log_level)
    {
 #ifndef DEBUG
@@ -53,8 +55,14 @@ void logger(int level, const char* tag, const char* fmt, ...)
 
       snprintf(current_log, sizeof(current_log), "[%c] --- %s %s", level_char[level], tag, buffer);
       if (!string_is_empty(previous_log) && string_is_equal(current_log, previous_log))
+      {
+         spam_count++;
+         if (spam_count % 60 == 0)
+            goto log;
          return;
+      }
 
+log:
       fprintf(stderr, "[%c] --- %s %s", level_char[level], tag, buffer);
       fflush(stderr);
       snprintf(previous_log, sizeof(previous_log), "[%c] --- %s %s", level_char[level], tag, buffer);
