@@ -390,7 +390,7 @@ void Kami::Main(const char* title)
                if (ImGui::Button(_("core_current_start_core_label"), ImVec2(120, 0)))
                {
                   piccolo->unload_core();
-                  piccolo->load_core(core_info->file_name);
+                  piccolo->load_core(core_info->file_name, frontend_supports_bitmasks);
                   piccolo->set_input_poll_callback(InputPoll);
                   piccolo->load_game(NULL);
                   core_info = piccolo->get_info();
@@ -412,11 +412,19 @@ void Kami::Main(const char* title)
             {
                piccolo->unload_core();
                core_info = &core_info_list[current_core];
-               piccolo->load_core(core_info->file_name);
+               piccolo->load_core(core_info->file_name, frontend_supports_bitmasks);
                piccolo->set_input_poll_callback(InputPoll);
                piccolo->load_game(content_file_name);
                core_info = piccolo->get_info();
             }
+#ifdef DEBUG
+            /* frontend flags */
+            if (ImGui::CollapsingHeader(_("frontend_flags_label"), ImGuiTreeNodeFlags_None))
+            {
+               ImGui::Checkbox(_("frontend_supports_bitmasks_label"), &frontend_supports_bitmasks);
+               tooltip(_("frontend_supports_bitmasks_desc"));
+            }
+#endif
             break;
          }
          case CORE_STATUS_LOADED:

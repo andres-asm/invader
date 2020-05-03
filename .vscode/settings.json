@@ -27,7 +27,14 @@
       "list": "c",
       "bitset": "c",
       "initializer_list": "c",
-      "utility": "c"
+      "utility": "c",
+      "optional": "cpp",
+      "ratio": "cpp",
+      "system_error": "cpp",
+      "functional": "cpp",
+      "regex": "cpp",
+      "tuple": "cpp",
+      "type_traits": "cpp"
    },
    "C_Cpp.dimInactiveRegions": false,
 }

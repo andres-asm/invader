@@ -70,6 +70,8 @@ private:
    core_info_t core_info_list[100];
    const char* core_entries[100];
 
+   bool frontend_supports_bitmasks;
+
    input_state_t input_state[MAX_PORTS];
 
    input_descriptor_t input_descriptors[MAX_PORTS][MAX_IDS];

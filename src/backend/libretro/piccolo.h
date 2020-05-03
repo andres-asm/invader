@@ -115,6 +115,7 @@ private:
    void* library_handle;
    unsigned status;
    bool options_updated;
+   bool frontend_supports_bitmasks;
    size_t option_count;
 
    core_option_t core_options[1000];
@@ -228,7 +229,8 @@ public:
       for (unsigned i = 0; i < 8; i++)
          input_state[port].analogs[i] = state.analogs[i];
    }
-
+   /*set support bitmasks*/
+   void set_frontend_supports_bitmasks(bool value) { frontend_supports_bitmasks = value; }
    /*set the current core instance*/
    void set_instance_ptr(Piccolo* piccolo);
 };
@@ -251,10 +253,11 @@ public:
    }
 
    /*load core for use*/
-   bool load_core(const char* in)
+   bool load_core(const char* in, bool bitmasks)
    {
       piccolo = new Piccolo();
       piccolo->set_instance_ptr(piccolo);
+      piccolo->set_frontend_supports_bitmasks(bitmasks);
       return piccolo->load_core(in, false);
    }
    /*load core to peek for core information*/

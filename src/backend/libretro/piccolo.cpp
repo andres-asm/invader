@@ -132,19 +132,19 @@ bool Piccolo::core_set_environment(unsigned cmd, void* data)
       case RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY:
       {
          logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY\n", "./");
-         *(const char**)data = "C:\\";
+         *(const char**)data = "./";
          break;
       }
       case RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY:
       {
          logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY %s\n", "./");
-         *(const char**)data = "C:\\";
+         *(const char**)data = "./";
          break;
       }
       case RETRO_ENVIRONMENT_GET_CONTENT_DIRECTORY:
       {
          logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_CONTENT_DIRECTORY\n", "./");
-         *(const char**)data = "C:\\";
+         *(const char**)data = "./";
          break;
       }
       case RETRO_ENVIRONMENT_GET_CORE_OPTIONS_VERSION:
@@ -216,26 +216,33 @@ bool Piccolo::core_set_environment(unsigned cmd, void* data)
          }
          break;
       }
+      case RETRO_ENVIRONMENT_GET_INPUT_BITMASKS:
+         logger(
+            LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_INPUT_BITMASKS: %s\n",
+            piccolo_ptr->frontend_supports_bitmasks ? "true" : "false");
+         return piccolo_ptr->frontend_supports_bitmasks;
+         break;
       default:
          logger(LOG_DEBUG, tag, "unknown command: %d\n", cmd);
    }
-   return true;
+   return false;
 }
 
 bool Piccolo::load_game(const char* filename)
 {
+   bool ret = false;
    /*supports no-game codepath*/
    if (!filename)
    {
       if (retro_load_game(NULL))
       {
          logger(LOG_INFO, tag, "loading without content\n");
-         return true;
+         ret = true;
       }
       else
       {
          logger(LOG_ERROR, tag, "loading failed\n");
-         return false;
+         ret = false;
       }
    }
    else
@@ -250,7 +257,7 @@ bool Piccolo::load_game(const char* filename)
          if (!retro_load_game(&info))
             logger(LOG_ERROR, tag, "core error while opening file %s\n", filename);
          else
-            return true;
+            ret = true;
       }
       else
       {
@@ -270,11 +277,11 @@ bool Piccolo::load_game(const char* filename)
          if (!retro_load_game(&info))
             logger(LOG_ERROR, tag, "core error while opening file %s\n", filename);
          else
-            return true;
+            ret = true;
       }
    }
 
-   return false;
+   return ret;
 }
 
 void Piccolo::core_input_poll()
@@ -287,11 +294,20 @@ void Piccolo::core_input_poll()
    return;
 }
 
-/*TODO: hook this up*/
+/*TODO: analogs, keyboards, mice*/
 int16_t Piccolo::core_input_state(unsigned port, unsigned device, unsigned index, unsigned id)
 {
    input_state_t state = piccolo_ptr->input_state[port];
-   return state.buttons;
+   int16_t ret;
+
+   /*buttons*/
+   int16_t buttons = state.buttons;
+   if (id == RETRO_DEVICE_ID_JOYPAD_MASK)
+      ret = buttons;
+   else
+      ret = ((state.buttons & (1 << id)) >> id);
+
+   return ret;
 }
 
 /*TODO: hook this up*/
@@ -407,6 +423,8 @@ bool Piccolo::load_core(const char* in, bool peek)
    set_audio_sample(core_audio_sample);
    set_audio_sample_batch(core_audio_sample_batch);
 
+   status = CORE_STATUS_LOADED;
+
    retro_get_system_av_info(&av_info);
 
    core_info.av_info.geometry.base_width = av_info.geometry.base_width;
@@ -419,8 +437,6 @@ bool Piccolo::load_core(const char* in, bool peek)
       LOG_DEBUG, tag, "geometry: %ux%d/%ux%d %f\n", av_info.geometry.base_width, av_info.geometry.base_height,
       av_info.geometry.max_width, av_info.geometry.max_height, av_info.geometry.aspect_ratio);
    logger(LOG_DEBUG, tag, "timing: %ffps %fHz\n", av_info.timing.fps, av_info.timing.sample_rate);
-
-   status = CORE_STATUS_LOADED;
 
    return true;
 }

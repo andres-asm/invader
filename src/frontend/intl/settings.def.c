@@ -95,6 +95,12 @@ static void localization_strings()
    _("core_current_port_current_device_label")
    _("core_current_port_current_device_desc")
 
+   /* frontend flags */
+   _("frontend_flags_label");
+   _("frontend_flags_desc");
+   _("frontend_supports_bitmasks_label");
+   _("frontend_supports_bitmasks_desc");
+
    /* window buttons */
    _("button_cancel_label");
    _("button_cancel_desc");

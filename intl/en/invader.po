@@ -21,28 +21,32 @@ msgstr "Audio sync"
 #: src/frontend/intl/settings.def.c:92 src/frontend/intl/settings.def.c:94
 #: src/frontend/intl/settings.def.c:95 src/frontend/intl/settings.def.c:93
 #: src/frontend/intl/settings.def.c:96 src/frontend/intl/settings.def.c:98
-#: src/frontend/intl/settings.def.c:100
+#: src/frontend/intl/settings.def.c:100 src/frontend/intl/settings.def.c:104
+#: src/frontend/intl/settings.def.c:106
 msgid "button_cancel_desc"
 msgstr "Cancel current operation"
 
 #: src/frontend/intl/settings.def.c:91 src/frontend/intl/settings.def.c:93
 #: src/frontend/intl/settings.def.c:94 src/frontend/intl/settings.def.c:92
 #: src/frontend/intl/settings.def.c:95 src/frontend/intl/settings.def.c:97
-#: src/frontend/intl/settings.def.c:99
+#: src/frontend/intl/settings.def.c:99 src/frontend/intl/settings.def.c:103
+#: src/frontend/intl/settings.def.c:105
 msgid "button_cancel_label"
 msgstr "Cancel"
 
 #: src/frontend/intl/settings.def.c:94 src/frontend/intl/settings.def.c:96
 #: src/frontend/intl/settings.def.c:97 src/frontend/intl/settings.def.c:95
 #: src/frontend/intl/settings.def.c:98 src/frontend/intl/settings.def.c:100
-#: src/frontend/intl/settings.def.c:102
+#: src/frontend/intl/settings.def.c:102 src/frontend/intl/settings.def.c:106
+#: src/frontend/intl/settings.def.c:108
 msgid "button_select_desc"
 msgstr "Select file"
 
 #: src/frontend/intl/settings.def.c:93 src/frontend/intl/settings.def.c:95
 #: src/frontend/intl/settings.def.c:96 src/frontend/intl/settings.def.c:94
 #: src/frontend/intl/settings.def.c:97 src/frontend/intl/settings.def.c:99
-#: src/frontend/intl/settings.def.c:101
+#: src/frontend/intl/settings.def.c:101 src/frontend/intl/settings.def.c:105
+#: src/frontend/intl/settings.def.c:107
 msgid "button_select_label"
 msgstr "Select"
 
@@ -160,8 +164,7 @@ msgstr "Core input port"
 
 #: src/frontend/intl/settings.def.c:96
 msgid "core_current_port_current_device_desc"
-msgstr ""
-"Currently selected device"
+msgstr "Currently selected device"
 
 #: src/frontend/intl/settings.def.c:95
 msgid "core_current_port_current_device_label"
@@ -274,44 +277,69 @@ msgstr ""
 
 #: src/frontend/intl/settings.def.c:106 src/frontend/intl/settings.def.c:109
 #: src/frontend/intl/settings.def.c:111 src/frontend/intl/settings.def.c:113
+#: src/frontend/intl/settings.def.c:117 src/frontend/intl/settings.def.c:119
 msgid "file_selector_label"
 msgstr "Select the file that you want to load"
 
 #: src/frontend/intl/settings.def.c:104 src/frontend/intl/settings.def.c:105
 #: src/frontend/intl/settings.def.c:103 src/frontend/intl/settings.def.c:106
 #: src/frontend/intl/settings.def.c:108 src/frontend/intl/settings.def.c:110
+#: src/frontend/intl/settings.def.c:114 src/frontend/intl/settings.def.c:116
 msgid "framebuffer_aspect_desc"
 msgstr "Core current aspect ratio"
 
 #: src/frontend/intl/settings.def.c:103 src/frontend/intl/settings.def.c:104
 #: src/frontend/intl/settings.def.c:102 src/frontend/intl/settings.def.c:105
 #: src/frontend/intl/settings.def.c:107 src/frontend/intl/settings.def.c:109
+#: src/frontend/intl/settings.def.c:113 src/frontend/intl/settings.def.c:115
 msgid "framebuffer_aspect_label"
 msgstr "Aspect"
 
 #: src/frontend/intl/settings.def.c:102 src/frontend/intl/settings.def.c:103
 #: src/frontend/intl/settings.def.c:101 src/frontend/intl/settings.def.c:104
 #: src/frontend/intl/settings.def.c:106 src/frontend/intl/settings.def.c:108
+#: src/frontend/intl/settings.def.c:112 src/frontend/intl/settings.def.c:114
 msgid "framebuffer_height_desc"
 msgstr "Core current height"
 
 #: src/frontend/intl/settings.def.c:101 src/frontend/intl/settings.def.c:102
 #: src/frontend/intl/settings.def.c:100 src/frontend/intl/settings.def.c:103
 #: src/frontend/intl/settings.def.c:105 src/frontend/intl/settings.def.c:107
+#: src/frontend/intl/settings.def.c:111 src/frontend/intl/settings.def.c:113
 msgid "framebuffer_height_label"
 msgstr "Height"
 
 #: src/frontend/intl/settings.def.c:100 src/frontend/intl/settings.def.c:101
 #: src/frontend/intl/settings.def.c:99 src/frontend/intl/settings.def.c:102
 #: src/frontend/intl/settings.def.c:104 src/frontend/intl/settings.def.c:106
+#: src/frontend/intl/settings.def.c:110 src/frontend/intl/settings.def.c:112
 msgid "framebuffer_width_desc"
 msgstr "Core current width"
 
 #: src/frontend/intl/settings.def.c:99 src/frontend/intl/settings.def.c:100
 #: src/frontend/intl/settings.def.c:98 src/frontend/intl/settings.def.c:101
 #: src/frontend/intl/settings.def.c:103 src/frontend/intl/settings.def.c:105
+#: src/frontend/intl/settings.def.c:109 src/frontend/intl/settings.def.c:111
 msgid "framebuffer_width_label"
 msgstr "Width"
+
+#: src/frontend/intl/settings.def.c:100
+msgid "frontend_flags_desc"
+msgstr "Frontend flags (for debugging)"
+
+#: src/frontend/intl/settings.def.c:99
+msgid "frontend_flags_label"
+msgstr "Frontend flags (for debugging)"
+
+#: src/frontend/intl/settings.def.c:100 src/frontend/intl/settings.def.c:102
+msgid "frontend_supports_bitmasks_desc"
+msgstr ""
+"Enable or disable support for input bitmasks implementation in libretro. "
+"This flag is only useful for debugging purposes."
+
+#: src/frontend/intl/settings.def.c:99 src/frontend/intl/settings.def.c:101
+msgid "frontend_supports_bitmasks_label"
+msgstr "Enable support for input bitmasks"
 
 #: src/frontend/intl/settings.def.c:46
 msgid "log_level_debug"

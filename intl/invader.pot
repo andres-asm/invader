@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-02 19:31-0500\n"
+"POT-Creation-Date: 2020-05-03 14:50-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -40,28 +40,32 @@ msgstr ""
 #: src/frontend/intl/settings.def.c:92 src/frontend/intl/settings.def.c:94
 #: src/frontend/intl/settings.def.c:95 src/frontend/intl/settings.def.c:93
 #: src/frontend/intl/settings.def.c:96 src/frontend/intl/settings.def.c:98
-#: src/frontend/intl/settings.def.c:100
+#: src/frontend/intl/settings.def.c:100 src/frontend/intl/settings.def.c:104
+#: src/frontend/intl/settings.def.c:106
 msgid "button_cancel_desc"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:91 src/frontend/intl/settings.def.c:93
 #: src/frontend/intl/settings.def.c:94 src/frontend/intl/settings.def.c:92
 #: src/frontend/intl/settings.def.c:95 src/frontend/intl/settings.def.c:97
-#: src/frontend/intl/settings.def.c:99
+#: src/frontend/intl/settings.def.c:99 src/frontend/intl/settings.def.c:103
+#: src/frontend/intl/settings.def.c:105
 msgid "button_cancel_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:94 src/frontend/intl/settings.def.c:96
 #: src/frontend/intl/settings.def.c:97 src/frontend/intl/settings.def.c:95
 #: src/frontend/intl/settings.def.c:98 src/frontend/intl/settings.def.c:100
-#: src/frontend/intl/settings.def.c:102
+#: src/frontend/intl/settings.def.c:102 src/frontend/intl/settings.def.c:106
+#: src/frontend/intl/settings.def.c:108
 msgid "button_select_desc"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:93 src/frontend/intl/settings.def.c:95
 #: src/frontend/intl/settings.def.c:96 src/frontend/intl/settings.def.c:94
 #: src/frontend/intl/settings.def.c:97 src/frontend/intl/settings.def.c:99
-#: src/frontend/intl/settings.def.c:101
+#: src/frontend/intl/settings.def.c:101 src/frontend/intl/settings.def.c:105
+#: src/frontend/intl/settings.def.c:107
 msgid "button_select_label"
 msgstr ""
 
@@ -288,43 +292,66 @@ msgstr ""
 
 #: src/frontend/intl/settings.def.c:106 src/frontend/intl/settings.def.c:109
 #: src/frontend/intl/settings.def.c:111 src/frontend/intl/settings.def.c:113
+#: src/frontend/intl/settings.def.c:117 src/frontend/intl/settings.def.c:119
 msgid "file_selector_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:104 src/frontend/intl/settings.def.c:105
 #: src/frontend/intl/settings.def.c:103 src/frontend/intl/settings.def.c:106
 #: src/frontend/intl/settings.def.c:108 src/frontend/intl/settings.def.c:110
+#: src/frontend/intl/settings.def.c:114 src/frontend/intl/settings.def.c:116
 msgid "framebuffer_aspect_desc"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:103 src/frontend/intl/settings.def.c:104
 #: src/frontend/intl/settings.def.c:102 src/frontend/intl/settings.def.c:105
 #: src/frontend/intl/settings.def.c:107 src/frontend/intl/settings.def.c:109
+#: src/frontend/intl/settings.def.c:113 src/frontend/intl/settings.def.c:115
 msgid "framebuffer_aspect_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:102 src/frontend/intl/settings.def.c:103
 #: src/frontend/intl/settings.def.c:101 src/frontend/intl/settings.def.c:104
 #: src/frontend/intl/settings.def.c:106 src/frontend/intl/settings.def.c:108
+#: src/frontend/intl/settings.def.c:112 src/frontend/intl/settings.def.c:114
 msgid "framebuffer_height_desc"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:101 src/frontend/intl/settings.def.c:102
 #: src/frontend/intl/settings.def.c:100 src/frontend/intl/settings.def.c:103
 #: src/frontend/intl/settings.def.c:105 src/frontend/intl/settings.def.c:107
+#: src/frontend/intl/settings.def.c:111 src/frontend/intl/settings.def.c:113
 msgid "framebuffer_height_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:100 src/frontend/intl/settings.def.c:101
 #: src/frontend/intl/settings.def.c:99 src/frontend/intl/settings.def.c:102
 #: src/frontend/intl/settings.def.c:104 src/frontend/intl/settings.def.c:106
+#: src/frontend/intl/settings.def.c:110 src/frontend/intl/settings.def.c:112
 msgid "framebuffer_width_desc"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:99 src/frontend/intl/settings.def.c:100
 #: src/frontend/intl/settings.def.c:98 src/frontend/intl/settings.def.c:101
 #: src/frontend/intl/settings.def.c:103 src/frontend/intl/settings.def.c:105
+#: src/frontend/intl/settings.def.c:109 src/frontend/intl/settings.def.c:111
 msgid "framebuffer_width_label"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:100
+msgid "frontend_flags_desc"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:99
+msgid "frontend_flags_label"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:100 src/frontend/intl/settings.def.c:102
+msgid "frontend_supports_bitmasks_desc"
+msgstr ""
+
+#: src/frontend/intl/settings.def.c:99 src/frontend/intl/settings.def.c:101
+msgid "frontend_supports_bitmasks_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:46
