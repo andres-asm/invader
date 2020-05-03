@@ -283,9 +283,14 @@ bool controller_combo(
       entries[i] = (char*)list[i].desc;
    }
    if (ImGui::Combo(label, current_item, entries, size, popup_max_height_in_items))
+   {
+      *current_item = list[*current_item].id;
       ret = true;
+   }
    else
+   {
       ret = false;
+   }
    return ret;
 }
 
@@ -453,7 +458,7 @@ void Kami::Main(const char* title)
                */
                ImGui::Indent(ImGui::GetTreeNodeToLabelSpacing());
 
-               for (unsigned i = 0; i < 1; i++)
+               for (unsigned i = 0; i < controller_port_count; i++)
                {
                   char buf[100];
                   snprintf(buf, sizeof(buf), "%s %d\n", _("core_current_port_label"), i + 1);
@@ -474,8 +479,8 @@ void Kami::Main(const char* title)
                             _("core_current_port_current_device_label"), &current_device[i], controllers->types,
                             controllers->num_types, controller_port_count))
                      {
-                        ControllerPortUpdate(i, current_device[i]);
                         ParseInputDescriptors();
+                        ControllerPortUpdate(i, current_device[i]);
                      }
                      tooltip(_("core_current_port_current_device_desc"));
 

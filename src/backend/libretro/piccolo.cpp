@@ -14,6 +14,8 @@ static const char* tag = "[core]";
 /*pointer to the current instance*/
 static Piccolo* piccolo_ptr;
 
+unsigned frame = 0;
+
 /*set the current core instance*/
 void Piccolo::set_instance_ptr(Piccolo* piccolo)
 {
@@ -298,6 +300,9 @@ void Piccolo::core_input_poll()
 /*TODO: analogs, keyboards, mice*/
 int16_t Piccolo::core_input_state(unsigned port, unsigned device, unsigned index, unsigned id)
 {
+   // logger(
+   //   LOG_DEBUG, tag, "frame: %d reading input for port: %d, device: %d, index: %d, id: %d\n", frame, port, device,
+   //   index, id);
    input_state_t state = piccolo_ptr->input_state[port];
    int16_t ret;
 
@@ -447,4 +452,5 @@ void Piccolo::core_run(audio_cb_t cb)
    if (status != CORE_STATUS_RUNNING)
       status = CORE_STATUS_RUNNING;
    piccolo_ptr->retro_run();
+   frame++;
 }
