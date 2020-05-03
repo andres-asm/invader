@@ -290,7 +290,8 @@ void Piccolo::core_input_poll()
 /*TODO: hook this up*/
 int16_t Piccolo::core_input_state(unsigned port, unsigned device, unsigned index, unsigned id)
 {
-   return 0;
+   input_state_t state = piccolo_ptr->input_state[port];
+   return state.buttons;
 }
 
 /*TODO: hook this up*/

@@ -24,7 +24,7 @@ Kami* kami2;
 GLuint kami1_output;
 GLuint kami2_output;
 
-static bool second_instance = true;
+static bool second_instance = false;
 
 std::vector<Asset> device_gamepad_inputs;
 Asset asset;
@@ -143,16 +143,17 @@ void RenderInputDeviceStatus(Kami* kami, unsigned port, unsigned width, unsigned
    ImVec2 p = ImGui::GetCursorScreenPos();
    ImGui::Image((void*)(intptr_t)base, ImVec2(width, height));
 
+   input_state_t state;
+   state = kami->GetInputState(port);
    for (unsigned i = 0; i < GAMEPAD_LAST; i++)
    {
       if (true)
       {
          asset = device_gamepad_inputs.at(i + 1);
          result = asset.get_texture();
-         /*uncomment this to test all the textures
-         ImGui::Image((void*)(intptr_t)result, ImVec2(width, height));*/
-         ImGui::GetWindowDrawList()->AddImage(
-            (void*)(intptr_t)result, p, ImVec2(p.x + width, p.y + height), ImVec2(0, 0), ImVec2(1, 1));
+         if ((state.buttons & (1 << i)) >> i)
+            ImGui::GetWindowDrawList()->AddImage(
+               (void*)(intptr_t)result, p, ImVec2(p.x + width, p.y + height), ImVec2(0, 0), ImVec2(1, 1));
       }
    }
 }
@@ -331,9 +332,7 @@ int Kami::RenderVideo()
 }
 
 void Kami::InputPoll()
-{
-   logger(LOG_DEBUG, tag, "poll input\n");
-}
+{ }
 
 void Kami::Main(const char* title)
 {
@@ -445,6 +444,7 @@ void Kami::Main(const char* title)
                device_gamepad_inputs[1].Render(width, height);
                */
                ImGui::Indent(ImGui::GetTreeNodeToLabelSpacing());
+
                for (unsigned i = 0; i < controller_port_count; i++)
                {
                   char buf[100];
@@ -470,13 +470,20 @@ void Kami::Main(const char* title)
                         ParseInputDescriptors();
                      }
                      tooltip(_("core_current_port_current_device_desc"));
+
                      for (unsigned j = 0; j < MAX_IDS; j++)
                      {
                         if (!string_is_empty(input_descriptors[i][j].description))
                         {
-                           ImGui::Button(input_descriptors[i][j].description, ImVec2(240, 0));
+                           ImGui::PushButtonRepeat(true);
+                           input_state[i].buttons &= ~(1 << j);
+                           if (ImGui::Button(input_descriptors[i][j].description, ImVec2(240, 0)))
+                              input_state[i].buttons |= 1 << 1 * j;
+                           ImGui::PopButtonRepeat();
                         }
                      }
+                     ImGui::Columns(1);
+                     piccolo->set_input_state(i, input_state[i]);
 
                      ImGui::Columns(1);
                   }
@@ -644,7 +651,8 @@ void imgui_draw_frame()
    ImGui::NewFrame();
 
    kami1->Main("Core 1");
-   kami2->Main("Core 2");
+   if (second_instance)
+      kami2->Main("Core 2");
 
    bool demo = true;
    ImGui::ShowDemoWindow(&demo);

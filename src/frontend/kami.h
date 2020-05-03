@@ -70,6 +70,8 @@ private:
    core_info_t core_info_list[100];
    const char* core_entries[100];
 
+   input_state_t input_state[MAX_PORTS];
+
    input_descriptor_t input_descriptors[MAX_PORTS][MAX_IDS];
 
    core_frame_buffer_t* video_data;
@@ -106,6 +108,7 @@ public:
    bool OpenFile(char* output, size_t size, const char* dir);
    void ControllerPortUpdate(int port, int device) { piccolo->set_controller_port_device(port, device); }
    void ParseInputDescriptors();
+   input_state_t GetInputState(int port) { return input_state[port]; }
 
    static void InputPoll();
 

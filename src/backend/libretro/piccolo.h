@@ -14,7 +14,7 @@ extern "C" char* dylib_error(void);
 extern "C" function_t dylib_proc(dylib_t lib, const char* proc);
 
 #define MAX_PORTS 16
-#define MAX_IDS 24
+#define MAX_IDS 12
 
 #define load_sym(V, S) \
    do \
@@ -89,6 +89,14 @@ typedef struct core_option
 typedef struct retro_controller_info controller_info_t;
 typedef struct retro_controller_description controller_description_t;
 
+/*input state*/
+typedef struct
+{
+   int16_t buttons;
+   uint16_t analogs[8];
+   uint16_t analog_buttons[16];
+} input_state_t;
+
 enum core_status
 {
    CORE_STATUS_NONE = 0,
@@ -115,6 +123,8 @@ private:
    audio_cb_t audio_callback;
 
    input_poll_t poll_callback;
+
+   input_state_t input_state[MAX_PORTS];
 
    controller_info_t* controller_info;
    size_t controller_info_size;
@@ -208,9 +218,16 @@ public:
    input_descriptor_t* get_input_descriptors() { return input_descriptors; }
    /*get the count of set input descriptors*/
    size_t get_input_descriptor_count() { return input_descriptors_size; }
-
    /*set the input poll callback*/
    void set_input_poll_callback(input_poll_t cb) { poll_callback = cb; }
+   /*set input state*/
+   void set_input_state(unsigned port, input_state_t state)
+   {
+      input_state[port].buttons = state.buttons;
+
+      for (unsigned i = 0; i < 8; i++)
+         input_state[port].analogs[i] = state.analogs[i];
+   }
 
    /*set the current core instance*/
    void set_instance_ptr(Piccolo* piccolo);
@@ -333,6 +350,8 @@ public:
       piccolo->set_instance_ptr(piccolo);
       piccolo->set_input_poll_callback(cb);
    }
+   /*set input state*/
+   void set_input_state(unsigned port, input_state_t state) { piccolo->set_input_state(port, state); }
 
    /*core deinit*/
    void unload_core()
