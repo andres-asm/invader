@@ -453,7 +453,7 @@ void Kami::Main(const char* title)
                */
                ImGui::Indent(ImGui::GetTreeNodeToLabelSpacing());
 
-               for (unsigned i = 0; i < controller_port_count; i++)
+               for (unsigned i = 0; i < 1; i++)
                {
                   char buf[100];
                   snprintf(buf, sizeof(buf), "%s %d\n", _("core_current_port_label"), i + 1);

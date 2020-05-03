@@ -127,6 +127,7 @@ bool Piccolo::core_set_environment(unsigned cmd, void* data)
          logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_LOG_INTERFACE\n");
          struct retro_log_callback* callback = (struct retro_log_callback*)data;
          callback->log = internal_logger;
+         return true;
          break;
       }
       case RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY:
