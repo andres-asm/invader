@@ -395,9 +395,8 @@ void Kami::Main(const char* title)
                if (ImGui::Button(_("core_current_start_core_label"), ImVec2(120, 0)))
                {
                   piccolo->unload_core();
-                  piccolo->load_core(core_info->file_name, frontend_supports_bitmasks);
-                  piccolo->set_input_poll_callback(InputPoll);
-                  piccolo->load_game(NULL);
+                  piccolo->load_game(core_info->file_name, NULL, frontend_supports_bitmasks);
+                  piccolo->set_callbacks(InputPoll);
                   core_info = piccolo->get_info();
                }
                tooltip(_("core_current_start_core_desc"));
@@ -417,9 +416,8 @@ void Kami::Main(const char* title)
             {
                piccolo->unload_core();
                core_info = &core_info_list[current_core];
-               piccolo->load_core(core_info->file_name, frontend_supports_bitmasks);
-               piccolo->set_input_poll_callback(InputPoll);
-               piccolo->load_game(content_file_name);
+               piccolo->set_callbacks(InputPoll);
+               piccolo->load_game(core_info->file_name, content_file_name, frontend_supports_bitmasks);
                core_info = piccolo->get_info();
             }
 #ifdef DEBUG
