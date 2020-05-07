@@ -185,10 +185,8 @@ public:
    ~Piccolo() { }
 
    /*helper functions*/
-   /*load core*/
-   bool load_core(const char* in, bool peek);
    /*load game*/
-   bool load_game(const char* in);
+   bool load_game(const char* core_file_name, const char* game_file_name, bool peek);
    /*run core*/
    void core_run(audio_cb_t cb);
 
@@ -219,8 +217,8 @@ public:
    input_descriptor_t* get_input_descriptors() { return input_descriptors; }
    /*get the count of set input descriptors*/
    size_t get_input_descriptor_count() { return input_descriptors_size; }
-   /*set the input poll callback*/
-   void set_input_poll_callback(input_poll_t cb) { poll_callback = cb; }
+   /*set callbacks for stuff that is handled in the frontend*/
+   void set_callbacks(input_poll_t cb) { poll_callback = cb; }
    /*set input state*/
    void set_input_state(unsigned port, input_state_t state)
    {
@@ -253,25 +251,18 @@ public:
    }
 
    /*load core for use*/
-   bool load_core(const char* in, bool bitmasks)
+   bool load_game(const char* core_file_name, const char* game_file_name, bool bitmasks)
    {
-      piccolo = new Piccolo();
       piccolo->set_instance_ptr(piccolo);
       piccolo->set_frontend_supports_bitmasks(bitmasks);
-      return piccolo->load_core(in, false);
+      return piccolo->load_game(core_file_name, game_file_name, false);
    }
    /*load core to peek for core information*/
-   bool peek_core(const char* in)
+   bool peek_core(const char* core_file_name)
    {
       piccolo = new Piccolo();
       piccolo->set_instance_ptr(piccolo);
-      return piccolo->load_core(in, true);
-   }
-   /*load game*/
-   bool load_game(const char* in)
-   {
-      piccolo->set_instance_ptr(piccolo);
-      return piccolo->load_game(in);
+      return piccolo->load_game(core_file_name, NULL, true);
    }
    /*core run*/
    void core_run(audio_cb_t cb)
@@ -347,11 +338,12 @@ public:
       piccolo->set_instance_ptr(piccolo);
       return piccolo->get_input_descriptor_count();
    }
-   /*set the input poll callback*/
-   void set_input_poll_callback(input_poll_t cb)
+   /*set callbacks for stuff that is handled in the frontend*/
+   void set_callbacks(input_poll_t cb)
    {
+      piccolo = new Piccolo();
       piccolo->set_instance_ptr(piccolo);
-      piccolo->set_input_poll_callback(cb);
+      piccolo->set_callbacks(cb);
    }
    /*set input state*/
    void set_input_state(unsigned port, input_state_t state) { piccolo->set_input_state(port, state); }

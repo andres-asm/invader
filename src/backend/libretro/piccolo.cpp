@@ -123,6 +123,7 @@ bool Piccolo::core_set_environment(unsigned cmd, void* data)
       case RETRO_ENVIRONMENT_SET_PIXEL_FORMAT:
          logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_SET_PIXEL_FORMAT: %s\n", PRINT_PIXFMT(*(int*)data));
          piccolo_ptr->core_info.pixel_format = *(int*)data;
+         return true;
          break;
       case RETRO_ENVIRONMENT_GET_LOG_INTERFACE:
       {
@@ -231,62 +232,6 @@ bool Piccolo::core_set_environment(unsigned cmd, void* data)
    return false;
 }
 
-bool Piccolo::load_game(const char* filename)
-{
-   bool ret = false;
-   /*supports no-game codepath*/
-   if (!filename)
-   {
-      if (retro_load_game(NULL))
-      {
-         logger(LOG_INFO, tag, "loading without content\n");
-         ret = true;
-      }
-      else
-      {
-         logger(LOG_ERROR, tag, "loading failed\n");
-         ret = false;
-      }
-   }
-   else
-   {
-      if (core_info.full_path)
-      {
-         struct retro_game_info info;
-         info.data = NULL;
-         info.size = 0;
-         info.path = filename;
-         logger(LOG_INFO, tag, "loading file %s\n", info.path);
-         if (!retro_load_game(&info))
-            logger(LOG_ERROR, tag, "core error while opening file %s\n", filename);
-         else
-            ret = true;
-      }
-      else
-      {
-         struct retro_game_info info;
-         FILE* file = fopen(filename, "rb");
-         if (!file)
-            logger(LOG_ERROR, tag, "error opening file %s\n", filename);
-         fseek(file, 0, SEEK_END);
-         info.size = ftell(file);
-         rewind(file);
-
-         info.path = filename;
-         info.data = calloc(1, info.size);
-
-         if (!info.data || !fread((void*)info.data, info.size, 1, file))
-            logger(LOG_ERROR, tag, "error reading file %s\n", filename);
-         if (!retro_load_game(&info))
-            logger(LOG_ERROR, tag, "core error while opening file %s\n", filename);
-         else
-            ret = true;
-      }
-   }
-
-   return ret;
-}
-
 void Piccolo::core_input_poll()
 {
    if (piccolo_ptr->poll_callback)
@@ -337,14 +282,15 @@ void Piccolo::core_video_refresh(const void* data, unsigned width, unsigned heig
    return;
 }
 
-bool Piccolo::load_core(const char* in, bool peek)
+bool Piccolo::load_game(const char* core_file_name, const char* game_file_name, bool peek)
 {
+   bool ret = false;
    status = CORE_STATUS_NONE;
 
-   if (string_is_empty(in))
+   if (string_is_empty(core_file_name))
    {
       logger(LOG_ERROR, tag, "filename cannot be null\n");
-      return false;
+      return ret;
    }
 
    option_count = 0;
@@ -359,14 +305,14 @@ bool Piccolo::load_core(const char* in, bool peek)
    void (*set_audio_sample)(retro_audio_sample_t) = NULL;
    void (*set_audio_sample_batch)(retro_audio_sample_batch_t) = NULL;
 
-   library_handle = dylib_load(in);
+   library_handle = dylib_load(core_file_name);
 
    void (*proc)(struct retro_system_info*);
    proc = (void (*)(struct retro_system_info*))dylib_proc(library_handle, "retro_get_system_info");
 
    if (!library_handle)
    {
-      logger(LOG_ERROR, tag, "failed to load library: %s\n", in);
+      logger(LOG_ERROR, tag, "failed to load library: %s\n", core_file_name);
       return false;
    }
 
@@ -377,7 +323,7 @@ bool Piccolo::load_core(const char* in, bool peek)
    retro_api_version();
    retro_get_system_info(&system_info);
 
-   strlcpy(core_info.file_name, in, sizeof(core_info.file_name));
+   strlcpy(core_info.file_name, core_file_name, sizeof(core_info.file_name));
    strlcpy(core_info.core_name, system_info.library_name, sizeof(core_info.core_name));
    strlcpy(core_info.core_version, system_info.library_version, sizeof(core_info.core_version));
    if (system_info.valid_extensions)
@@ -431,6 +377,61 @@ bool Piccolo::load_core(const char* in, bool peek)
 
    status = CORE_STATUS_LOADED;
 
+   logger(
+      LOG_DEBUG, tag, "geometry: %ux%d/%ux%d %f\n", av_info.geometry.base_width, av_info.geometry.base_height,
+      av_info.geometry.max_width, av_info.geometry.max_height, av_info.geometry.aspect_ratio);
+   logger(LOG_DEBUG, tag, "timing: %ffps %fHz\n", av_info.timing.fps, av_info.timing.sample_rate);
+
+   /*supports no-game codepath*/
+   if (!game_file_name)
+   {
+      if (retro_load_game(NULL))
+      {
+         logger(LOG_INFO, tag, "loading without content\n");
+         ret = true;
+      }
+      else
+      {
+         logger(LOG_ERROR, tag, "loading failed\n");
+         ret = false;
+      }
+   }
+   else
+   {
+      if (core_info.full_path)
+      {
+         struct retro_game_info info;
+         info.data = NULL;
+         info.size = 0;
+         info.path = game_file_name;
+         logger(LOG_INFO, tag, "loading file %s\n", info.path);
+         if (!retro_load_game(&info))
+            logger(LOG_ERROR, tag, "core error while opening file %s\n", game_file_name);
+         else
+            ret = true;
+      }
+      else
+      {
+         struct retro_game_info info;
+         FILE* file = fopen(game_file_name, "rb");
+         if (!file)
+            logger(LOG_ERROR, tag, "error opening file %s\n", game_file_name);
+         fseek(file, 0, SEEK_END);
+         info.size = ftell(file);
+         rewind(file);
+
+         info.path = game_file_name;
+         info.data = calloc(1, info.size);
+
+         if (!info.data || !fread((void*)info.data, info.size, 1, file))
+            logger(LOG_ERROR, tag, "error reading file %s\n", game_file_name);
+         if (!retro_load_game(&info))
+            logger(LOG_ERROR, tag, "core error while opening file %s\n", game_file_name);
+         else
+            ret = true;
+      }
+   }
+
    retro_get_system_av_info(&av_info);
 
    core_info.av_info.geometry.base_width = av_info.geometry.base_width;
@@ -439,12 +440,7 @@ bool Piccolo::load_core(const char* in, bool peek)
    core_info.av_info.geometry.max_height = av_info.geometry.max_height;
    core_info.av_info.geometry.aspect_ratio = av_info.geometry.aspect_ratio;
 
-   logger(
-      LOG_DEBUG, tag, "geometry: %ux%d/%ux%d %f\n", av_info.geometry.base_width, av_info.geometry.base_height,
-      av_info.geometry.max_width, av_info.geometry.max_height, av_info.geometry.aspect_ratio);
-   logger(LOG_DEBUG, tag, "timing: %ffps %fHz\n", av_info.timing.fps, av_info.timing.sample_rate);
-
-   return true;
+   return ret;
 }
 
 void Piccolo::core_run(audio_cb_t cb)
