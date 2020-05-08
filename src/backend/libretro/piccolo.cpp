@@ -468,3 +468,11 @@ void Piccolo::core_run(audio_cb_t cb)
    piccolo_ptr->retro_run();
    frame++;
 }
+
+void Piccolo::core_reset()
+{
+   if (status == CORE_STATUS_RUNNING)
+      piccolo_ptr->retro_reset();
+   else
+      return;
+}

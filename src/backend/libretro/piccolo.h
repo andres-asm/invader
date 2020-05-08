@@ -187,8 +187,10 @@ public:
    /*helper functions*/
    /*load game*/
    bool load_game(const char* core_file_name, const char* game_file_name, bool peek);
-   /*run core*/
+   /*core run*/
    void core_run(audio_cb_t cb);
+   /*core reset*/
+   void core_reset();
 
    /*accessors*/
    /*get core information*/
@@ -269,6 +271,12 @@ public:
    {
       piccolo->set_instance_ptr(piccolo);
       piccolo->core_run(cb);
+   }
+   /*core reset*/
+   void core_reset()
+   {
+      piccolo->set_instance_ptr(piccolo);
+      piccolo->core_reset();
    }
 
    /*accessors*/
