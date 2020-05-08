@@ -94,6 +94,10 @@ static void localization_strings()
    _("core_current_port desc");
    _("core_current_port_current_device_label")
    _("core_current_port_current_device_desc")
+   _("core_current_reset_core_label");
+   _("core_current_reset_core_desc");
+   _("core_current_actions_label");
+   _("core_current_actions_desc");
 
    /* frontend flags */
    _("frontend_flags_label");

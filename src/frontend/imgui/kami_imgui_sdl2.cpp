@@ -434,6 +434,13 @@ void Kami::Main(const char* title)
             ImGui::Image(
                image_texture, ImVec2((float)height * 2 * aspect, (float)height * 2), ImVec2(0.0f, 0.0f),
                ImVec2(1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
+
+            if (ImGui::CollapsingHeader(_("core_current_actions_label"), ImGuiTreeNodeFlags_None))
+            {
+               if (ImGui::Button(_("core_current_reset_core_label"), ImVec2(240, 0)))
+                  piccolo->core_reset();
+               tooltip(_("core_current_reset_core_desc"));
+            }
             if (ImGui::CollapsingHeader(_("core_current_input_label"), ImGuiTreeNodeFlags_None))
             {
                /*TODO: remove this, asset rendering example
