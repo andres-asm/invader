@@ -284,7 +284,7 @@ bool controller_combo(
    }
    if (ImGui::Combo(label, current_item, entries, size, popup_max_height_in_items))
    {
-      *current_item = list[*current_item].id;
+      //*current_item = list[*current_item].id;
       ret = true;
    }
    else
@@ -477,8 +477,13 @@ void Kami::Main(const char* title)
                             _("core_current_port_current_device_label"), &current_device[i], controllers->types,
                             controllers->num_types, controller_port_count))
                      {
+                        const unsigned index = current_device[i];
+                        const unsigned idx = controllers->types[index].id;
+                        const char* desc = controllers->types[index].desc;
+
+                        logger(LOG_DEBUG, tag, "changing port to: %d (%s)\n", idx, desc);
                         ParseInputDescriptors();
-                        ControllerPortUpdate(i, current_device[i]);
+                        ControllerPortUpdate(i, idx);
                      }
                      tooltip(_("core_current_port_current_device_desc"));
 
