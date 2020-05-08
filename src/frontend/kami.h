@@ -111,14 +111,11 @@ public:
    /*implementation specific functions*/
    void Main(const char* title);
    int RenderVideo();
-   void InputPoll();
+   static void InputPoll();
 
    /*TODO: this shouldn't be a part of this class*/
    void TextureListInit(const char* path);
 };
-
-extern Kami* kami;
-extern Kami* kami2;
 
 /*TODO: reimplement these*/
 size_t kami_render_audio(const int16_t* data, size_t frames);
