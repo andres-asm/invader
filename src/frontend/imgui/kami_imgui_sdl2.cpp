@@ -33,6 +33,7 @@ const char* device_gamepad_asset_names[] = {"base.png", "b.png",    "y.png",    
                                             "down.png", "left.png", "right.png", "a.png",      "x.png",     "l.png",
                                             "r.png",    "l2.png",   "r2.png",    "l3.png",     "r3.png"};
 
+/*helpers*/
 bool load_texture(const char* filename, GLuint* out_texture, int* out_width, int* out_height)
 {
    int image_width = 0;
@@ -68,24 +69,8 @@ void init_localization()
    textdomain("invader");
 }
 
-void imgui_shutdown()
-{
-   ImGui_ImplOpenGL3_Shutdown();
-   ImGui_ImplSDL2_Shutdown();
-   ImGui::DestroyContext(NULL);
-}
-
-void imgui_setup()
-{
-   ImGui::CreateContext(NULL);
-   io = ImGui::GetIO();
-   ImGui_ImplSDL2_InitForOpenGL(mywindow, mycontext);
-   ImGui_ImplOpenGL3_Init(glsl_version);
-
-   ImGui::StyleColorsDark(NULL);
-   io.Fonts->AddFontDefault();
-}
-
+/*TODO: move outside of this file*/
+/*tooltip widget*/
 void tooltip(const char* desc)
 {
    ImGui::SameLine(0, 0);
@@ -98,6 +83,130 @@ void tooltip(const char* desc)
       ImGui::PopTextWrapPos();
       ImGui::EndTooltip();
    }
+}
+
+/*TODO: move outside of this file*/
+/*file list widget*/
+bool file_list(const char* label, int* current_item, file_list_t* list, int popup_max_height_in_items)
+{
+   bool ret = false;
+   char** entries = (char**)calloc(list->file_count, sizeof(char*));
+   for (unsigned i = 0; i < list->file_count; i++)
+   {
+      entries[i] = list->file_names[i];
+   }
+
+   ImGui::PushItemWidth(-FLT_MIN);
+   if (ImGui::ListBox(label, current_item, entries, list->file_count, popup_max_height_in_items))
+      ret = true;
+   else
+      ret = false;
+   ImGui::PopItemWidth();
+
+   free(entries);
+   return ret;
+}
+
+/*TODO: move outside of this file*/
+/*string list combo widget*/
+bool string_list_combo(const char* label, int* current_item, struct string_list* list, int popup_max_height_in_items)
+{
+   bool ret = false;
+   char** entries = (char**)calloc(list->size, sizeof(char*));
+   for (unsigned i = 0; i < list->size; i++)
+   {
+      entries[i] = list->elems[i].data;
+   }
+   if (ImGui::Combo(label, current_item, entries, list->size, popup_max_height_in_items))
+      ret = true;
+   else
+      ret = false;
+   free(entries);
+   return ret;
+}
+
+/*TODO: move outside of this file*/
+/*controller entries widget*/
+bool controller_combo(
+   const char* label, int* current_item, const controller_description_t* list, size_t size,
+   int popup_max_height_in_items)
+{
+   bool ret = false;
+   char** entries = (char**)calloc(size, sizeof(char*));
+   for (unsigned i = 0; i < size; i++)
+      entries[i] = (char*)list[i].desc;
+
+   if (ImGui::Combo(label, current_item, entries, size, popup_max_height_in_items))
+      ret = true;
+   else
+      ret = false;
+
+   return ret;
+}
+
+void set_default_style()
+{
+   ImGuiStyle* style = &ImGui::GetStyle();
+
+   style->WindowPadding = ImVec2(15, 15);
+   style->WindowRounding = 0.0f;
+   style->FramePadding = ImVec2(5, 5);
+   style->FrameRounding = 0.0f;
+   style->ItemSpacing = ImVec2(12, 8);
+   style->ItemInnerSpacing = ImVec2(8, 6);
+   style->IndentSpacing = 25.0f;
+   style->ScrollbarSize = 4.0f;
+   style->ScrollbarRounding = 0.0f;
+   style->GrabMinSize = 10.0f;
+   style->GrabRounding = 0.0f;
+   style->TabRounding = 0.0f;
+
+   style->Colors[ImGuiCol_Text] = ImVec4(0.80f, 0.80f, 0.83f, 1.00f);
+   style->Colors[ImGuiCol_TextDisabled] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
+   style->Colors[ImGuiCol_Border] = ImVec4(0.16f, 0.15f, 0.17f, 1.00f);
+   style->Colors[ImGuiCol_WindowBg] = ImVec4(0.16f, 0.15f, 0.17f, 1.00f);
+   style->Colors[ImGuiCol_ChildBg] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
+   style->Colors[ImGuiCol_PopupBg] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
+   style->Colors[ImGuiCol_Border] = ImVec4(0.80f, 0.80f, 0.83f, 0.88f);
+   style->Colors[ImGuiCol_BorderShadow] = ImVec4(0.92f, 0.91f, 0.88f, 0.00f);
+   style->Colors[ImGuiCol_FrameBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
+   style->Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
+   style->Colors[ImGuiCol_FrameBgActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+   style->Colors[ImGuiCol_TitleBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
+   style->Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.70f, 0.70f, 0.70f, 0.70f);
+   style->Colors[ImGuiCol_TitleBgActive] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
+   style->Colors[ImGuiCol_MenuBarBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
+   style->Colors[ImGuiCol_ScrollbarBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
+   style->Colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.80f, 0.80f, 0.83f, 0.50f);
+   style->Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.80f, 0.80f, 0.83f, 0.75f);
+   style->Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.80f, 0.80f, 0.83f, 1.00f);
+   style->Colors[ImGuiCol_PopupBg] = ImVec4(0.19f, 0.18f, 0.21f, 1.00f);
+   style->Colors[ImGuiCol_CheckMark] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
+   style->Colors[ImGuiCol_SliderGrab] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
+   style->Colors[ImGuiCol_SliderGrabActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
+   style->Colors[ImGuiCol_Button] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
+   style->Colors[ImGuiCol_ButtonHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
+   style->Colors[ImGuiCol_ButtonActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+   style->Colors[ImGuiCol_Header] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
+   style->Colors[ImGuiCol_HeaderHovered] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+   style->Colors[ImGuiCol_HeaderActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
+   style->Colors[ImGuiCol_Separator] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+   style->Colors[ImGuiCol_SeparatorHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
+   style->Colors[ImGuiCol_SeparatorActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+   style->Colors[ImGuiCol_ResizeGrip] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+   style->Colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+   style->Colors[ImGuiCol_ResizeGripActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
+   style->Colors[ImGuiCol_PlotLines] = ImVec4(0.40f, 0.39f, 0.38f, 0.63f);
+   style->Colors[ImGuiCol_PlotLinesHovered] = ImVec4(0.25f, 1.00f, 0.00f, 1.00f);
+   style->Colors[ImGuiCol_PlotHistogram] = ImVec4(0.40f, 0.39f, 0.38f, 0.63f);
+   style->Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(0.25f, 1.00f, 0.00f, 1.00f);
+   style->Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.25f, 1.00f, 0.00f, 0.43f);
+   style->Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(1.00f, 0.98f, 0.95f, 0.73f);
+   style->Colors[ImGuiCol_Tab] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
+   style->Colors[ImGuiCol_TabHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
+   style->Colors[ImGuiCol_TabActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+
+   clearColor = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 }
 
 void Asset::Load(const char* filename)
@@ -169,129 +278,6 @@ void Kami::TextureListInit(const char* path)
       asset->Load(filename);
       device_gamepad_inputs.push_back(*asset);
    }
-}
-
-void set_default_style()
-{
-   ImGuiStyle* style = &ImGui::GetStyle();
-
-   style->WindowPadding = ImVec2(15, 15);
-   style->WindowRounding = 0.0f;
-   style->FramePadding = ImVec2(5, 5);
-   style->FrameRounding = 0.0f;
-   style->ItemSpacing = ImVec2(12, 8);
-   style->ItemInnerSpacing = ImVec2(8, 6);
-   style->IndentSpacing = 25.0f;
-   style->ScrollbarSize = 4.0f;
-   style->ScrollbarRounding = 0.0f;
-   style->GrabMinSize = 10.0f;
-   style->GrabRounding = 0.0f;
-   style->TabRounding = 0.0f;
-
-   style->Colors[ImGuiCol_Text] = ImVec4(0.80f, 0.80f, 0.83f, 1.00f);
-   style->Colors[ImGuiCol_TextDisabled] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
-   style->Colors[ImGuiCol_Border] = ImVec4(0.16f, 0.15f, 0.17f, 1.00f);
-   style->Colors[ImGuiCol_WindowBg] = ImVec4(0.16f, 0.15f, 0.17f, 1.00f);
-   style->Colors[ImGuiCol_ChildBg] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
-   style->Colors[ImGuiCol_PopupBg] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
-   style->Colors[ImGuiCol_Border] = ImVec4(0.80f, 0.80f, 0.83f, 0.88f);
-   style->Colors[ImGuiCol_BorderShadow] = ImVec4(0.92f, 0.91f, 0.88f, 0.00f);
-   style->Colors[ImGuiCol_FrameBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-   style->Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
-   style->Colors[ImGuiCol_FrameBgActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-   style->Colors[ImGuiCol_TitleBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-   style->Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.70f, 0.70f, 0.70f, 0.70f);
-   style->Colors[ImGuiCol_TitleBgActive] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
-   style->Colors[ImGuiCol_MenuBarBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-   style->Colors[ImGuiCol_ScrollbarBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-   style->Colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.80f, 0.80f, 0.83f, 0.50f);
-   style->Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.80f, 0.80f, 0.83f, 0.75f);
-   style->Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.80f, 0.80f, 0.83f, 1.00f);
-   style->Colors[ImGuiCol_PopupBg] = ImVec4(0.19f, 0.18f, 0.21f, 1.00f);
-   style->Colors[ImGuiCol_CheckMark] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
-   style->Colors[ImGuiCol_SliderGrab] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
-   style->Colors[ImGuiCol_SliderGrabActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
-   style->Colors[ImGuiCol_Button] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-   style->Colors[ImGuiCol_ButtonHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
-   style->Colors[ImGuiCol_ButtonActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-   style->Colors[ImGuiCol_Header] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-   style->Colors[ImGuiCol_HeaderHovered] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-   style->Colors[ImGuiCol_HeaderActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
-   style->Colors[ImGuiCol_Separator] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-   style->Colors[ImGuiCol_SeparatorHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
-   style->Colors[ImGuiCol_SeparatorActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-   style->Colors[ImGuiCol_ResizeGrip] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-   style->Colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-   style->Colors[ImGuiCol_ResizeGripActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
-   style->Colors[ImGuiCol_PlotLines] = ImVec4(0.40f, 0.39f, 0.38f, 0.63f);
-   style->Colors[ImGuiCol_PlotLinesHovered] = ImVec4(0.25f, 1.00f, 0.00f, 1.00f);
-   style->Colors[ImGuiCol_PlotHistogram] = ImVec4(0.40f, 0.39f, 0.38f, 0.63f);
-   style->Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(0.25f, 1.00f, 0.00f, 1.00f);
-   style->Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.25f, 1.00f, 0.00f, 0.43f);
-   style->Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(1.00f, 0.98f, 0.95f, 0.73f);
-   style->Colors[ImGuiCol_Tab] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-   style->Colors[ImGuiCol_TabHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
-   style->Colors[ImGuiCol_TabActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-
-   clearColor = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-}
-
-bool file_list(const char* label, int* current_item, file_list_t* list, int popup_max_height_in_items)
-{
-   bool ret = false;
-   char** entries = (char**)calloc(list->file_count, sizeof(char*));
-   for (unsigned i = 0; i < list->file_count; i++)
-   {
-      entries[i] = list->file_names[i];
-   }
-
-   ImGui::PushItemWidth(-FLT_MIN);
-   if (ImGui::ListBox(label, current_item, entries, list->file_count, popup_max_height_in_items))
-      ret = true;
-   else
-      ret = false;
-   ImGui::PopItemWidth();
-
-   free(entries);
-   return ret;
-}
-
-bool string_list_combo(const char* label, int* current_item, struct string_list* list, int popup_max_height_in_items)
-{
-   bool ret = false;
-   char** entries = (char**)calloc(list->size, sizeof(char*));
-   for (unsigned i = 0; i < list->size; i++)
-   {
-      entries[i] = list->elems[i].data;
-   }
-   if (ImGui::Combo(label, current_item, entries, list->size, popup_max_height_in_items))
-      ret = true;
-   else
-      ret = false;
-   free(entries);
-   return ret;
-}
-
-bool controller_combo(
-   const char* label, int* current_item, const controller_description_t* list, size_t size,
-   int popup_max_height_in_items)
-{
-   bool ret = false;
-   char** entries = (char**)calloc(size, sizeof(char*));
-   for (unsigned i = 0; i < size; i++)
-   {
-      entries[i] = (char*)list[i].desc;
-   }
-   if (ImGui::Combo(label, current_item, entries, size, popup_max_height_in_items))
-   {
-      //*current_item = list[*current_item].id;
-      ret = true;
-   }
-   else
-   {
-      ret = false;
-   }
-   return ret;
 }
 
 int Kami::RenderVideo()
@@ -467,8 +453,8 @@ void Kami::Main(const char* title)
                      unsigned height = width / device_gamepad_inputs[0].get_aspect();
                      ImGui::SetColumnWidth(-1, width + ImGui::GetTreeNodeToLabelSpacing());
                      RenderInputDeviceStatus(this, 0, width, height);
-
                      ImGui::NextColumn();
+
                      /*TODO: get the actual current device from the core at init and make sure to get the one from
                       * setting once settings are implemented, also change 16 to a define somewhere*/
                      static int current_device[MAX_PORTS];
@@ -644,6 +630,24 @@ void Kami::Main(const char* title)
    }
    ImGui::End();
    return;
+}
+
+void imgui_shutdown()
+{
+   ImGui_ImplOpenGL3_Shutdown();
+   ImGui_ImplSDL2_Shutdown();
+   ImGui::DestroyContext(NULL);
+}
+
+void imgui_setup()
+{
+   ImGui::CreateContext(NULL);
+   io = ImGui::GetIO();
+   ImGui_ImplSDL2_InitForOpenGL(mywindow, mycontext);
+   ImGui_ImplOpenGL3_Init(glsl_version);
+
+   ImGui::StyleColorsDark(NULL);
+   io.Fonts->AddFontDefault();
 }
 
 void imgui_draw_frame()
