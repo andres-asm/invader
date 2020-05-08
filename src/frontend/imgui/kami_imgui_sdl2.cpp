@@ -381,8 +381,8 @@ void Kami::Main(const char* title)
                if (ImGui::Button(_("core_current_start_core_label"), ImVec2(120, 0)))
                {
                   piccolo->unload_core();
-                  piccolo->load_game(core_info->file_name, NULL, frontend_supports_bitmasks);
                   piccolo->set_callbacks(InputPoll);
+                  piccolo->load_game(core_info->file_name, NULL, frontend_supports_bitmasks);
                   core_info = piccolo->get_info();
                }
                tooltip(_("core_current_start_core_desc"));
