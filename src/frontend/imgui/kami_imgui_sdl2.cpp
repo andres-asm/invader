@@ -650,7 +650,7 @@ void imgui_setup()
 {
    ImGui::CreateContext(NULL);
    io = ImGui::GetIO();
-   ImGui_ImplSDL2_InitForOpenGL(mywindow, mycontext);
+   ImGui_ImplSDL2_InitForOpenGL(invader_window, invader_context);
    ImGui_ImplOpenGL3_Init(glsl_version);
 
    ImGui::StyleColorsDark(NULL);
@@ -668,13 +668,13 @@ void imgui_draw_frame()
          quit = true;
       if (
          e.type == SDL_WINDOWEVENT && e.window.event == SDL_WINDOWEVENT_CLOSE
-         && e.window.windowID == SDL_GetWindowID(mywindow))
+         && e.window.windowID == SDL_GetWindowID(invader_window))
          quit = true;
    }
 
    /* start imgui frame */
    ImGui_ImplOpenGL3_NewFrame();
-   ImGui_ImplSDL2_NewFrame(mywindow);
+   ImGui_ImplSDL2_NewFrame(invader_window);
    ImGui::NewFrame();
 
    kami1->Main("Core 1");
@@ -684,12 +684,12 @@ void imgui_draw_frame()
    bool demo = true;
    ImGui::ShowDemoWindow(&demo);
    ImGui::Render();
-   SDL_GL_MakeCurrent(mywindow, mycontext);
+   SDL_GL_MakeCurrent(invader_window, invader_context);
    glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
    glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
    glClear(GL_COLOR_BUFFER_BIT);
    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-   SDL_GL_SwapWindow(mywindow);
+   SDL_GL_SwapWindow(invader_window);
 }
 
 int main(int argc, char* argv[])
@@ -699,8 +699,8 @@ int main(int argc, char* argv[])
 
    if (!create_window(app_name, WINDOW_WIDTH, WINDOW_HEIGHT))
       return -1;
-   mywindow = get_window();
-   mycontext = get_context();
+   invader_window = get_window();
+   invader_context = get_context();
 
    glsl_version = get_glsl_version();
 

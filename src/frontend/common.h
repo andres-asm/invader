@@ -37,8 +37,8 @@
 #define MAX_VERTEX_BUFFER 512 * 1024
 #define MAX_ELEMENT_BUFFER 128 * 1024
 
-extern SDL_Window* mywindow;
-extern SDL_GLContext mycontext;
+extern SDL_Window* invader_window;
+extern SDL_GLContext invader_context;
 
 extern const char* glsl_version;
 

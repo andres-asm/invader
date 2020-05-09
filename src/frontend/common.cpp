@@ -4,8 +4,8 @@
 static const char* tag = "[common]";
 const char* glsl_version;
 
-SDL_Window* mywindow = NULL;
-SDL_GLContext mycontext = NULL;
+SDL_Window* invader_window = NULL;
+SDL_GLContext invader_context = NULL;
 
 bool create_window(const char* app_name, unsigned width, unsigned height)
 {
@@ -43,14 +43,14 @@ bool create_window(const char* app_name, unsigned width, unsigned height)
 
    uint32_t flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI;
 
-   mywindow = SDL_CreateWindow(app_name, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags);
-   if (mywindow == NULL)
+   invader_window = SDL_CreateWindow(app_name, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags);
+   if (invader_window == NULL)
    {
       logger(LOG_DEBUG, tag, "failed to create window: %s", SDL_GetError());
       return -1;
    }
 
-   mycontext = SDL_GL_CreateContext(mywindow);
+   invader_context = SDL_GL_CreateContext(invader_window);
    /* enable vsync */
    SDL_GL_SetSwapInterval(1);
 
@@ -73,23 +73,23 @@ bool create_window(const char* app_name, unsigned width, unsigned height)
 
 void destroy_window()
 {
-   SDL_GL_DeleteContext(mycontext);
-   if (mywindow != NULL)
+   SDL_GL_DeleteContext(invader_context);
+   if (invader_window != NULL)
    {
-      SDL_DestroyWindow(mywindow);
-      mywindow = NULL;
+      SDL_DestroyWindow(invader_window);
+      invader_window = NULL;
    }
    SDL_Quit();
 }
 
 SDL_GLContext get_context()
 {
-   return mycontext;
+   return invader_context;
 }
 
 SDL_Window* get_window()
 {
-   return mywindow;
+   return invader_window;
 }
 
 const char* get_glsl_version()
