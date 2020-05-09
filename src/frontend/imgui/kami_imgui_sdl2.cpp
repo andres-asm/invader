@@ -480,12 +480,12 @@ void Kami::Main(const char* title)
                      static int current_device[MAX_PORTS];
 
                      if (controller_combo(
-                            _("core_current_port_current_device_label"), &current_device[i], controllers->types,
-                            controllers->num_types, controller_port_count))
+                            _("core_current_port_current_device_label"), &current_device[i], controllers[i].types,
+                            controllers[i].num_types, controller_port_count))
                      {
                         const unsigned index = current_device[i];
-                        const unsigned idx = controllers->types[index].id;
-                        const char* desc = controllers->types[index].desc;
+                        const unsigned idx = controllers[i].types[index].id;
+                        const char* desc = controllers[i].types[index].desc;
 
                         logger(LOG_DEBUG, tag, "changing port to: %d (%s)\n", idx, desc);
                         ParseInputDescriptors();
