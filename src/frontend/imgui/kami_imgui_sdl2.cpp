@@ -338,6 +338,11 @@ void Kami::Main(const char* title)
    unsigned option_count;
    core_option_t* options;
 
+   static int padding = ImGui::GetStyle().WindowPadding.x;
+
+   ImGui::SetNextWindowPos(ImVec2(0, 0));
+   ImGui::SetNextWindowSizeConstraints(ImVec2(640 + padding * 2, 100), ImVec2(640 + padding * 2, FLT_MAX));
+
    ImGui::Begin(_(title), NULL, ImGuiWindowFlags_AlwaysAutoResize);
    ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.40f);
 
@@ -431,10 +436,18 @@ void Kami::Main(const char* title)
                aspect = core_info->av_info.geometry.aspect_ratio;
 
             ImTextureID image_texture = (void*)(intptr_t)this->RenderVideo();
-            ImGui::Image(
-               image_texture, ImVec2((float)height * 2 * aspect, (float)height * 2), ImVec2(0.0f, 0.0f),
-               ImVec2(1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
+            auto draw_list = ImGui::GetBackgroundDrawList();
+            ImVec2 p = ImVec2(0.0f, 0.0f);
+            draw_list->AddImage(
+               (void*)(intptr_t)image_texture, p, ImVec2(p.x + height * aspect, p.y + height), ImVec2(0, 0),
+               ImVec2(1, 1));
 
+            if (ImGui::CollapsingHeader(_("core_current_video_output_label"), ImGuiTreeNodeFlags_None))
+            {
+               ImGui::Image(
+                  image_texture, ImVec2((float)640, (float)640 / aspect), ImVec2(0.0f, 0.0f), ImVec2(1.0f, 1.0f),
+                  ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
+            }
             if (ImGui::CollapsingHeader(_("core_current_actions_label"), ImGuiTreeNodeFlags_None))
             {
                if (ImGui::Button(_("core_current_reset_core_label"), ImVec2(240, 0)))

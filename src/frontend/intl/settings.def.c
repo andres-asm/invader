@@ -98,6 +98,8 @@ static void localization_strings()
    _("core_current_reset_core_desc");
    _("core_current_actions_label");
    _("core_current_actions_desc");
+   _("core_current_video_output_label");
+   _("core_current_video_output_desc");
 
    /* frontend flags */
    _("frontend_flags_label");
