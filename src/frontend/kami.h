@@ -115,6 +115,7 @@ public:
 
    /*TODO: this shouldn't be a part of this class*/
    void TextureListInit(const char* path);
+   GLuint get_texture() { return texture; }
 };
 
 /*TODO: reimplement these*/

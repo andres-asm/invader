@@ -670,6 +670,115 @@ void imgui_setup()
    io.Fonts->AddFontDefault();
 }
 
+const char* vertex_shader_source =
+   "#version 330 core\n"
+   "layout (location = 0) in vec3 aPos;\n"
+   "layout (location = 1) in vec3 aColor;\n"
+   "layout (location = 2) in vec2 aTexCoord;\n"
+   "out vec3 ourColor;\n"
+   "out vec2 TexCoord;\n"
+   "void main()\n"
+   "{\n"
+   "    gl_Position = vec4(aPos, 1.0);\n"
+   "    ourColor = aColor;\n"
+   "    TexCoord = aTexCoord;\n"
+   "}\n";
+
+const char* fragment_shader_source =
+   "#version 330 core\n"
+   "out vec4 FragColor;\n"
+   "in vec3 ourColor;\n"
+   "in vec2 TexCoord;\n"
+   "uniform sampler2D ourTexture;\n"
+   "void main()\n"
+   "{\n"
+   "    FragColor = texture(ourTexture, TexCoord);\n"
+   "}\n";
+
+void framebuffer_setup()
+{
+   int success;
+   char infoLog[512];
+
+   /*vertex shader*/
+   int vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+   glShaderSource(vertex_shader, 1, &vertex_shader_source, NULL);
+   glCompileShader(vertex_shader);
+
+   glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
+   if (!success)
+   {
+      glGetShaderInfoLog(vertex_shader, 512, NULL, infoLog);
+      logger(LOG_DEBUG, tag, "vertex shader compilation error: %s\n", infoLog);
+   }
+
+   /*fragment shader*/
+   int fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+   glShaderSource(fragment_shader, 1, &fragment_shader_source, NULL);
+   glCompileShader(fragment_shader);
+
+   glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
+   if (!success)
+   {
+      glGetShaderInfoLog(fragment_shader, 512, NULL, infoLog);
+      logger(LOG_DEBUG, tag, "fragment shader compilation error: %s\n", infoLog);
+   }
+
+   /*link shaders*/
+   int shader_program = glCreateProgram();
+   glAttachShader(shader_program, vertex_shader);
+   glAttachShader(shader_program, fragment_shader);
+   glLinkProgram(shader_program);
+
+   glGetProgramiv(shader_program, GL_LINK_STATUS, &success);
+   if (!success)
+   {
+      glGetProgramInfoLog(shader_program, 512, NULL, infoLog);
+      logger(LOG_DEBUG, tag, "shader program linking error: %s\n", infoLog);
+   }
+   glDeleteShader(vertex_shader);
+   glDeleteShader(fragment_shader);
+
+   float vertices[] = {1.0f, -1.0f, 0.0f,  1.0f,  0.0f, 0.0f,  1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+                       0.0f, 1.0f,  0.0f,  1.0f,  0.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+                       0.0f, 0.0f,  -1.0f, -1.0f, 0.0f, 1.0f,  1.0f, 0.0f, 0.0f, 1.0f};
+   unsigned int indices[] = {0, 1, 3, 1, 2, 3};
+
+   unsigned int vbo, vao, ebo;
+   glGenVertexArrays(1, &vao);
+   glGenBuffers(1, &vbo);
+   glGenBuffers(1, &ebo);
+
+   glBindVertexArray(vao);
+
+   glBindBuffer(GL_ARRAY_BUFFER, vbo);
+   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+   /*position attributes*/
+   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+   glEnableVertexAttribArray(0);
+   /*color attributes*/
+   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+   glEnableVertexAttribArray(1);
+   /*texture coordinate attributes*/
+   glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+   glEnableVertexAttribArray(2);
+   glActiveTexture(GL_TEXTURE0);
+   glBindTexture(GL_TEXTURE_2D, kami1->get_texture());
+
+   glUseProgram(shader_program);
+   glBindVertexArray(vao);
+}
+
+void framebuffer_render()
+{
+   /*TODO: setup viewport*/
+   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+}
+
 void imgui_draw_frame()
 {
    SDL_Event e;
@@ -688,19 +797,23 @@ void imgui_draw_frame()
    /* start imgui frame */
    ImGui_ImplOpenGL3_NewFrame();
    ImGui_ImplSDL2_NewFrame(invader_window);
+
    ImGui::NewFrame();
 
    kami1->Main("Core 1");
    if (second_instance)
       kami2->Main("Core 2");
 
-   bool demo = true;
-   ImGui::ShowDemoWindow(&demo);
+   /*TODO: remove this
+    *bool demo = true;
+    *ImGui::ShowDemoWindow(&demo);*/
+
    ImGui::Render();
    SDL_GL_MakeCurrent(invader_window, invader_context);
    glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
    glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
    glClear(GL_COLOR_BUFFER_BIT);
+   framebuffer_render();
    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
    SDL_GL_SwapWindow(invader_window);
 }
@@ -730,6 +843,8 @@ int main(int argc, char* argv[])
       kami2->CoreListInit("./cores");
       kami2->TextureListInit(asset_dir);
    }
+
+   framebuffer_setup();
 
    while (!quit)
    {
