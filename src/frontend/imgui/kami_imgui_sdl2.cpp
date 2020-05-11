@@ -436,12 +436,14 @@ void Kami::Main(const char* title)
                aspect = core_info->av_info.geometry.aspect_ratio;
 
             ImTextureID image_texture = (void*)(intptr_t)this->RenderVideo();
-            auto draw_list = ImGui::GetBackgroundDrawList();
-            ImVec2 p = ImVec2(0.0f, 0.0f);
-            draw_list->AddImage(
-               (void*)(intptr_t)image_texture, p, ImVec2(p.x + height * aspect, p.y + height), ImVec2(0, 0),
-               ImVec2(1, 1));
 
+            /*TODO: remove this
+             *auto draw_list = ImGui::GetBackgroundDrawList();
+             *ImVec2 p = ImVec2(0.0f, 0.0f);
+             *draw_list->AddImage(
+             *   (void*)(intptr_t)image_texture, p, ImVec2(p.x + height * aspect, p.y + height), ImVec2(0,
+             *   0), ImVec2(1, 1));
+             */
             if (ImGui::CollapsingHeader(_("core_current_video_output_label"), ImGuiTreeNodeFlags_None))
             {
                ImGui::Image(
