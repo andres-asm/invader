@@ -15,6 +15,8 @@ static const char* asset_dir = "./assets/gamepad/generic";
 
 static bool quit = false;
 
+static bool file_manager_dialog_is_open = false;
+
 ImVec4 clearColor;
 ImGuiIO io;
 
@@ -155,56 +157,71 @@ void set_default_style()
    style->ItemSpacing = ImVec2(12, 8);
    style->ItemInnerSpacing = ImVec2(8, 6);
    style->IndentSpacing = 25.0f;
-   style->ScrollbarSize = 4.0f;
+   style->ScrollbarSize = 1.0f;
    style->ScrollbarRounding = 0.0f;
    style->GrabMinSize = 10.0f;
    style->GrabRounding = 0.0f;
    style->TabRounding = 0.0f;
 
-   style->Colors[ImGuiCol_Text] = ImVec4(0.80f, 0.80f, 0.83f, 1.00f);
-   style->Colors[ImGuiCol_TextDisabled] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
-   style->Colors[ImGuiCol_Border] = ImVec4(0.16f, 0.15f, 0.17f, 1.00f);
-   style->Colors[ImGuiCol_WindowBg] = ImVec4(0.16f, 0.15f, 0.17f, 1.00f);
-   style->Colors[ImGuiCol_ChildBg] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
-   style->Colors[ImGuiCol_PopupBg] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
-   style->Colors[ImGuiCol_Border] = ImVec4(0.80f, 0.80f, 0.83f, 0.88f);
+   ImVec4 widgets_idle = ImVec4(0.10f, 0.10f, 0.18f, 1.00f);
+   ImVec4 widgets_hovered = ImVec4(0.20f, 0.20f, 0.28f, 1.00f);
+   ImVec4 widgets_active = ImVec4(0.50f, 0.50f, 0.58f, 1.00f);
+
+   ImVec4 highlights = ImVec4(0.80f, 0.80f, 0.80f, 1.00f);
+
+   ImVec4 grabs_idle = ImVec4(0.80f, 0.80f, 0.80f, 0.50f);
+   ImVec4 grabs_hovered = ImVec4(0.80f, 0.80f, 0.80f, 0.50f);
+   ImVec4 grabs_active = ImVec4(0.80f, 0.80f, 0.80f, 0.50f);
+
+   style->Colors[ImGuiCol_Text] = highlights;
+   style->Colors[ImGuiCol_TextDisabled] = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
+   style->Colors[ImGuiCol_Border] = ImVec4(0.10f, 0.10f, 0.10f, 1.00f);
+
+   style->Colors[ImGuiCol_WindowBg] = ImVec4(0.30f, 0.30f, 0.38f, 1.00f);
+   style->Colors[ImGuiCol_ChildBg] = ImVec4(0.30f, 0.30f, 0.38f, 1.00f);
+   style->Colors[ImGuiCol_PopupBg] = ImVec4(0.30f, 0.30f, 0.38f, 1.00f);
+   style->Colors[ImGuiCol_MenuBarBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
+
+   style->Colors[ImGuiCol_Border] = highlights;
    style->Colors[ImGuiCol_BorderShadow] = ImVec4(0.92f, 0.91f, 0.88f, 0.00f);
-   style->Colors[ImGuiCol_FrameBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
+
+   style->Colors[ImGuiCol_FrameBg] = widgets_hovered;
    style->Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
    style->Colors[ImGuiCol_FrameBgActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+
    style->Colors[ImGuiCol_TitleBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
    style->Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.70f, 0.70f, 0.70f, 0.70f);
    style->Colors[ImGuiCol_TitleBgActive] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
-   style->Colors[ImGuiCol_MenuBarBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-   style->Colors[ImGuiCol_ScrollbarBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-   style->Colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.80f, 0.80f, 0.83f, 0.50f);
-   style->Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.80f, 0.80f, 0.83f, 0.75f);
-   style->Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.80f, 0.80f, 0.83f, 1.00f);
-   style->Colors[ImGuiCol_PopupBg] = ImVec4(0.19f, 0.18f, 0.21f, 1.00f);
-   style->Colors[ImGuiCol_CheckMark] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
-   style->Colors[ImGuiCol_SliderGrab] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
-   style->Colors[ImGuiCol_SliderGrabActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
-   style->Colors[ImGuiCol_Button] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-   style->Colors[ImGuiCol_ButtonHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
-   style->Colors[ImGuiCol_ButtonActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-   style->Colors[ImGuiCol_Header] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-   style->Colors[ImGuiCol_HeaderHovered] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-   style->Colors[ImGuiCol_HeaderActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
-   style->Colors[ImGuiCol_Separator] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-   style->Colors[ImGuiCol_SeparatorHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
-   style->Colors[ImGuiCol_SeparatorActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-   style->Colors[ImGuiCol_ResizeGrip] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-   style->Colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-   style->Colors[ImGuiCol_ResizeGripActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
+
+   style->Colors[ImGuiCol_ScrollbarBg] = widgets_idle;
+   style->Colors[ImGuiCol_ScrollbarGrab] = grabs_idle;
+   style->Colors[ImGuiCol_ScrollbarGrabHovered] = grabs_hovered;
+   style->Colors[ImGuiCol_ScrollbarGrabActive] = grabs_active;
+   style->Colors[ImGuiCol_CheckMark] = highlights;
+   style->Colors[ImGuiCol_SliderGrab] = grabs_idle;
+   style->Colors[ImGuiCol_SliderGrabActive] = grabs_active;
+   style->Colors[ImGuiCol_Button] = widgets_idle;
+   style->Colors[ImGuiCol_ButtonHovered] = widgets_hovered;
+   style->Colors[ImGuiCol_ButtonActive] = widgets_active;
+   style->Colors[ImGuiCol_Header] = widgets_idle;
+   style->Colors[ImGuiCol_HeaderHovered] = widgets_hovered;
+   style->Colors[ImGuiCol_HeaderActive] = widgets_active;
+   style->Colors[ImGuiCol_Separator] = widgets_idle;
+   style->Colors[ImGuiCol_SeparatorHovered] = widgets_hovered;
+   style->Colors[ImGuiCol_SeparatorActive] = widgets_active;
+   style->Colors[ImGuiCol_ResizeGrip] = widgets_idle;
+   style->Colors[ImGuiCol_ResizeGripHovered] = widgets_hovered;
+   style->Colors[ImGuiCol_ResizeGripActive] = widgets_active;
+   style->Colors[ImGuiCol_Tab] = widgets_idle;
+   style->Colors[ImGuiCol_TabHovered] = widgets_hovered;
+   style->Colors[ImGuiCol_TabActive] = widgets_active;
+
    style->Colors[ImGuiCol_PlotLines] = ImVec4(0.40f, 0.39f, 0.38f, 0.63f);
    style->Colors[ImGuiCol_PlotLinesHovered] = ImVec4(0.25f, 1.00f, 0.00f, 1.00f);
    style->Colors[ImGuiCol_PlotHistogram] = ImVec4(0.40f, 0.39f, 0.38f, 0.63f);
    style->Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(0.25f, 1.00f, 0.00f, 1.00f);
    style->Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.25f, 1.00f, 0.00f, 0.43f);
-   style->Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(1.00f, 0.98f, 0.95f, 0.73f);
-   style->Colors[ImGuiCol_Tab] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-   style->Colors[ImGuiCol_TabHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
-   style->Colors[ImGuiCol_TabActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+   style->Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.70f, 0.70f, 0.78f, 0.70f);
 
    clearColor = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 }
@@ -340,7 +357,6 @@ void Kami::Main(const char* title)
 
    static int padding = ImGui::GetStyle().WindowPadding.x;
 
-   ImGui::SetNextWindowPos(ImVec2(0, 0));
    ImGui::SetNextWindowSizeConstraints(ImVec2(640 + padding * 2, 100), ImVec2(640 + padding * 2, FLT_MAX));
 
    ImGui::Begin(_(title), NULL, ImGuiWindowFlags_AlwaysAutoResize);
@@ -654,6 +670,111 @@ void Kami::Main(const char* title)
    return;
 }
 
+void file_manager(const char* dir_left, const char* dir_right)
+{
+   static int padding = ImGui::GetStyle().WindowPadding.x;
+   ImGui::SetNextWindowSizeConstraints(ImVec2(800 + padding * 2, 100), ImVec2(800 + padding * 2, FLT_MAX));
+
+   if (file_manager_dialog_is_open)
+   {
+      if (ImGui::BeginPopupModal(_("window_title_file_manager"), NULL, ImGuiWindowFlags_AlwaysAutoResize))
+      {
+         static file_list_t* list_left = NULL;
+         static file_list_t* list_right = NULL;
+         static int index_left = 0;
+         static int index_right = 0;
+
+         static char cur_left[PATH_MAX_LENGTH];
+         static char old_left[PATH_MAX_LENGTH];
+         static char cur_right[PATH_MAX_LENGTH];
+         static char old_right[PATH_MAX_LENGTH];
+
+         ImGui::Columns(2, "", false);
+         if (!list_left)
+         {
+            strlcpy(cur_left, dir_left, sizeof(cur_left));
+            logger(LOG_DEBUG, tag, "path: %s\n", cur_left);
+            list_left = (file_list_t*)calloc(1, sizeof(file_list_t));
+            get_file_list(cur_left, list_left, "", true);
+         }
+         else
+         {
+            ImGui::PushID("left");
+            if (file_list("", &index_left, list_left, 10))
+            {
+               fill_pathname_join(cur_left, old_left, list_left->file_names[index_left], sizeof(cur_left));
+               if (path_is_directory(cur_left))
+               {
+                  index_left = 0;
+                  get_file_list(cur_left, list_left, "", true);
+                  strlcpy(old_left, cur_left, sizeof(old_left));
+               }
+            }
+            ImGui::PopID();
+         }
+         ImGui::NextColumn();
+         if (!list_right)
+         {
+            strlcpy(cur_right, dir_right, sizeof(cur_right));
+            logger(LOG_DEBUG, tag, "path: %s\n", cur_right);
+            list_right = (file_list_t*)calloc(1, sizeof(file_list_t));
+            get_file_list(cur_right, list_right, "", true);
+         }
+         else
+         {
+            ImGui::PushID("right");
+            if (file_list("", &index_right, list_right, 10))
+            {
+               fill_pathname_join(cur_right, old_right, list_right->file_names[index_right], sizeof(cur_right));
+               if (path_is_directory(cur_right))
+               {
+                  index_right = 0;
+                  get_file_list(cur_right, list_right, "", true);
+                  strlcpy(old_right, cur_right, sizeof(old_right));
+               }
+            }
+            ImGui::PopID();
+         }
+         ImGui::Columns(1);
+         ImGui::Separator();
+         /*
+         static bool dont_ask_me_next_time = false;
+         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+         ImGui::Checkbox("Don't ask me next time", &dont_ask_me_next_time);
+         ImGui::PopStyleVar();
+         */
+         /*if (ImGui::Button(_("button_select_label"), ImVec2(240, 0)))
+         {
+            file_open_dialog_result_ok = true;
+            file_open_dialog_is_open = false;
+            strlcpy(content_file_name, cur, sizeof(content_file_name));
+            ImGui::CloseCurrentPopup();
+         }*/
+         ImGui::SetItemDefaultFocus();
+         ImGui::SameLine();
+         /*if (ImGui::Button("Cancel", ImVec2(240, 0)))
+         {
+            file_open_dialog_result_ok = false;
+            file_open_dialog_is_open = false;
+            ImGui::CloseCurrentPopup();
+         }*/
+         ImGui::EndPopup();
+      }
+   }
+}
+
+void invader()
+{
+   ImGui::Begin(_("window_title_invader"), NULL, ImGuiWindowFlags_AlwaysAutoResize);
+   if (ImGui::Button(_("invader_file_manager"), ImVec2(120, 0)))
+   {
+      ImGui::OpenPopup(_("window_title_file_manager"));
+      file_manager_dialog_is_open = true;
+   }
+   file_manager(".", ".");
+   ImGui::End();
+}
+
 void imgui_shutdown()
 {
    ImGui_ImplOpenGL3_Shutdown();
@@ -778,7 +899,8 @@ void framebuffer_setup()
 void framebuffer_render()
 {
    /*TODO: setup viewport*/
-   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+   if (kami1->get_texture())
+      glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
 void imgui_draw_frame()
@@ -802,13 +924,15 @@ void imgui_draw_frame()
 
    ImGui::NewFrame();
 
+   // invader();
+
    kami1->Main("Core 1");
    if (second_instance)
       kami2->Main("Core 2");
 
-   /*TODO: remove this
-    *bool demo = true;
-    *ImGui::ShowDemoWindow(&demo);*/
+   /*TODO: remove this*/
+   bool demo = true;
+   ImGui::ShowDemoWindow(&demo);
 
    ImGui::Render();
    SDL_GL_MakeCurrent(invader_window, invader_context);
