@@ -76,7 +76,7 @@ void init_localization()
 void tooltip(const char* desc)
 {
    ImGui::SameLine(0, 0);
-   ImGui::TextDisabled("(?)");
+   ImGui::TextDisabled(" (?)");
    if (ImGui::IsItemHovered(0))
    {
       ImGui::BeginTooltip();
@@ -357,7 +357,7 @@ void Kami::Main(const char* title)
 
    static int padding = ImGui::GetStyle().WindowPadding.x;
 
-   ImGui::SetNextWindowSizeConstraints(ImVec2(640 + padding * 2, 100), ImVec2(640 + padding * 2, FLT_MAX));
+   ImGui::SetNextWindowSizeConstraints(ImVec2(640 + padding * 2, 100), ImVec2(640 + padding * 2, 800));
 
    ImGui::Begin(_(title), NULL, ImGuiWindowFlags_AlwaysAutoResize);
    ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.40f);
@@ -557,6 +557,9 @@ void Kami::Main(const char* title)
             }
             if (option_count > 0 && ImGui::CollapsingHeader(_("core_current_options_label"), ImGuiTreeNodeFlags_None))
             {
+               ImGuiWindowFlags window_flags = 0;
+               ImGui::BeginChild(
+                  "ChildL", ImVec2(ImGui::GetWindowContentRegionWidth() * 1.0f, 500), false, window_flags);
                for (unsigned i = 0; i < option_count; i++)
                {
                   core_option_t* option = &options[i];
@@ -564,12 +567,15 @@ void Kami::Main(const char* title)
                   struct string_list* values = OptionGetValues(option);
 
                   int index = OptionGetIndex(option, values);
+                  ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.30f);
                   if (string_list_combo(description, &index, values, 0))
                   {
                      char* value = values->elems[index].data;
                      OptionUpdate(option, value);
                   }
+                  ImGui::PopItemWidth();
                }
+               ImGui::EndChild();
             }
          }
          break;
