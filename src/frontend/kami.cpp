@@ -1,7 +1,5 @@
 #include <assert.h>
-#include <compat/strl.h>
 #include <limits.h>
-#include <lists/string_list.h>
 #include <math.h>
 #include <stdarg.h>
 #include <stdint.h>
