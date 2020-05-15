@@ -1,7 +1,12 @@
 #ifndef UTIL_H_
 #define UTIL_H_
 
-#include "libretro.h"
+#include <dirent.h>
+#include <stdarg.h>
+
+#include <file/file_path.h>
+#include <lists/string_list.h>
+#include <string/stdstring.h>
 
 #define PATH_MAX_LENGTH 4096
 

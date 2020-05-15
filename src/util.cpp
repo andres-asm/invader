@@ -1,21 +1,5 @@
 #include "util.h"
 
-#include <compat/strl.h>
-#include <dirent.h>
-#include <errno.h>
-#include <file/file_path.h>
-#include <libgen.h>
-#include <retro_stat.h>
-#include <stdarg.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/stat.h>
-
-#include <compat/strl.h>
-#include <lists/string_list.h>
-#include <string/stdstring.h>
-
 static const char* tag = "[util]";
 
 static int log_level = 0;

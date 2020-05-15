@@ -1,13 +1,3 @@
-#include <assert.h>
-#include <limits.h>
-#include <math.h>
-#include <stdarg.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
-
 #include "kami.h"
 
 static const char* tag = "[invader]";

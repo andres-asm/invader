@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-15 11:57-0500\n"
+"POT-Creation-Date: 2020-05-15 12:15-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,12 +18,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: src/frontend/intl/settings.def.c:30 src/frontend/intl/settings.def.c:34
-#: src/frontend/intl/settings.def.c:36
+#: src/frontend/intl/settings.def.c:36 src/frontend/intl/settings.def.c:32
 msgid "audio_enable_desc"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:29 src/frontend/intl/settings.def.c:33
-#: src/frontend/intl/settings.def.c:35
+#: src/frontend/intl/settings.def.c:35 src/frontend/intl/settings.def.c:31
 msgid "audio_enable_label"
 msgstr ""
 
@@ -73,248 +73,265 @@ msgstr ""
 msgid "button_select_label"
 msgstr ""
 
-#: src/frontend/intl/settings.def.c:100
+#: src/frontend/intl/settings.def.c:100 src/frontend/intl/settings.def.c:98
 msgid "core_current_actions_desc"
 msgstr ""
 
-#: src/frontend/intl/settings.def.c:99
+#: src/frontend/intl/settings.def.c:99 src/frontend/intl/settings.def.c:97
 msgid "core_current_actions_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:75 src/frontend/intl/settings.def.c:76
 #: src/frontend/intl/settings.def.c:77 src/frontend/intl/settings.def.c:78
+#: src/frontend/intl/settings.def.c:74
 msgid "core_current_block_extract_desc"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:74 src/frontend/intl/settings.def.c:75
 #: src/frontend/intl/settings.def.c:76 src/frontend/intl/settings.def.c:77
+#: src/frontend/intl/settings.def.c:73
 msgid "core_current_block_extract_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:63 src/frontend/intl/settings.def.c:64
-#: src/frontend/intl/settings.def.c:65
+#: src/frontend/intl/settings.def.c:65 src/frontend/intl/settings.def.c:61
 msgid "core_current_desc"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:68 src/frontend/intl/settings.def.c:69
-#: src/frontend/intl/settings.def.c:70
+#: src/frontend/intl/settings.def.c:70 src/frontend/intl/settings.def.c:66
 msgid "core_current_extensions_desc"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:67 src/frontend/intl/settings.def.c:68
-#: src/frontend/intl/settings.def.c:69
+#: src/frontend/intl/settings.def.c:69 src/frontend/intl/settings.def.c:65
 msgid "core_current_extensions_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:87 src/frontend/intl/settings.def.c:88
-#: src/frontend/intl/settings.def.c:86
+#: src/frontend/intl/settings.def.c:86 src/frontend/intl/settings.def.c:84
 msgid "core_current_filename_desc"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:86 src/frontend/intl/settings.def.c:87
-#: src/frontend/intl/settings.def.c:85
+#: src/frontend/intl/settings.def.c:85 src/frontend/intl/settings.def.c:83
 msgid "core_current_filename_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:71 src/frontend/intl/settings.def.c:72
-#: src/frontend/intl/settings.def.c:70
+#: src/frontend/intl/settings.def.c:70 src/frontend/intl/settings.def.c:68
 msgid "core_current_flags_desc"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:69 src/frontend/intl/settings.def.c:70
-#: src/frontend/intl/settings.def.c:71
+#: src/frontend/intl/settings.def.c:71 src/frontend/intl/settings.def.c:67
 msgid "core_current_flags_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:73 src/frontend/intl/settings.def.c:74
 #: src/frontend/intl/settings.def.c:75 src/frontend/intl/settings.def.c:76
+#: src/frontend/intl/settings.def.c:72
 msgid "core_current_full_path_desc"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:72 src/frontend/intl/settings.def.c:73
 #: src/frontend/intl/settings.def.c:74 src/frontend/intl/settings.def.c:75
+#: src/frontend/intl/settings.def.c:71
 msgid "core_current_full_path_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:90 src/frontend/intl/settings.def.c:88
+#: src/frontend/intl/settings.def.c:86
 msgid "core_current_info_desc"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:89 src/frontend/intl/settings.def.c:87
+#: src/frontend/intl/settings.def.c:85
 msgid "core_current_info_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:91 src/frontend/intl/settings.def.c:89
-#: src/frontend/intl/settings.def.c:90
+#: src/frontend/intl/settings.def.c:90 src/frontend/intl/settings.def.c:88
 msgid "core_current_info_video_desc"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:90 src/frontend/intl/settings.def.c:88
-#: src/frontend/intl/settings.def.c:89
+#: src/frontend/intl/settings.def.c:89 src/frontend/intl/settings.def.c:87
 msgid "core_current_info_video_label"
 msgstr ""
 
-#: src/frontend/intl/settings.def.c:92
+#: src/frontend/intl/settings.def.c:92 src/frontend/intl/settings.def.c:90
 msgid "core_current_input_desc"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:91 src/frontend/intl/settings.def.c:92
+#: src/frontend/intl/settings.def.c:89
 msgid "core_current_input_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:62 src/frontend/intl/settings.def.c:63
-#: src/frontend/intl/settings.def.c:64
+#: src/frontend/intl/settings.def.c:64 src/frontend/intl/settings.def.c:60
 msgid "core_current_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:83 src/frontend/intl/settings.def.c:84
-#: src/frontend/intl/settings.def.c:82
+#: src/frontend/intl/settings.def.c:82 src/frontend/intl/settings.def.c:80
 msgid "core_current_load_content_desc"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:82 src/frontend/intl/settings.def.c:83
-#: src/frontend/intl/settings.def.c:81
+#: src/frontend/intl/settings.def.c:81 src/frontend/intl/settings.def.c:79
 msgid "core_current_load_content_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:81 src/frontend/intl/settings.def.c:82
-#: src/frontend/intl/settings.def.c:80
+#: src/frontend/intl/settings.def.c:80 src/frontend/intl/settings.def.c:78
 msgid "core_current_options_desc"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:79 src/frontend/intl/settings.def.c:80
-#: src/frontend/intl/settings.def.c:81
+#: src/frontend/intl/settings.def.c:81 src/frontend/intl/settings.def.c:77
 msgid "core_current_options_label"
 msgstr ""
 
-#: src/frontend/intl/settings.def.c:94
+#: src/frontend/intl/settings.def.c:94 src/frontend/intl/settings.def.c:92
 msgid "core_current_port desc"
 msgstr ""
 
-#: src/frontend/intl/settings.def.c:96
+#: src/frontend/intl/settings.def.c:96 src/frontend/intl/settings.def.c:94
 msgid "core_current_port_current_device_desc"
 msgstr ""
 
-#: src/frontend/intl/settings.def.c:95
+#: src/frontend/intl/settings.def.c:95 src/frontend/intl/settings.def.c:93
 msgid "core_current_port_current_device_label"
 msgstr ""
 
-#: src/frontend/intl/settings.def.c:93
+#: src/frontend/intl/settings.def.c:93 src/frontend/intl/settings.def.c:91
 msgid "core_current_port_label"
 msgstr ""
 
-#: src/frontend/intl/settings.def.c:98
+#: src/frontend/intl/settings.def.c:98 src/frontend/intl/settings.def.c:96
 msgid "core_current_reset_core_desc"
 msgstr ""
 
-#: src/frontend/intl/settings.def.c:97
+#: src/frontend/intl/settings.def.c:97 src/frontend/intl/settings.def.c:95
 msgid "core_current_reset_core_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:85 src/frontend/intl/settings.def.c:86
-#: src/frontend/intl/settings.def.c:84
+#: src/frontend/intl/settings.def.c:84 src/frontend/intl/settings.def.c:82
 msgid "core_current_select_content_desc"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:84 src/frontend/intl/settings.def.c:85
-#: src/frontend/intl/settings.def.c:83
+#: src/frontend/intl/settings.def.c:83 src/frontend/intl/settings.def.c:81
 msgid "core_current_select_content_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:77 src/frontend/intl/settings.def.c:78
 #: src/frontend/intl/settings.def.c:79 src/frontend/intl/settings.def.c:80
+#: src/frontend/intl/settings.def.c:76
 msgid "core_current_start_core_desc"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:76 src/frontend/intl/settings.def.c:77
 #: src/frontend/intl/settings.def.c:78 src/frontend/intl/settings.def.c:79
+#: src/frontend/intl/settings.def.c:75
 msgid "core_current_start_core_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:71 src/frontend/intl/settings.def.c:72
 #: src/frontend/intl/settings.def.c:73 src/frontend/intl/settings.def.c:74
+#: src/frontend/intl/settings.def.c:70
 msgid "core_current_supports_no_game_desc"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:70 src/frontend/intl/settings.def.c:71
 #: src/frontend/intl/settings.def.c:72 src/frontend/intl/settings.def.c:73
+#: src/frontend/intl/settings.def.c:69
 msgid "core_current_supports_no_game_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:66 src/frontend/intl/settings.def.c:67
-#: src/frontend/intl/settings.def.c:68
+#: src/frontend/intl/settings.def.c:68 src/frontend/intl/settings.def.c:64
 msgid "core_current_version_desc"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:65 src/frontend/intl/settings.def.c:66
-#: src/frontend/intl/settings.def.c:67
+#: src/frontend/intl/settings.def.c:67 src/frontend/intl/settings.def.c:63
 msgid "core_current_version_label"
 msgstr ""
 
-#: src/frontend/intl/settings.def.c:102
+#: src/frontend/intl/settings.def.c:102 src/frontend/intl/settings.def.c:100
 msgid "core_current_video_output_desc"
 msgstr ""
 
-#: src/frontend/intl/settings.def.c:101
+#: src/frontend/intl/settings.def.c:101 src/frontend/intl/settings.def.c:99
 msgid "core_current_video_output_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:64 src/frontend/intl/settings.def.c:65
-#: src/frontend/intl/settings.def.c:66
+#: src/frontend/intl/settings.def.c:66 src/frontend/intl/settings.def.c:62
 msgid "core_empty_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:61 src/frontend/intl/settings.def.c:62
-#: src/frontend/intl/settings.def.c:63
+#: src/frontend/intl/settings.def.c:63 src/frontend/intl/settings.def.c:59
 msgid "core_selector_desc"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:60 src/frontend/intl/settings.def.c:61
-#: src/frontend/intl/settings.def.c:62
+#: src/frontend/intl/settings.def.c:62 src/frontend/intl/settings.def.c:58
 msgid "core_selector_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:18 src/frontend/intl/settings.def.c:16
+#: src/frontend/intl/settings.def.c:14
 msgid "directory_cores_desc"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:17 src/frontend/intl/settings.def.c:15
+#: src/frontend/intl/settings.def.c:13
 msgid "directory_cores_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:22 src/frontend/intl/settings.def.c:24
+#: src/frontend/intl/settings.def.c:20
 msgid "directory_games_desc"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:21 src/frontend/intl/settings.def.c:23
+#: src/frontend/intl/settings.def.c:19
 msgid "directory_games_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:46 src/frontend/intl/settings.def.c:20
-#: src/frontend/intl/settings.def.c:18
+#: src/frontend/intl/settings.def.c:18 src/frontend/intl/settings.def.c:16
 msgid "directory_saves_desc"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:45 src/frontend/intl/settings.def.c:19
-#: src/frontend/intl/settings.def.c:17
+#: src/frontend/intl/settings.def.c:17 src/frontend/intl/settings.def.c:15
 msgid "directory_saves_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:48 src/frontend/intl/settings.def.c:22
-#: src/frontend/intl/settings.def.c:20
+#: src/frontend/intl/settings.def.c:20 src/frontend/intl/settings.def.c:18
 msgid "directory_states_desc"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:47 src/frontend/intl/settings.def.c:21
-#: src/frontend/intl/settings.def.c:19
+#: src/frontend/intl/settings.def.c:19 src/frontend/intl/settings.def.c:17
 msgid "directory_states_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:26 src/frontend/intl/settings.def.c:24
+#: src/frontend/intl/settings.def.c:22
 msgid "directory_system_desc"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:25 src/frontend/intl/settings.def.c:23
+#: src/frontend/intl/settings.def.c:21
 msgid "directory_system_label"
 msgstr ""
 
@@ -398,6 +415,7 @@ msgid "log_level_debug"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:40 src/frontend/intl/settings.def.c:42
+#: src/frontend/intl/settings.def.c:38
 msgid "log_level_desc"
 msgstr ""
 
@@ -434,6 +452,7 @@ msgid "log_level_info"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:39 src/frontend/intl/settings.def.c:41
+#: src/frontend/intl/settings.def.c:37
 msgid "log_level_label"
 msgstr ""
 
@@ -454,36 +473,42 @@ msgid "no_label_available"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:11 src/frontend/intl/settings.def.c:9
+#: src/frontend/intl/settings.def.c:7
 msgid "setting_categories_audio"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:9 src/frontend/intl/settings.def.c:7
+#: src/frontend/intl/settings.def.c:5
 msgid "setting_categories_general"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:12 src/frontend/intl/settings.def.c:10
+#: src/frontend/intl/settings.def.c:8
 msgid "setting_categories_input"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:8 src/frontend/intl/settings.def.c:6
+#: src/frontend/intl/settings.def.c:4
 msgid "setting_categories_none"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:13 src/frontend/intl/settings.def.c:11
+#: src/frontend/intl/settings.def.c:9
 msgid "setting_categories_paths"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:10 src/frontend/intl/settings.def.c:8
+#: src/frontend/intl/settings.def.c:6
 msgid "setting_categories_video"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:38 src/frontend/intl/settings.def.c:30
-#: src/frontend/intl/settings.def.c:32
+#: src/frontend/intl/settings.def.c:32 src/frontend/intl/settings.def.c:28
 msgid "video_fullscreen_desc"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:37 src/frontend/intl/settings.def.c:29
-#: src/frontend/intl/settings.def.c:31
+#: src/frontend/intl/settings.def.c:31 src/frontend/intl/settings.def.c:27
 msgid "video_fullscreen_label"
 msgstr ""
 
@@ -498,15 +523,17 @@ msgid "video_vsync_label"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:47 src/frontend/intl/settings.def.c:45
+#: src/frontend/intl/settings.def.c:43
 msgid "window_title_core"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:47 src/frontend/intl/settings.def.c:48
-#: src/frontend/intl/settings.def.c:46
+#: src/frontend/intl/settings.def.c:46 src/frontend/intl/settings.def.c:44
 msgid "window_title_core_control"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:49 src/frontend/intl/settings.def.c:47
+#: src/frontend/intl/settings.def.c:45
 msgid "window_title_file_selector"
 msgstr ""
 
@@ -516,5 +543,6 @@ msgid "window_title_settings"
 msgstr ""
 
 #: src/frontend/intl/settings.def.c:46 src/frontend/intl/settings.def.c:44
+#: src/frontend/intl/settings.def.c:42
 msgid "window_title_status"
 msgstr ""

@@ -2,26 +2,16 @@
 #ifndef COMMON_H_
 #define COMMON_H_
 
-#include <assert.h>
-#include <limits.h>
-#include <math.h>
-#include <stdarg.h>
-#include <stdbool.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
+#include <libintl.h>
+#include <locale.h>
 
-#include "util.h"
-
+/*TODO: fence this*/
 #include <GL/glew.h>
-
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 
-#include <libintl.h>
-#include <locale.h>
+#include "util.h"
+
 #define _(str) gettext(str)
 
 #define WINDOW_WIDTH 1920

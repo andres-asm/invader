@@ -1,13 +1,4 @@
-#include <compat/strl.h>
-#include <lists/string_list.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <string/stdstring.h>
-
 #include "piccolo.h"
-#include "util.h"
 
 static const char* tag = "[core]";
 

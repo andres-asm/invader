@@ -1,5 +1,3 @@
-#include "config.h"
-
 static void localization_strings()
 {
    /* categories*/

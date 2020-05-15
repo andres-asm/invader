@@ -1,17 +1,19 @@
 #ifndef PICCOLO_H_
 #define PICCOLO_H_
 
-#include "libretro.h"
-#include "util.h"
-
 extern "C" {
 #include <dynamic/dylib.h>
 }
 
-extern "C" dylib_t dylib_load(const char* path);
-extern "C" void dylib_close(dylib_t lib);
-extern "C" char* dylib_error(void);
-extern "C" function_t dylib_proc(dylib_t lib, const char* proc);
+#include "libretro.h"
+#include "util.h"
+
+extern "C" {
+dylib_t dylib_load(const char* path);
+void dylib_close(dylib_t lib);
+char* dylib_error(void);
+function_t dylib_proc(dylib_t lib, const char* proc);
+}
 
 #define MAX_PORTS 16
 #define MAX_IDS 12

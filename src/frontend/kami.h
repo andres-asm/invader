@@ -2,15 +2,11 @@
 #ifndef KAMI_H_
 #define KAMI_H_
 
-#include <compat/strl.h>
-#include <lists/string_list.h>
-#include <string/stdstring.h>
+#include <vector>
 
 #include "asset.h"
 #include "common.h"
 #include "libretro/piccolo.h"
-
-#include <vector>
 
 enum device_gamepad_enum
 {
