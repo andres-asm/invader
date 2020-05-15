@@ -3,9 +3,6 @@
 #include "imgui_impl_sdl.h"
 #include <file/file_path.h>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
-
 #include "kami.h"
 
 static const char* tag = "[kami]";
@@ -23,8 +20,8 @@ ImGuiIO io;
 Kami* kami1;
 Kami* kami2;
 
-GLuint kami1_output;
-GLuint kami2_output;
+int kami1_output;
+int kami2_output;
 
 static bool second_instance = false;
 
@@ -34,35 +31,6 @@ Asset asset;
 const char* device_gamepad_asset_names[] = {"base.png", "b.png",    "y.png",     "select.png", "start.png", "up.png",
                                             "down.png", "left.png", "right.png", "a.png",      "x.png",     "l.png",
                                             "r.png",    "l2.png",   "r2.png",    "l3.png",     "r3.png"};
-
-/*helpers*/
-bool load_texture(const char* filename, GLuint* out_texture, int* out_width, int* out_height)
-{
-   int image_width = 0;
-   int image_height = 0;
-   unsigned char* image_data = stbi_load(filename, &image_width, &image_height, NULL, 4);
-   if (image_data == NULL)
-      return false;
-
-   GLuint image_texture;
-   glGenTextures(1, &image_texture);
-   glBindTexture(GL_TEXTURE_2D, image_texture);
-
-   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-   glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
-   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image_width, image_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
-   stbi_image_free(image_data);
-
-   *out_texture = image_texture;
-   *out_width = image_width;
-   *out_height = image_height;
-
-   return true;
-}
 
 void init_localization()
 {
@@ -226,38 +194,6 @@ void set_default_style()
    clearColor = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 }
 
-void Asset::Load(const char* filename)
-{
-   width = 0;
-   height = 0;
-   aspect = 0;
-
-   logger(LOG_DEBUG, tag, "filename %s\n", filename);
-   unsigned char* image_data = stbi_load(filename, &width, &height, NULL, 4);
-   if (image_data == NULL)
-      return;
-
-   aspect = (float)width / height;
-
-   GLuint texture;
-   glGenTextures(1, &texture);
-   glBindTexture(GL_TEXTURE_2D, texture);
-
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-   glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
-   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
-   stbi_image_free(image_data);
-
-   data = texture;
-}
-
-void Asset::Render(unsigned width, unsigned height)
-{
-   ImGui::Image((void*)(intptr_t)data, ImVec2(width, height));
-}
-
 void RenderInputDeviceStatus(Kami* kami, unsigned port, unsigned width, unsigned height)
 {
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -301,6 +237,8 @@ int Kami::RenderVideo()
 {
    unsigned pixel_format = core_info->pixel_format;
    core_frame_buffer_t* video_data = piccolo->get_video_data();
+
+   GLuint texture;
 
    if (!texture)
       glGenTextures(1, &texture);
@@ -357,7 +295,7 @@ void Kami::Main(const char* title)
 
    static int padding = ImGui::GetStyle().WindowPadding.x;
 
-   ImGui::SetNextWindowSizeConstraints(ImVec2(640 + padding * 2, 100), ImVec2(640 + padding * 2, 800));
+   ImGui::SetNextWindowSizeConstraints(ImVec2(640 + padding * 2, 100), ImVec2(640 + padding * 2, 900));
 
    ImGui::Begin(_(title), NULL, ImGuiWindowFlags_AlwaysAutoResize);
    ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.40f);
@@ -451,7 +389,8 @@ void Kami::Main(const char* title)
             else
                aspect = core_info->av_info.geometry.aspect_ratio;
 
-            ImTextureID image_texture = (void*)(intptr_t)this->RenderVideo();
+            kami1_output = RenderVideo();
+            ImTextureID image_texture = (void*)(intptr_t)kami1_output;
 
             /*TODO: remove this
              *auto draw_list = ImGui::GetBackgroundDrawList();
@@ -532,6 +471,8 @@ void Kami::Main(const char* title)
             }
             if (ImGui::CollapsingHeader(_("core_current_info_label"), ImGuiTreeNodeFlags_None))
             {
+               ImGuiWindowFlags window_flags = 0;
+               ImGui::BeginChild("info", ImVec2(ImGui::GetWindowContentRegionWidth() * 1.0f, 120), false, window_flags);
                ImGui::LabelText(_("core_current_label"), core_name);
                tooltip(_("core_current_desc"));
                ImGui::LabelText(_("core_current_version_label"), core_version);
@@ -554,12 +495,13 @@ void Kami::Main(const char* title)
                   tooltip(_("framebuffer_aspect_desc"));
                }
                ImGui::Unindent();
+               ImGui::EndChild();
             }
             if (option_count > 0 && ImGui::CollapsingHeader(_("core_current_options_label"), ImGuiTreeNodeFlags_None))
             {
                ImGuiWindowFlags window_flags = 0;
                ImGui::BeginChild(
-                  "ChildL", ImVec2(ImGui::GetWindowContentRegionWidth() * 1.0f, 500), false, window_flags);
+                  "options", ImVec2(ImGui::GetWindowContentRegionWidth() * 1.0f, 120), false, window_flags);
                for (unsigned i = 0; i < option_count; i++)
                {
                   core_option_t* option = &options[i];
@@ -896,7 +838,7 @@ void framebuffer_setup()
    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
    glEnableVertexAttribArray(2);
    glActiveTexture(GL_TEXTURE0);
-   glBindTexture(GL_TEXTURE_2D, kami1->get_texture());
+   glBindTexture(GL_TEXTURE_2D, kami1_output);
 
    glUseProgram(shader_program);
    glBindVertexArray(vao);
@@ -905,7 +847,7 @@ void framebuffer_setup()
 void framebuffer_render()
 {
    /*TODO: setup viewport*/
-   if (kami1->get_texture())
+   if (kami1_output)
       glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 

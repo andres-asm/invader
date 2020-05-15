@@ -13,6 +13,8 @@
 #include <string.h>
 #include <time.h>
 
+#include "util.h"
+
 #include <GL/glew.h>
 
 #include <SDL2/SDL.h>

@@ -6,9 +6,9 @@
 #include <lists/string_list.h>
 #include <string/stdstring.h>
 
+#include "asset.h"
 #include "common.h"
 #include "libretro/piccolo.h"
-#include "util.h"
 
 #include <vector>
 
@@ -35,27 +35,6 @@ enum device_gamepad_enum
 
 extern const char* device_gamepad_asset_names[];
 
-class Asset
-{
-private:
-   /*variables*/
-   GLuint data;
-   int width;
-   int height;
-   float aspect;
-
-public:
-   void Load(const char* filename);
-   void Render(unsigned width, unsigned height);
-
-   /*accessors are used when you need to get the asset data directly from outseide the class, for instance when blending
-    * two assets*/
-   int get_width() { return width; }
-   int get_height() { return height; }
-   float get_aspect() { return aspect; }
-   GLuint get_texture() { return data; }
-};
-
 /*kami class controls a core completely, provides the complete I/O for the core including file I/O, video, audio, input.
  * Implementation is GUI toolkit / paradygm specific, only common code is defined in kami.cpp*/
 class Kami
@@ -81,9 +60,6 @@ private:
    input_state_t input_state[MAX_PORTS];
    input_descriptor_t input_descriptors[MAX_PORTS][MAX_IDS];
    core_frame_buffer_t* video_data;
-
-   /*TODO: this shouldn't be a part of this class*/
-   GLuint texture;
 
 public:
    Kami()
@@ -115,7 +91,6 @@ public:
 
    /*TODO: this shouldn't be a part of this class*/
    void TextureListInit(const char* path);
-   GLuint get_texture() { return texture; }
 };
 
 /*TODO: reimplement these*/

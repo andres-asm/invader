@@ -23,6 +23,7 @@ ifeq ($(WITH_GUI), imgui)
          ./src/frontend/common.cpp \
          ./src/frontend/imgui/imgui_impl_opengl3.cpp \
          ./src/frontend/imgui/imgui_impl_sdl.cpp \
+         ./src/frontend/imgui/kami_asset_opengl3.cpp \
          ./src/frontend/imgui/kami_imgui_sdl2.cpp \
          ./src/frontend/kami.cpp \
          ./src/util.cpp
