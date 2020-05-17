@@ -29,7 +29,7 @@ private:
    int gamepad_id;
 
    /*internal state*/
-   Uint8 button_state[SDL_CONTROLLER_BUTTON_MAX];
+   unsigned button_state[SDL_CONTROLLER_BUTTON_MAX];
    float axis_values[SDL_CONTROLLER_AXIS_MAX];
 };
 

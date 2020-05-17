@@ -32,9 +32,12 @@ static bool second_instance = false;
 std::vector<Asset> device_gamepad_inputs;
 Asset asset;
 
-const char* device_gamepad_asset_names[] = {"base.png", "b.png",    "y.png",     "select.png", "start.png", "up.png",
-                                            "down.png", "left.png", "right.png", "a.png",      "x.png",     "l.png",
-                                            "r.png",    "l2.png",   "r2.png",    "l3.png",     "r3.png"};
+const char* device_gamepad_asset_names[] = {
+   "base.png",         "b.png",     "y.png",  "select.png", "start.png",       "up.png",          "down.png",
+   "left.png",         "right.png", "a.png",  "x.png",      "l.png",           "r.png",           "l2.png",
+   "r2.png",           "l3.png",    "r3.png", "guide.png",  "left_axis_x.png", "left_axis_y.png", "right_axis_x.png",
+   "right_axis_y.png",
+};
 
 void init_localization()
 {
@@ -642,6 +645,79 @@ void file_manager(const char* dir_left, const char* dir_right)
 
 GamePad* controller;
 
+struct gamepad_lut
+{
+   int libretro_id;
+   int sdl_id;
+};
+
+struct gamepad_lut lut[] = {
+   {GAMEPAD_B, SDL_CONTROLLER_BUTTON_A},
+   {GAMEPAD_Y, SDL_CONTROLLER_BUTTON_X},
+   {GAMEPAD_SELECT, SDL_CONTROLLER_BUTTON_BACK},
+   {GAMEPAD_START, SDL_CONTROLLER_BUTTON_START},
+   {GAMEPAD_UP, SDL_CONTROLLER_BUTTON_DPAD_UP},
+   {GAMEPAD_DOWN, SDL_CONTROLLER_BUTTON_DPAD_DOWN},
+   {GAMEPAD_LEFT, SDL_CONTROLLER_BUTTON_DPAD_LEFT},
+   {GAMEPAD_RIGHT, SDL_CONTROLLER_BUTTON_DPAD_RIGHT},
+   {GAMEPAD_A, SDL_CONTROLLER_BUTTON_B},
+   {GAMEPAD_X, SDL_CONTROLLER_BUTTON_Y},
+   {GAMEPAD_L, SDL_CONTROLLER_BUTTON_LEFTSHOULDER},
+   {GAMEPAD_R, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER},
+   {GAMEPAD_L2, SDL_CONTROLLER_AXIS_TRIGGERLEFT},
+   {GAMEPAD_R2, SDL_CONTROLLER_AXIS_TRIGGERRIGHT},
+   {GAMEPAD_L3, SDL_CONTROLLER_BUTTON_LEFTSTICK},
+   {GAMEPAD_R3, SDL_CONTROLLER_BUTTON_RIGHTSTICK},
+   {GAMEPAD_GUIDE, SDL_CONTROLLER_BUTTON_GUIDE},
+   {GAMEPAD_LEFT_STICK_X, SDL_CONTROLLER_AXIS_LEFTX},
+   {GAMEPAD_LEFT_STICK_Y, SDL_CONTROLLER_AXIS_LEFTY},
+   {GAMEPAD_RIGHT_STICK_X, SDL_CONTROLLER_AXIS_RIGHTX},
+   {GAMEPAD_RIGHT_STICK_Y, SDL_CONTROLLER_AXIS_RIGHTY},
+};
+
+void render_frontend_input_device_state()
+{
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   Asset asset;
+   GLuint base, result;
+   asset = device_gamepad_inputs.at(0);
+   base = asset.get_texture();
+
+   unsigned width = device_gamepad_inputs[0].get_width() / 2;
+   unsigned height = width / device_gamepad_inputs[0].get_aspect();
+
+   ImVec2 p = ImGui::GetCursorScreenPos();
+   ImGui::Image((void*)(intptr_t)base, ImVec2(width, height));
+
+   input_state_t state;
+
+   for (unsigned i = 0; i <= GAMEPAD_GUIDE; i++)
+   {
+      if (i != GAMEPAD_L2 && i != GAMEPAD_R2)
+      {
+         if (controller->GetButtonState((SDL_GameControllerButton)lut[i].sdl_id))
+            asset = device_gamepad_inputs.at(i + 1);
+      }
+      else
+      {
+         if (controller->GetAxisValue((SDL_GameControllerAxis)lut[i].sdl_id))
+            asset = device_gamepad_inputs.at(i + 1);
+      }
+      result = asset.get_texture();
+      ImGui::GetWindowDrawList()->AddImage(
+         (void*)(intptr_t)result, p, ImVec2(p.x + width, p.y + height), ImVec2(0, 0), ImVec2(1, 1));
+   }
+
+   for (unsigned i = GAMEPAD_LEFT_STICK_X; i < GAMEPAD_LAST; i++)
+   {
+      if (abs(controller->GetAxisValue((SDL_GameControllerAxis)lut[i].sdl_id)) > 10000)
+         asset = device_gamepad_inputs.at(i + 1);
+      result = asset.get_texture();
+      ImGui::GetWindowDrawList()->AddImage(
+         (void*)(intptr_t)result, p, ImVec2(p.x + width, p.y + height), ImVec2(0, 0), ImVec2(1, 1));
+   }
+}
+
 void invader()
 {
    ImGui::Begin(_("window_title_invader"), NULL, ImGuiWindowFlags_AlwaysAutoResize);
@@ -658,6 +734,7 @@ void invader()
       controller->Initialize();
    }
    controller->Update();
+   render_frontend_input_device_state();
 
    ImGui::End();
 }
