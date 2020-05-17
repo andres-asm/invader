@@ -4,21 +4,21 @@ static const char* tag = "[input]";
 
 GamePad::GamePad()
 {
-   /*initialize variables*/
+   // initialize variables
    gamepad = NULL;
    gamepad_id = -1;
 
-   /*set button and axis states to zero*/
+   // set button and axis states to zero
    memset(button_state, 0, sizeof(Uint8) * SDL_CONTROLLER_BUTTON_MAX);
    memset(axis_values, 0, sizeof(float) * SDL_CONTROLLER_AXIS_MAX);
 }
 
 bool GamePad::Initialize(void)
 {
-   /*initialize game controller api*/
+   // TODO: remove this, it's done elsewhere
    // SDL_Init(SDL_INIT_GAMECONTROLLER);
 
-   /*load mappings from file*/
+   // load mappings from file
    int entries = SDL_GameControllerAddMappingsFromFile("gamecontrollerdb.txt");
    if (entries == -1)
    {
@@ -34,18 +34,18 @@ bool GamePad::Initialize(void)
 
 void GamePad::Update(void)
 {
-   /*early return if no gamepad attached*/
+   // early return if no gamepad attached
    if (gamepad == NULL)
       return;
 
-   /*update controller info from SDL*/
+   // update controller info from SDL
    SDL_GameControllerUpdate();
 
-   /*update button states*/
+   // update button states
    for (int b = 0; b < SDL_CONTROLLER_BUTTON_MAX; ++b)
       button_state[b] = SDL_GameControllerGetButton(gamepad, (SDL_GameControllerButton)b);
 
-   /*update axis values*/
+   // update axis values
    for (int a = 0; a < SDL_CONTROLLER_AXIS_MAX; ++a)
    {
       axis_values[a] = SDL_GameControllerGetAxis(gamepad, (SDL_GameControllerAxis)a);
@@ -56,27 +56,27 @@ void GamePad::ReceiveEvent(const SDL_Event& oEvent)
 {
    switch (oEvent.type)
    {
-      /*controller attached event*/
+      // controller attached event
       case SDL_CONTROLLERDEVICEADDED:
       {
-         /*for now only support the first attached gamepad*/
+         // for now only support the first attached gamepad
          if (gamepad == NULL)
          {
-            /*open the controller*/
+            // open the controller
             gamepad_id = oEvent.cdevice.which;
             gamepad = SDL_GameControllerOpen(gamepad_id);
 
-            /*set button and axis states to zero*/
+            // set button and axis states to zero
             memset(button_state, 0, sizeof(Uint8) * SDL_CONTROLLER_BUTTON_MAX);
             memset(axis_values, 0, sizeof(float) * SDL_CONTROLLER_AXIS_MAX);
             logger(LOG_INFO, tag, "device added %d\n", gamepad);
          }
          break;
       }
-      /*controller removed event*/
+      // controller removed event
       case SDL_CONTROLLERDEVICEREMOVED:
       {
-         /*only remove if it was the same gamepad*/
+         // only remove if it was the same gamepad
          if (gamepad_id = oEvent.cdevice.which)
          {
             gamepad_id = -1;

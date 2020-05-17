@@ -2,6 +2,7 @@
 #include "util.h"
 
 static const char* tag = "[common]";
+
 const char* glsl_version;
 
 SDL_Window* invader_window = NULL;
@@ -11,16 +12,16 @@ bool create_window(const char* app_name, unsigned width, unsigned height)
 {
    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_EVENTS | SDL_INIT_AUDIO | SDL_INIT_GAMECONTROLLER) == -1)
       logger(LOG_ERROR, tag, SDL_GetError());
-      /* Decide GL+GLSL versions */
+      // select GL+GLSL versions
 #if __APPLE__
-   /* GL 3.2 Core + GLSL 150 */
+   // GL 3.2 Core + GLSL 150
    glsl_version = "#version 150";
-   SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG); /* Always required on Mac */
+   SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);  // always required on Mac
    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
 #else
-   /* GL 3.0 + GLSL 130 */
+   // GL 3.0 + GLSL 130
    glsl_version = "#version 130";
    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
@@ -28,7 +29,6 @@ bool create_window(const char* app_name, unsigned width, unsigned height)
    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
 #endif
 
-   /* and prepare OpenGL stuff */
    SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
    SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
@@ -46,10 +46,10 @@ bool create_window(const char* app_name, unsigned width, unsigned height)
    }
 
    invader_context = SDL_GL_CreateContext(invader_window);
-   /* enable vsync */
+   // enable vsync
    SDL_GL_SetSwapInterval(1);
 
-   /* check opengl version sdl uses */
+   // check opengl version sdl uses
    logger(LOG_DEBUG, tag, "opengl version: %s", (char*)glGetString(GL_VERSION));
 
    glViewport(0, 0, width, height);
@@ -92,6 +92,6 @@ const char* get_glsl_version()
    return glsl_version;
 }
 
-/* Initialize configuration */
+// initialize configuration
 void common_config_load()
 { }

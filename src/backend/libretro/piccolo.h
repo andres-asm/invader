@@ -1,11 +1,12 @@
 #ifndef PICCOLO_H_
 #define PICCOLO_H_
 
+// libretro common
 extern "C" {
 #include <dynamic/dylib.h>
 }
-
 #include "libretro.h"
+
 #include "util.h"
 
 extern "C" {
@@ -46,7 +47,7 @@ static void internal_logger(enum retro_log_level level, const char* fmt, ...)
    fflush(stderr);
 }
 
-/*core frame buffer data*/
+// core frame buffer data
 typedef struct core_frame_buffer
 {
    const void* data;
@@ -55,13 +56,13 @@ typedef struct core_frame_buffer
    unsigned pitch;
 } core_frame_buffer_t;
 
-/*audio callback*/
+// audio callback
 typedef size_t (*audio_cb_t)(const int16_t*, size_t);
 
-/*input poll callback*/
+// input poll callback
 typedef void (*input_poll_t)();
 
-/*core information*/
+// core information
 typedef struct core_info
 {
    char file_name[PATH_MAX_LENGTH];
@@ -78,7 +79,7 @@ typedef struct core_info
    struct retro_system_av_info av_info;
 } core_info_t;
 
-/*core options*/
+// core options
 typedef struct core_option
 {
    char key[100];
@@ -87,11 +88,11 @@ typedef struct core_option
    char values[PATH_MAX_LENGTH];
 } core_option_t;
 
-/*controller info*/
+// controller info
 typedef struct retro_controller_info controller_info_t;
 typedef struct retro_controller_description controller_description_t;
 
-/*input state*/
+// input state
 typedef struct
 {
    int16_t buttons;
@@ -106,14 +107,14 @@ enum core_status
    CORE_STATUS_RUNNING
 };
 
-/*button descriptors*/
+// button descriptors
 typedef struct retro_input_descriptor input_descriptor_t;
 
-/*piccolo class is the class that interacts with the libretro core directly*/
+// piccolo class is the class that interacts with the libretro core directly
 class Piccolo
 {
 private:
-   /*variables*/
+   // variables
    void* library_handle;
    unsigned status;
    bool options_updated;
@@ -137,11 +138,11 @@ private:
 
    int controller_port_device[MAX_PORTS];
 
-   /*libretro variables*/
+   // libretro variables
    struct retro_system_info system_info;
    struct retro_system_av_info av_info;
 
-   /*libretro functions*/
+   // libretro functions
    void (*retro_init)(void);
    void (*retro_deinit)(void);
    unsigned (*retro_api_version)(void);
@@ -158,7 +159,7 @@ private:
    void* (*retro_get_memory_data)(unsigned id);
    size_t (*retro_get_memory_size)(unsigned id);
 
-   /*internal helper functions*/
+   // internal helper functions
    static void core_set_variables(void* data);
    static void core_get_variables(void* data);
    static void core_video_refresh(const void* data, unsigned width, unsigned height, size_t pitch);
@@ -168,62 +169,49 @@ private:
    static size_t core_audio_sample_batch(const int16_t* data, size_t frames);
    static bool core_set_environment(unsigned cmd, void* data);
 
-   /* Polls input. */
-   // typedef void (RETRO_CALLCONV *retro_input_poll_t)(void);
-
-   /* Queries for input for player 'port'. device will be masked with
-    * RETRO_DEVICE_MASK.
-    *
-    * Specialization of devices such as RETRO_DEVICE_JOYPAD_MULTITAP that
-    * have been set with retro_set_controller_port_device()
-    * will still use the higher level RETRO_DEVICE_JOYPAD to request input.
-    */
-   // typedef int16_t (RETRO_CALLCONV *retro_input_state_t)(unsigned port, unsigned device,
-   //      unsigned index, unsigned id);
-
 public:
-   /*constructor*/
+   // constructor
    Piccolo() { }
    ~Piccolo() { }
 
-   /*helper functions*/
-   /*load game*/
+   // helper functions
+   // load game
    bool load_game(const char* core_file_name, const char* game_file_name, bool peek);
-   /*core run*/
+   // core run
    void core_run(audio_cb_t cb);
-   /*core reset*/
+   // core reset
    void core_reset();
 
-   /*accessors*/
-   /*get core information*/
+   // accessors
+   // get core information
    core_info_t* get_info() { return &core_info; }
-   /*get core options array*/
+   // get core options array
    core_option_t* get_options() { return core_options; }
-   /*get core options count*/
+   // get core options count
    size_t get_option_count() { return option_count; }
-   /*get video data*/
+   // get video data
    void set_options_updated() { options_updated = true; }
-   /*get core status*/
+   // get core status
    unsigned get_status() { return status; }
-   /*get video data*/
+   // get video data
    core_frame_buffer_t* get_video_data() { return &video_data; }
-   /*get input port info*/
+   // get input port info
    controller_info_t* get_controller_info() { return controller_info; }
-   /*get input port count*/
+   // get input port count
    size_t get_controller_port_count() { return controller_info_size; }
-   /*set device in port*/
+   // set device in port
    void set_controller_port_device(int port, int device)
    {
       controller_port_device[port] = device;
       retro_set_controller_port_device(port, device);
    }
-   /*get input descriptors*/
+   // get input descriptors
    input_descriptor_t* get_input_descriptors() { return input_descriptors; }
-   /*get the count of set input descriptors*/
+   // get the count of set input descriptors
    size_t get_input_descriptor_count() { return input_descriptors_size; }
-   /*set callbacks for stuff that is handled in the frontend*/
+   // set callbacks for stuff that is handled in the frontend
    void set_callbacks(input_poll_t cb) { poll_callback = cb; }
-   /*set input state*/
+   // set input state
    void set_input_state(unsigned port, input_state_t state)
    {
       input_state[port].buttons = state.buttons;
@@ -231,138 +219,138 @@ public:
       for (unsigned i = 0; i < 8; i++)
          input_state[port].analogs[i] = state.analogs[i];
    }
-   /*set support bitmasks*/
+   // set support bitmasks
    void set_frontend_supports_bitmasks(bool value) { frontend_supports_bitmasks = value; }
-   /*set the current core instance*/
+   // set the current core instance
    void set_instance_ptr(Piccolo* piccolo);
 };
 
-/*piccolo controller is a wrapper for piccolo with the single purpose of making sure the correct instance pointer is set
- * in every function call to achieve multi-instancing*/
+// piccolo controller is a wrapper for piccolo with the single purpose of making sure the correct instance pointer is
+// set in every function call to achieve multi - instancing
 class PiccoloWrapper
 {
 private:
    Piccolo* piccolo;
 
 public:
-   /*constructor*/
+   // constructor
    PiccoloWrapper() { }
-   /*destructor*/
+   // destructor
    ~PiccoloWrapper()
    {
       piccolo->set_instance_ptr(piccolo);
       delete piccolo;
    }
 
-   /*load core for use*/
+   // load core for use
    bool load_game(const char* core_file_name, const char* game_file_name, bool bitmasks)
    {
       piccolo->set_instance_ptr(piccolo);
       piccolo->set_frontend_supports_bitmasks(bitmasks);
       return piccolo->load_game(core_file_name, game_file_name, false);
    }
-   /*load core to peek for core information*/
+   // load core to peek for core information
    bool peek_core(const char* core_file_name)
    {
       piccolo = new Piccolo();
       piccolo->set_instance_ptr(piccolo);
       return piccolo->load_game(core_file_name, NULL, true);
    }
-   /*core run*/
+   // core run
    void core_run(audio_cb_t cb)
    {
       piccolo->set_instance_ptr(piccolo);
       piccolo->core_run(cb);
    }
-   /*core reset*/
+   // core reset
    void core_reset()
    {
       piccolo->set_instance_ptr(piccolo);
       piccolo->core_reset();
    }
 
-   /*accessors*/
-   /*get core information*/
+   // accessors
+   // get core information
    core_info_t* get_info()
    {
       piccolo->set_instance_ptr(piccolo);
       return piccolo->get_info();
    }
-   /*get core options array*/
+   // get core options array
    core_option_t* get_options()
    {
       piccolo->set_instance_ptr(piccolo);
       return piccolo->get_options();
    }
-   /*get core options count*/
+   // get core options count
    size_t get_option_count()
    {
       piccolo->set_instance_ptr(piccolo);
       return piccolo->get_option_count();
    }
-   /* get video data */
+   // get video data
    void set_options_updated()
    {
       piccolo->set_instance_ptr(piccolo);
       piccolo->set_options_updated();
    }
-   /* get core status */
+   // get core status
    unsigned get_status()
    {
       piccolo->set_instance_ptr(piccolo);
       return piccolo->get_status();
    }
-   /* get video data */
+   // get video data
    core_frame_buffer_t* get_video_data()
    {
       piccolo->set_instance_ptr(piccolo);
       return piccolo->get_video_data();
    };
-   /*get input port info*/
+   // get input port info
    controller_info_t* get_controller_info()
    {
       piccolo->set_instance_ptr(piccolo);
       return piccolo->get_controller_info();
    }
-   /*get input port count*/
+   // get input port count
    size_t get_controller_port_count()
    {
       piccolo->set_instance_ptr(piccolo);
       return piccolo->get_controller_port_count();
    }
-   /*set device in port*/
+   // set device in port
    void set_controller_port_device(int port, int device)
    {
       piccolo->set_instance_ptr(piccolo);
       piccolo->set_controller_port_device(port, device);
    }
-   /*get input descriptors*/
+   // get input descriptors
    input_descriptor_t* get_input_descriptors()
    {
       piccolo->set_instance_ptr(piccolo);
       return piccolo->get_input_descriptors();
    }
-   /*get the count of set input descriptors*/
+   // get the count of set input descriptors
    size_t get_input_descriptor_count()
    {
       piccolo->set_instance_ptr(piccolo);
       return piccolo->get_input_descriptor_count();
    }
-   /*set callbacks for stuff that is handled in the frontend*/
+   // set callbacks for stuff that is handled in the frontend
    void set_callbacks(input_poll_t cb)
    {
       piccolo = new Piccolo();
       piccolo->set_instance_ptr(piccolo);
       piccolo->set_callbacks(cb);
    }
-   /*set input state*/
+   // set input state
    void set_input_state(unsigned port, input_state_t state) { piccolo->set_input_state(port, state); }
 
-   /*core deinit*/
+   // core deinit
    void unload_core()
    {
       piccolo->set_instance_ptr(piccolo);
-      /*TODO: hookup actual core unloading*/
+      // TODO: hookup actual core unloading
       delete piccolo;
    }
 };

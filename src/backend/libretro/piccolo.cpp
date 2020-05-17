@@ -2,12 +2,12 @@
 
 static const char* tag = "[core]";
 
-/*pointer to the current instance*/
+// pointer to the current instance
 static Piccolo* piccolo_ptr;
 
 unsigned frame = 0;
 
-/*set the current core instance*/
+// set the current core instance
 void Piccolo::set_instance_ptr(Piccolo* piccolo)
 {
    piccolo_ptr = piccolo;
@@ -38,10 +38,10 @@ void Piccolo::core_set_variables(void* data)
 
    struct retro_variable* vars = (struct retro_variable*)data;
 
-   /* pointer to count and iterate over options */
+   // pointer to count and iterate over options
    struct retro_variable* var = vars;
 
-   /* count core options */
+   // count core options
    while (var->key)
    {
       var++;
@@ -251,7 +251,7 @@ void Piccolo::core_input_poll()
    return;
 }
 
-/*TODO: analogs, keyboards, mice*/
+// TODO: analogs, keyboards, mice
 int16_t Piccolo::core_input_state(unsigned port, unsigned device, unsigned index, unsigned id)
 {
    // logger(
@@ -260,7 +260,7 @@ int16_t Piccolo::core_input_state(unsigned port, unsigned device, unsigned index
    input_state_t state = piccolo_ptr->input_state[port];
    int16_t ret;
 
-   /*buttons*/
+   // buttons
    int16_t buttons = state.buttons;
    if (id == RETRO_DEVICE_ID_JOYPAD_MASK)
       ret = buttons;
@@ -270,12 +270,13 @@ int16_t Piccolo::core_input_state(unsigned port, unsigned device, unsigned index
    return ret;
 }
 
-/*TODO: hook this up*/
+// TODO: hook this up
 void Piccolo::core_audio_sample(int16_t left, int16_t right)
 {
    return;
 }
 
+// TODO: hook this up
 size_t Piccolo::core_audio_sample_batch(const int16_t* data, size_t frames)
 {
    // return piccolo_ptr->audio_callback(data, frames);
@@ -391,7 +392,7 @@ bool Piccolo::load_game(const char* core_file_name, const char* game_file_name, 
       av_info.geometry.max_width, av_info.geometry.max_height, av_info.geometry.aspect_ratio);
    logger(LOG_DEBUG, tag, "timing: %ffps %fHz\n", av_info.timing.fps, av_info.timing.sample_rate);
 
-   /*supports no-game codepath*/
+   // supports no-game codepath
    if (!game_file_name)
    {
       if (retro_load_game(NULL))

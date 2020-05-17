@@ -1,11 +1,12 @@
-/* Common defines, includes and variables for all implementations */
 #ifndef COMMON_H_
 #define COMMON_H_
 
+// system
 #include <libintl.h>
 #include <locale.h>
 
-/*TODO: fence this*/
+// TODO: ifdef this for other possible backends
+// GLEW
 #include <GL/glew.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>

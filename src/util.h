@@ -1,9 +1,11 @@
 #ifndef UTIL_H_
 #define UTIL_H_
 
+// system
 #include <dirent.h>
 #include <stdarg.h>
 
+// libretro common
 #include <file/file_path.h>
 #include <lists/string_list.h>
 #include <string/stdstring.h>

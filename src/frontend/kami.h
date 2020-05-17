@@ -1,7 +1,7 @@
-/* User interface functions */
 #ifndef KAMI_H_
 #define KAMI_H_
 
+// system
 #include <vector>
 
 #include "asset.h"
@@ -36,13 +36,13 @@ enum device_gamepad_enum
 
 extern const char* device_gamepad_asset_names[];
 
-/*kami class controls a core completely, provides the complete I/O for the core including file I/O, video, audio, input.
- * Implementation is GUI toolkit / paradygm specific, only common code is defined in kami.cpp*/
+// kami class controls a core completely, provides the complete I/O for the core including file I/O, video, audio,
+// input. Implementation is GUI toolkit / paradygm specific, only common code is defined in kami.cpp
 class Kami
 {
 private:
-   /*variables*/
-   /*backend related variables*/
+   // variables
+   // backend related variables
    PiccoloWrapper* piccolo;
    int current_core;
    int previous_core;
@@ -52,7 +52,7 @@ private:
    core_info_t* core_info;
    core_info_t core_info_list[100];
 
-   /*frontend related variables*/
+   // frontend related variables
    bool frontend_supports_bitmasks;
    bool core_loaded;
    bool file_open_dialog_is_open;
@@ -76,7 +76,7 @@ public:
 
    ~Kami() { delete piccolo; }
 
-   /*common functions*/
+   // common functions
    bool CoreListInit(const char* path);
    struct string_list* OptionGetValues(core_option_t* option);
    unsigned OptionGetIndex(core_option_t* option, struct string_list* values);
@@ -85,16 +85,16 @@ public:
    void ParseInputDescriptors();
    input_state_t GetInputState(int port) { return input_state[port]; }
 
-   /*implementation specific functions*/
+   // implementation specific functions
    void Main(const char* title);
    int RenderVideo();
    static void InputPoll();
 
-   /*TODO: this shouldn't be a part of this class*/
+   // TODO: this shouldn't be a part of this class
    void TextureListInit(const char* path);
 };
 
-/*TODO: reimplement these*/
+// TODO: reimplement these
 size_t kami_render_audio(const int16_t* data, size_t frames);
 bool kami_init_audio();
 

@@ -1,3 +1,4 @@
+// dependency includes
 #include "imgui.h"
 
 #include "widgets.h"
@@ -6,7 +7,7 @@ static const char* tag = "[widgets]";
 
 static bool file_manager_dialog_is_open = false;
 
-/*tooltip widget*/
+// tooltip widget
 void tooltip(const char* desc)
 {
    ImGui::SameLine(0, 0);
@@ -21,7 +22,7 @@ void tooltip(const char* desc)
    }
 }
 
-/*file list widget*/
+// file list widget
 bool file_list(const char* label, int* current_item, file_list_t* list, int popup_max_height_in_items)
 {
    bool ret = false;
@@ -42,7 +43,7 @@ bool file_list(const char* label, int* current_item, file_list_t* list, int popu
    return ret;
 }
 
-/*string list combo widget*/
+// string list combo widget
 bool string_list_combo(const char* label, int* current_item, struct string_list* list, int popup_max_height_in_items)
 {
    bool ret = false;
@@ -59,7 +60,7 @@ bool string_list_combo(const char* label, int* current_item, struct string_list*
    return ret;
 }
 
-/*controller entries widget*/
+// controller entries widget
 bool controller_combo(
    const char* label, int* current_item, const controller_description_t* list, size_t size,
    int popup_max_height_in_items)
@@ -77,8 +78,8 @@ bool controller_combo(
    return ret;
 }
 
-/*TODO: finish this up*/
-/*rudimentary file manager*/
+// TODO: finish this up
+// rudimentary file manager
 void file_manager(const char* dir_left, const char* dir_right)
 {
    static int padding = ImGui::GetStyle().WindowPadding.x;
@@ -146,27 +147,27 @@ void file_manager(const char* dir_left, const char* dir_right)
          }
          ImGui::Columns(1);
          ImGui::Separator();
-         /*
+         //
          static bool dont_ask_me_next_time = false;
          ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
          ImGui::Checkbox("Don't ask me next time", &dont_ask_me_next_time);
          ImGui::PopStyleVar();
-         */
-         /*if (ImGui::Button(_("button_select_label"), ImVec2(240, 0)))
-         {
-            file_open_dialog_result_ok = true;
-            file_open_dialog_is_open = false;
-            strlcpy(content_file_name, cur, sizeof(content_file_name));
-            ImGui::CloseCurrentPopup();
-         }*/
+
+         // if (ImGui::Button(_("button_select_label"), ImVec2(240, 0)))
+         //{
+         //   file_open_dialog_result_ok = true;
+         //   file_open_dialog_is_open = false;
+         //   strlcpy(content_file_name, cur, sizeof(content_file_name));
+         //   ImGui::CloseCurrentPopup();
+         //}
          ImGui::SetItemDefaultFocus();
          ImGui::SameLine();
-         /*if (ImGui::Button("Cancel", ImVec2(240, 0)))
-         {
-            file_open_dialog_result_ok = false;
-            file_open_dialog_is_open = false;
-            ImGui::CloseCurrentPopup();
-         }*/
+         // if (ImGui::Button("Cancel", ImVec2(240, 0)))
+         //{
+         //   file_open_dialog_result_ok = false;
+         //      file_open_dialog_is_open = false;
+         // ImGui::CloseCurrentPopup();
+         //}
          ImGui::EndPopup();
       }
    }

@@ -1,17 +1,19 @@
+// stb image
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
+// imgui
 #include "imgui.h"
 #include "imgui_impl_opengl3.h"
 #include "imgui_impl_sdl.h"
 
+// libretro common
 #include <file/file_path.h>
 
 #include "asset.h"
 #include "common.h"
 
 static const char* tag = "[asset]";
-static const char* app_name = "invader";
 
 void Asset::Load(const char* filename)
 {

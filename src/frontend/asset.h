@@ -4,7 +4,7 @@
 class Asset
 {
 private:
-   /*variables*/
+   // variables
    int data;
    int width;
    int height;
@@ -14,8 +14,8 @@ public:
    void Load(const char* filename);
    void Render(unsigned width, unsigned height);
 
-   /*accessors are used when you need to get the asset data directly from outseide the class, for instance when blending
-    * two assets*/
+   // accessors to be used when you need to get the asset data directly from outseide the class, for instance when
+   // blending two images or combining them in any way
    int get_width() { return width; }
    int get_height() { return height; }
    float get_aspect() { return aspect; }

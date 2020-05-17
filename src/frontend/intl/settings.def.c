@@ -1,6 +1,6 @@
 static void localization_strings()
 {
-   /* categories*/
+   // categories
    _("setting_categories_none");
    _("setting_categories_general");
    _("setting_categories_video");
@@ -8,8 +8,8 @@ static void localization_strings()
    _("setting_categories_input");
    _("setting_categories_paths");
 
-   /* settings */
-   /* directories */
+   // settings
+   // directories
    _("directory_cores_label");
    _("directory_cores_desc");
    _("directory_saves_label");
@@ -21,40 +21,40 @@ static void localization_strings()
    _("directory_system_label");
    _("directory_system_desc");
 
-   /* video */
+   // video
    _("video_vsync_label");
    _("video_vsync_desc");
    _("video_fullscreen_label");
    _("video_fullscreen_desc");
 
-   /* audio  */
+   // audio
    _("audio_enable_label");
    _("audio_enable_desc");
    _("audio_sync_label");
    _("audio_sync_desc");
 
-   /* general */
+   // general
    _("log_level_label");
    _("log_level_desc");
 
-   /* window titles */
+   // window titles
    _("window_title_settings");
    _("window_title_status");
    _("window_title_core");
    _("window_title_core_control");
    _("window_title_file_selector");
 
-   /* log levels */
+   // log levels
    _("log_level_desc_debug");
    _("log_level_desc_info");
    _("log_level_desc_warning");
    _("log_level_desc_error");
 
-   /* helper strings */
+   // helper strings
    _("no_description_available");
    _("no_label_available");
 
-   /* core window */
+   // core window
    _("core_selector_label");
    _("core_selector_desc");
    _("core_current_label");
@@ -99,19 +99,19 @@ static void localization_strings()
    _("core_current_video_output_label");
    _("core_current_video_output_desc");
 
-   /* frontend flags */
+   // frontend flags
    _("frontend_flags_label");
    _("frontend_flags_desc");
    _("frontend_supports_bitmasks_label");
    _("frontend_supports_bitmasks_desc");
 
-   /* window buttons */
+   // window buttons
    _("button_cancel_label");
    _("button_cancel_desc");
    _("button_select_label");
    _("button_select_desc");
 
-   /* core info */
+   // core info
    _("framebuffer_width_label");
    _("framebuffer_width_desc");
    _("framebuffer_height_label");
@@ -119,5 +119,5 @@ static void localization_strings()
    _("framebuffer_aspect_label");
    _("framebuffer_aspect_desc");
 
-   /* long_labels */
+   // long_labels
    _("file_selector_label");
