@@ -26,6 +26,7 @@ ifeq ($(WITH_GUI), imgui)
          ./src/frontend/imgui/kami_asset_opengl3.cpp \
          ./src/frontend/imgui/kami_imgui_sdl2.cpp \
          ./src/frontend/imgui/widgets.cpp \
+         ./src/frontend/input/gamepad.cpp \
          ./src/frontend/kami.cpp \
          ./src/util.cpp
    INCLUDE += -I./deps/ -I./deps/imgui

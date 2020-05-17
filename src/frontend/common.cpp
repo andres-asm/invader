@@ -9,12 +9,7 @@ SDL_GLContext invader_context = NULL;
 
 bool create_window(const char* app_name, unsigned width, unsigned height)
 {
-   if (SDL_Init(SDL_INIT_VIDEO) < 0)
-   {
-      logger(LOG_DEBUG, tag, "failed to init: %s", SDL_GetError());
-      return false;
-   }
-   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_EVENTS | SDL_INIT_AUDIO) == -1)
+   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_EVENTS | SDL_INIT_AUDIO | SDL_INIT_GAMECONTROLLER) == -1)
       logger(LOG_ERROR, tag, SDL_GetError());
       /* Decide GL+GLSL versions */
 #if __APPLE__

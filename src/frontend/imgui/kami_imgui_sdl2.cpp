@@ -7,6 +7,8 @@
 #include "kami.h"
 #include "widgets.h"
 
+#include "input/gamepad.h"
+
 static const char* tag = "[kami]";
 static const char* app_name = "invader";
 
@@ -638,15 +640,25 @@ void file_manager(const char* dir_left, const char* dir_right)
    }
 }
 
+GamePad* controller;
+
 void invader()
 {
    ImGui::Begin(_("window_title_invader"), NULL, ImGuiWindowFlags_AlwaysAutoResize);
-   if (ImGui::Button(_("invader_file_manager"), ImVec2(120, 0)))
+   /*if (ImGui::Button(_("invader_file_manager"), ImVec2(120, 0)))
    {
       ImGui::OpenPopup(_("window_title_file_manager"));
       file_manager_dialog_is_open = true;
    }
-   file_manager(".", ".");
+   file_manager(".", ".");*/
+
+   if (!controller)
+   {
+      controller = new GamePad();
+      controller->Initialize();
+   }
+   controller->Update();
+
    ImGui::End();
 }
 
@@ -784,6 +796,8 @@ void imgui_draw_frame()
 
    while (SDL_PollEvent(&e) != 0)
    {
+      if (controller)
+         controller->ReceiveEvent(e);
       ImGui_ImplSDL2_ProcessEvent(&e);
       if (e.type == SDL_QUIT)
          quit = true;
@@ -799,7 +813,7 @@ void imgui_draw_frame()
 
    ImGui::NewFrame();
 
-   // invader();
+   invader();
 
    kami1->Main("Core 1");
    if (second_instance)
