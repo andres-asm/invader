@@ -123,7 +123,7 @@ void set_default_style()
    clearColor = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 }
 
-void RenderInputDeviceStatus(Kami* kami, unsigned port, unsigned width, unsigned height)
+void RenderBackendInputState(Kami* kami, unsigned port, unsigned width, unsigned height)
 {
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    Asset asset;
@@ -358,7 +358,7 @@ void Kami::Main(const char* title)
                      unsigned width = device_gamepad_inputs[0].get_width() / 2;
                      unsigned height = width / device_gamepad_inputs[0].get_aspect();
                      ImGui::SetColumnWidth(-1, width + ImGui::GetTreeNodeToLabelSpacing());
-                     RenderInputDeviceStatus(this, 0, width, height);
+                     RenderBackendInputState(this, 0, width, height);
                      ImGui::NextColumn();
 
                      /*TODO: get the actual current device from the core at init and make sure to get the one from

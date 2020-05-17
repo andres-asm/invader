@@ -18,10 +18,10 @@ public:
    void ReceiveEvent(const SDL_Event& oEvent);
 
    /*button state*/
-   bool GetButtonState(const SDL_GameControllerButton iButton) const;
+   bool GetButtonState(const SDL_GameControllerButton button) const;
 
    /*axis state*/
-   float GetAxisValue(const SDL_GameControllerAxis iAxis) const;
+   float GetAxisValue(const SDL_GameControllerAxis axis) const;
 
 private:
    /*internal variables*/

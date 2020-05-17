@@ -87,12 +87,12 @@ void GamePad::ReceiveEvent(const SDL_Event& oEvent)
    }
 }
 
-bool GamePad::GetButtonState(const SDL_GameControllerButton iButton) const
+bool GamePad::GetButtonState(const SDL_GameControllerButton button) const
 {
-   return (button_state[iButton] == 1);
+   return (button_state[button] == 1);
 }
 
-float GamePad::GetAxisValue(const SDL_GameControllerAxis iAxis) const
+float GamePad::GetAxisValue(const SDL_GameControllerAxis axis) const
 {
-   return axis_values[iAxis];
+   return axis_values[axis];
 }
