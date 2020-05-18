@@ -20,6 +20,8 @@ ifeq ($(WITH_GUI), imgui)
          ./deps/imgui/imgui_widgets.cpp \
          ./deps/imgui/imgui.cpp \
          ./src/backend/libretro/piccolo.cpp \
+         ./src/common/settings.cpp \
+         ./src/common/util.cpp \
          ./src/frontend/common.cpp \
          ./src/frontend/imgui/imgui_impl_opengl3.cpp \
          ./src/frontend/imgui/imgui_impl_sdl.cpp \
@@ -28,8 +30,7 @@ ifeq ($(WITH_GUI), imgui)
          ./src/frontend/imgui/main.cpp \
          ./src/frontend/imgui/widgets.cpp \
          ./src/frontend/input/gamepad.cpp \
-         ./src/frontend/kami.cpp \
-         ./src/common/util.cpp
+         ./src/frontend/kami.cpp
    INCLUDE += -I./deps/ -I./deps/imgui
    LIBS +=
    CFLAGS +=
