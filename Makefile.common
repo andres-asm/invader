@@ -29,7 +29,7 @@ ifeq ($(WITH_GUI), imgui)
          ./src/frontend/imgui/widgets.cpp \
          ./src/frontend/input/gamepad.cpp \
          ./src/frontend/kami.cpp \
-         ./src/util.cpp
+         ./src/common/util.cpp
    INCLUDE += -I./deps/ -I./deps/imgui
    LIBS +=
    CFLAGS +=
@@ -39,4 +39,4 @@ endif
 SOURCES_LOCALIZATION = \
       ./src/frontend/intl/settings.def.c
 
-INCLUDE += -I./deps/libretro/include -I./src/ -I./src/backend/ -I./src/frontend/ -I./deps/stb
+INCLUDE += -I./deps/libretro/include -I./src/common -I./src/backend/ -I./src/frontend/ -I./deps/stb
