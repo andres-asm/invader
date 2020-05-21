@@ -6,7 +6,7 @@ SOURCES_C   :=
 SOURCES_CXX :=
 
 CFLAGS   :=
-CXXFLAGS :=
+CXXFLAGS := -std=c++17
 LIBS  :=
 
 WITH_GUI := imgui

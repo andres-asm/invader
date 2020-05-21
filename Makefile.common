@@ -31,7 +31,7 @@ ifeq ($(WITH_GUI), imgui)
          ./src/frontend/imgui/widgets.cpp \
          ./src/frontend/input/gamepad.cpp \
          ./src/frontend/kami.cpp
-   INCLUDE += -I./deps/ -I./deps/imgui
+   INCLUDE += -I./deps/ -I./deps/imgui -I./deps/toml/include
    LIBS +=
    CFLAGS +=
    CXXFLAGS += -DIMGUI_IMPL_API="" -DIMGUI_IMPL_OPENGL_LOADER_GLEW -DRETRO_COMMON_API

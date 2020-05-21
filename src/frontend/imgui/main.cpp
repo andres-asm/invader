@@ -390,6 +390,9 @@ int main(int argc, char* argv[])
 {
    logger_set_level(LOG_DEBUG);
    init_localization();
+   common_config_load();
+
+   return 0;
 
    if (!create_window(app_name, WINDOW_WIDTH, WINDOW_HEIGHT))
       return -1;

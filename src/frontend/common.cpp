@@ -1,4 +1,5 @@
 #include "common.h"
+#include "settings.h"
 #include "util.h"
 
 static const char* tag = "[common]";
@@ -94,4 +95,7 @@ const char* get_glsl_version()
 
 // initialize configuration
 void common_config_load()
-{ }
+{
+   settings_init("settings.toml");
+   settings_get_value("fullscreen");
+}
