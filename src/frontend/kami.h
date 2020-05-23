@@ -85,6 +85,8 @@ public:
    void ParseInputDescriptors();
    input_state_t GetInputState(int port) { return input_state[port]; }
 
+   core_info_t* GetCoreInfo() { return core_info; }
+
    // implementation specific functions
    void Main(const char* title);
    int RenderVideo();

@@ -336,8 +336,71 @@ void framebuffer_setup()
    glBindVertexArray(vao);
 }
 
+enum scale
+{
+   SCALE_OFF = 0,
+   SCALE_FULL,
+   SCALE_INTEGER_UP,
+   SCALE_INTEGER_DOWN,
+};
+
 void framebuffer_render()
 {
+   unsigned integer_scale = SCALE_INTEGER_DOWN;
+
+   core_info* info = kami1->GetCoreInfo();
+   float aspect = info->av_info.geometry.aspect_ratio;
+   int width, height, x, y;
+
+   int base_height = info->av_info.geometry.base_height;
+
+   if (kami1_output)
+      switch (integer_scale)
+      {
+         case SCALE_OFF:
+         {
+            height = base_height;
+            width = height * aspect;
+
+            x = (WINDOW_WIDTH - width) / 2;
+            y = (WINDOW_HEIGHT - height) / 2;
+            break;
+         }
+         case SCALE_FULL:
+         {
+            height = WINDOW_HEIGHT;
+            width = height * aspect;
+            x = (WINDOW_WIDTH - width) / 2;
+            y = 0;
+            break;
+         }
+         case SCALE_INTEGER_UP:
+         {
+            unsigned scale = WINDOW_HEIGHT / base_height + (WINDOW_HEIGHT % base_height != 0);
+
+            height = base_height * scale;
+            width = height * aspect;
+
+            x = (WINDOW_WIDTH - width) / 2;
+            y = (abs(WINDOW_HEIGHT - height) / 2) * -1;
+
+            break;
+         }
+         case SCALE_INTEGER_DOWN:
+         {
+            unsigned scale = WINDOW_HEIGHT / base_height;
+            height = base_height * scale;
+            width = height * aspect;
+
+            x = (WINDOW_WIDTH - width) / 2;
+            y = (WINDOW_HEIGHT - height) / 2;
+            break;
+         }
+         default:
+            break;
+      }
+
+   glViewport(x, y, width, height);
    // TODO: setup viewport
    if (kami1_output)
       glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -392,7 +455,7 @@ int main(int argc, char* argv[])
    init_localization();
    common_config_load();
 
-   return 0;
+   // return 0;
 
    if (!create_window(app_name, WINDOW_WIDTH, WINDOW_HEIGHT))
       return -1;
