@@ -21,7 +21,7 @@
 	url = https://github.com/marzer/tomlplusplus.git
 [submodule "assets"]
 	path = assets
-	url = git@git.retromods.org:radius/invader-assets.git
+	url = https://git.retromods.org/radius/invader-assets.git
 [submodule "deps/stb"]
 	path = deps/stb
 	url = https://github.com/nothings/stb
