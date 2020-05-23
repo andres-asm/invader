@@ -22,4 +22,9 @@ jobs:
         submodules: 'true'
     - name: make
       run: msys2do make -j4
-
+    - name: upload
+      if: github.event_name == 'push'
+      uses: actions/upload-artifact@v2
+      with:
+        name: windows-build
+        path: invader_imgui_sdl2.exe

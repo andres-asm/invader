@@ -1,4 +1,5 @@
-[![pipeline status](https://git.retromods.org/dev/invader/badges/master/pipeline.svg)](https://git.retromods.org/dev/invader/commits/master)
+![linux-build](https://github.com/fr500/invader/workflows/linux-build/badge.svg)
+![windows-build](https://github.com/fr500/invader/workflows/windows-build/badge.svg)
 
 # invader
 
