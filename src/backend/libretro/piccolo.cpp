@@ -112,19 +112,21 @@ bool Piccolo::core_set_environment(unsigned cmd, void* data)
             logger(
                LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE: %s\n",
                piccolo_ptr->options_updated ? "true" : "false");
+            piccolo_ptr->options_updated = false;
             return true;
          }
          else
             return false;
 
-         piccolo_ptr->options_updated = false;
          break;
       }
       case RETRO_ENVIRONMENT_SET_PIXEL_FORMAT:
+      {
          logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_SET_PIXEL_FORMAT: %s\n", PRINT_PIXFMT(*(int*)data));
          piccolo_ptr->core_info.pixel_format = *(int*)data;
          return true;
          break;
+      }
       case RETRO_ENVIRONMENT_GET_LOG_INTERFACE:
       {
          logger(LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_LOG_INTERFACE\n");
@@ -160,9 +162,11 @@ bool Piccolo::core_set_environment(unsigned cmd, void* data)
          return true;
          break;
       case RETRO_ENVIRONMENT_GET_CAN_DUPE:
+      {
          *(bool*)data = true;
          return true;
          break;
+      }
       case RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS:
       {
          const input_descriptor_t* new_descriptors = NULL;
@@ -185,12 +189,14 @@ bool Piccolo::core_set_environment(unsigned cmd, void* data)
          }
          piccolo_ptr->input_descriptors_size = count;
          return true;
+         break;
       }
-      break;
       case RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL:
+      {
          logger(LOG_DEBUG, tag, "RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL unhandled\n");
          return false;
          break;
+      }
       case RETRO_ENVIRONMENT_GET_FASTFORWARDING:
          logger(LOG_DEBUG, tag, "RETRO_ENVIRONMENT_GET_FASTFORWARDING unhandled\n");
          return false;
@@ -230,11 +236,34 @@ bool Piccolo::core_set_environment(unsigned cmd, void* data)
          break;
       }
       case RETRO_ENVIRONMENT_GET_INPUT_BITMASKS:
+      {
          logger(
             LOG_INFO, tag, "RETRO_ENVIRONMENT_GET_INPUT_BITMASKS: %s\n",
             piccolo_ptr->frontend_supports_bitmasks ? "true" : "false");
          return piccolo_ptr->frontend_supports_bitmasks;
          break;
+      }
+      case RETRO_ENVIRONMENT_SET_GEOMETRY:
+      {
+         struct retro_game_geometry* geometry = &piccolo_ptr->av_info.geometry;
+         const struct retro_game_geometry* new_geometry = (const struct retro_game_geometry*)data;
+
+         if (!geometry)
+            return false;
+
+         if (
+            (geometry->base_width != new_geometry->base_width) || (geometry->base_height != new_geometry->base_height)
+            || (geometry->aspect_ratio != new_geometry->aspect_ratio))
+         {
+            logger(
+               LOG_INFO, tag, "RETRO_ENVIRONMENT_SET_GEOMETRY: old geometry: %dx%d (%f) new geometry: %dx%d (%f)\n",
+               geometry->base_width, geometry->base_height, geometry->aspect_ratio, new_geometry->base_width,
+               new_geometry->base_height, new_geometry->aspect_ratio);
+
+            piccolo_ptr->core_info.av_info.geometry = *new_geometry;
+         }
+         break;
+      }
       default:
          logger(LOG_DEBUG, tag, "unknown command: %d\n", cmd);
    }

@@ -140,7 +140,6 @@ private:
 
    // libretro variables
    struct retro_system_info system_info;
-   struct retro_system_av_info av_info;
 
    // libretro functions
    void (*retro_init)(void);
