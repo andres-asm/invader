@@ -1,0 +1,25 @@
+name: windows-build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: numworks/setup-msys2@v1
+      with:
+        msystem: MINGW64
+    - run: msys2do pacman -S --noconfirm --needed libintl
+    - run: msys2do pacman -S --noconfirm --needed make mingw-w64-x86_64-toolchain mingw-w64-x86_64-ntldd mingw-w64-x86_64-zlib mingw-w64-x86_64-pkg-config mingw-w64-x86_64-SDL2 mingw-w64-x86_64-drmingw mingw-w64-x86_64-glew mingw-w64-x86_64-gettext
+    - uses: actions/checkout@v2
+      with:
+        submodules: 'true'
+    - name: make
+      run: msys2do make -j4
+
