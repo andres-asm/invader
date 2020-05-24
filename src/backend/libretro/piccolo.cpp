@@ -245,7 +245,7 @@ bool Piccolo::core_set_environment(unsigned cmd, void* data)
       }
       case RETRO_ENVIRONMENT_SET_GEOMETRY:
       {
-         struct retro_game_geometry* geometry = &piccolo_ptr->av_info.geometry;
+         struct retro_game_geometry* geometry = &piccolo_ptr->core_info.av_info.geometry;
          const struct retro_game_geometry* new_geometry = (const struct retro_game_geometry*)data;
 
          if (!geometry)
@@ -416,11 +416,6 @@ bool Piccolo::load_game(const char* core_file_name, const char* game_file_name, 
 
    status = CORE_STATUS_LOADED;
 
-   logger(
-      LOG_DEBUG, tag, "geometry: %ux%d/%ux%d %f\n", av_info.geometry.base_width, av_info.geometry.base_height,
-      av_info.geometry.max_width, av_info.geometry.max_height, av_info.geometry.aspect_ratio);
-   logger(LOG_DEBUG, tag, "timing: %ffps %fHz\n", av_info.timing.fps, av_info.timing.sample_rate);
-
    // supports no-game codepath
    if (!game_file_name)
    {
@@ -471,13 +466,13 @@ bool Piccolo::load_game(const char* core_file_name, const char* game_file_name, 
       }
    }
 
-   retro_get_system_av_info(&av_info);
+   retro_get_system_av_info(&core_info.av_info);
 
-   core_info.av_info.geometry.base_width = av_info.geometry.base_width;
-   core_info.av_info.geometry.base_height = av_info.geometry.base_height;
-   core_info.av_info.geometry.max_width = av_info.geometry.max_width;
-   core_info.av_info.geometry.max_height = av_info.geometry.max_height;
-   core_info.av_info.geometry.aspect_ratio = av_info.geometry.aspect_ratio;
+   logger(
+      LOG_DEBUG, tag, "geometry: %ux%d/%ux%d %f\n", core_info.av_info.geometry.base_width,
+      core_info.av_info.geometry.base_height, core_info.av_info.geometry.max_width,
+      core_info.av_info.geometry.max_height, core_info.av_info.geometry.aspect_ratio);
+   logger(LOG_DEBUG, tag, "timing: %ffps %fHz\n", core_info.av_info.timing.fps, core_info.av_info.timing.sample_rate);
 
    return ret;
 }
