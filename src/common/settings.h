@@ -18,6 +18,8 @@ private:
    T step;
    T def;
 
+   bool changed;
+
 public:
    Setting<T>(const char* name, T data)
    {
@@ -44,6 +46,7 @@ public:
 
    T GetValue() { return data; }
    T* GetPtr() { return &data; }
+   void SetChanged() { changed = true; }
 
    const char* GetName() { return name; }
 };

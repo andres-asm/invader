@@ -213,8 +213,8 @@ void invader()
    controller->Update();
    render_frontend_input_device_state();
 
-   ImGui::Checkbox(video_fullscreen->GetName(), video_fullscreen->GetPtr());
-   tooltip(_("NAAA"));
+   if (setting_checkbox(video_fullscreen))
+      set_fullscreen_mode(video_fullscreen->GetValue(), true);
 
    ImGui::End();
 }

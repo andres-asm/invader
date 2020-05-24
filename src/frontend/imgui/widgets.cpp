@@ -78,6 +78,24 @@ bool controller_combo(
    return ret;
 }
 
+// setting checkbox
+bool setting_checkbox(Setting<bool>* setting)
+{
+   std::string label(setting->GetName());
+   label = label + "_label";
+
+   std::string desc(setting->GetName());
+   desc = desc + "_desc";
+
+   bool ret = ImGui::Checkbox(_(label.c_str()), setting->GetPtr());
+   tooltip(_(desc.c_str()));
+
+   if (ret)
+      setting->SetChanged();
+
+   return ret;
+}
+
 // TODO: finish this up
 // rudimentary file manager
 void file_manager(const char* dir_left, const char* dir_right)
