@@ -213,7 +213,7 @@ void invader()
    controller->Update();
    render_frontend_input_device_state();
 
-   // ImGui::Checkbox("Video fullscreen", &video_fullscreen);
+   ImGui::Checkbox(video_fullscreen->GetName(), video_fullscreen->GetPtr());
    tooltip(_("NAAA"));
 
    ImGui::End();
