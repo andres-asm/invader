@@ -12,10 +12,10 @@ LIBS  :=
 WITH_GUI := imgui
 
 ifeq ($(WITH_GUI), nuklear)
-   TARGET = invader_nuklear_sdl2
+   TARGET = ../invader_nuklear_sdl2
    WITH_GUI := nuklear
 else ifeq ($(WITH_GUI), imgui)
-   TARGET = invader_imgui_sdl2
+   TARGET = ../invader_imgui_sdl2
    WITH_GUI := imgui
 endif
 
@@ -75,10 +75,10 @@ endif
 
 %.po: %.c
 
-	xgettext -k_ -j -lC --sort-output -o intl/invader.pot $^
-	mkdir -p intl/en/LC_MESSAGES
-	msgmerge --update intl/en/invader.po intl/invader.pot
-	msgfmt --output-file=intl/en/LC_MESSAGES/invader.mo intl/en/invader.po
+	xgettext -k_ -j -lC --sort-output -o ../intl/invader.pot $^
+	mkdir -p ../intl/en/LC_MESSAGES
+	msgmerge --update ../intl/en/invader.po ../intl/invader.pot
+	msgfmt --output-file=../intl/en/LC_MESSAGES/invader.mo ../intl/en/invader.po
 
 %.o: %.c
 	$(CC) $(INCLUDE) $(DEFINES) $(CFLAGS) -c $^ -o $@
@@ -88,7 +88,7 @@ endif
 
 clean:
 	rm -f $(OBJECTS) $(TARGET)
-	find ./intl -name *.mo -exec rm {} \;
-	find ./intl -name *.po~ -exec rm {} \;
+	find ../intl -name *.mo -exec rm {} \;
+	find ../intl -name *.po~ -exec rm {} \;
 
 .PHONY: clean install uninstall

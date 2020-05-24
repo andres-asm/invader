@@ -439,10 +439,6 @@ void imgui_draw_frame()
    if (second_instance)
       kami2->Main("Core 2");
 
-   // TODO: remove this
-   bool demo = true;
-   ImGui::ShowDemoWindow(&demo);
-
    ImGui::Render();
    SDL_GL_MakeCurrent(invader_window, invader_context);
    glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);

@@ -25,3 +25,15 @@
 - add video rendering
 - add audio playback
 
+## 0.1.3
+- replace nuklear with imgui
+- rewrite backend in C++
+- rewrite frontend in C++
+- rewrite settings handler
+- implement multi instancing (different cores)
+- hookup input processing
+- hookup input bitmasks
+- hookup loading cores without content
+- hookup rendering outside imgui window
+- implement file selector
+- setup ci using github actions
