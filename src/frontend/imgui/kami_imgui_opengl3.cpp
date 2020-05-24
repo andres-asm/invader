@@ -149,7 +149,7 @@ void Kami::Main(const char* title)
          case CORE_STATUS_NONE:
          {
             ImGui::Combo(_("core_selector_label"), &current_core, core_entries, core_count);
-            tooltip(_("core_selector_desc"));
+            Widgets::Tooltip(_("core_selector_desc"));
             if (previous_core != current_core || previous_core == -1)
             {
                core_info = &core_info_list[current_core];
@@ -158,9 +158,9 @@ void Kami::Main(const char* title)
                previous_core = current_core;
             }
             ImGui::LabelText(_("core_current_version_label"), core_version);
-            tooltip(_("core_current_version_desc"));
+            Widgets::Tooltip(_("core_current_version_desc"));
             ImGui::LabelText(_("core_current_extensions_label"), supported_extensions);
-            tooltip(_("core_current_extensions_desc"));
+            Widgets::Tooltip(_("core_current_extensions_desc"));
 
             if (supports_no_game)
             {
@@ -171,7 +171,7 @@ void Kami::Main(const char* title)
                   piccolo->load_game(core_info->file_name, NULL, frontend_supports_bitmasks);
                   core_info = piccolo->get_info();
                }
-               tooltip(_("core_current_start_core_desc"));
+               Widgets::Tooltip(_("core_current_start_core_desc"));
             }
             if (
                !(string_is_equal(supported_extensions, "N/A"))
@@ -183,7 +183,7 @@ void Kami::Main(const char* title)
                   file_open_dialog_is_open = true;
                }
             }
-            tooltip(_("core_current_load_content_desc"));
+            Widgets::Tooltip(_("core_current_load_content_desc"));
             if (!file_open_dialog_is_open && file_open_dialog_result_ok)
             {
                piccolo->unload_core();
@@ -197,7 +197,7 @@ void Kami::Main(const char* title)
             if (ImGui::CollapsingHeader(_("frontend_flags_label"), ImGuiTreeNodeFlags_None))
             {
                ImGui::Checkbox(_("frontend_supports_bitmasks_label"), &frontend_supports_bitmasks);
-               tooltip(_("frontend_supports_bitmasks_desc"));
+               Widgets::Tooltip(_("frontend_supports_bitmasks_desc"));
             }
 #endif
             break;
@@ -219,7 +219,7 @@ void Kami::Main(const char* title)
             kami1_output = RenderVideo();
             ImTextureID image_texture = (void*)(intptr_t)kami1_output;
 
-            // TODO: remove this
+            // TODO: remove this, example of drawing to the background, could be useful
             // auto draw_list = ImGui::GetBackgroundDrawList();
             // ImVec2 p = ImVec2(0.0f, 0.0f);
             // draw_list->AddImage(
@@ -236,7 +236,7 @@ void Kami::Main(const char* title)
             {
                if (ImGui::Button(_("core_current_reset_core_label"), ImVec2(240, 0)))
                   piccolo->core_reset();
-               tooltip(_("core_current_reset_core_desc"));
+               Widgets::Tooltip(_("core_current_reset_core_desc"));
             }
             if (ImGui::CollapsingHeader(_("core_current_input_label"), ImGuiTreeNodeFlags_None))
             {
@@ -260,11 +260,10 @@ void Kami::Main(const char* title)
                      ImGui::NextColumn();
 
                      // TODO: get the actual current device from the core at init and make sure to get the one from
-                     // setting once settings are implemented,
-                     // also change 16 to a define somewhere
+                     // setting once settings are implemented
                      static int current_device[MAX_PORTS];
 
-                     if (controller_combo(
+                     if (Widgets::ControllerTypesCombo(
                             _("core_current_port_current_device_label"), &current_device[i], controllers[i].types,
                             controllers[i].num_types, controller_port_count))
                      {
@@ -276,7 +275,7 @@ void Kami::Main(const char* title)
                         ParseInputDescriptors();
                         ControllerPortUpdate(i, idx);
                      }
-                     tooltip(_("core_current_port_current_device_desc"));
+                     Widgets::Tooltip(_("core_current_port_current_device_desc"));
 
                      for (unsigned j = 0; j < MAX_IDS; j++)
                      {
@@ -302,11 +301,11 @@ void Kami::Main(const char* title)
                ImGuiWindowFlags window_flags = 0;
                ImGui::BeginChild("info", ImVec2(ImGui::GetWindowContentRegionWidth() * 1.0f, 120), false, window_flags);
                ImGui::LabelText(_("core_current_label"), core_name);
-               tooltip(_("core_current_desc"));
+               Widgets::Tooltip(_("core_current_desc"));
                ImGui::LabelText(_("core_current_version_label"), core_version);
-               tooltip(_("core_current_version_desc"));
+               Widgets::Tooltip(_("core_current_version_desc"));
                ImGui::LabelText(_("core_current_extensions_label"), supported_extensions);
-               tooltip(_("core_current_extensions_desc"));
+               Widgets::Tooltip(_("core_current_extensions_desc"));
 
                ImGui::Indent(ImGui::GetTreeNodeToLabelSpacing());
                if (ImGui::CollapsingHeader(_("core_current_info_video_label"), ImGuiTreeNodeFlags_None))
@@ -316,11 +315,11 @@ void Kami::Main(const char* title)
                   int base_height = height;
 
                   ImGui::InputInt(_("framebuffer_width_label"), &base_width, 0, 0, ImGuiInputTextFlags_ReadOnly);
-                  tooltip(_("framebuffer_width_desc"));
+                  Widgets::Tooltip(_("framebuffer_width_desc"));
                   ImGui::InputInt(_("framebuffer_height_label"), &base_height, 0, 0, ImGuiInputTextFlags_ReadOnly);
-                  tooltip(_("framebuffer_height_desc"));
+                  Widgets::Tooltip(_("framebuffer_height_desc"));
                   ImGui::InputFloat(_("framebuffer_aspect_label"), &aspect, 0, 0, "%.3f", ImGuiInputTextFlags_ReadOnly);
-                  tooltip(_("framebuffer_aspect_desc"));
+                  Widgets::Tooltip(_("framebuffer_aspect_desc"));
                }
                ImGui::Unindent();
                ImGui::EndChild();
@@ -338,7 +337,7 @@ void Kami::Main(const char* title)
 
                   int index = OptionGetIndex(option, values);
                   ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.30f);
-                  if (string_list_combo(description, &index, values, 0))
+                  if (Widgets::StringListCombo(description, &index, values, 0))
                   {
                      char* value = values->elems[index].data;
                      OptionUpdate(option, value);
@@ -357,11 +356,11 @@ void Kami::Main(const char* title)
       if (ImGui::CollapsingHeader(_("core_current_flags_label"), ImGuiTreeNodeFlags_None))
       {
          ImGui::Checkbox(_("core_current_supports_no_game_label"), &supports_no_game);
-         tooltip(_("core_current_supports_no_game_desc"));
+         Widgets::Tooltip(_("core_current_supports_no_game_desc"));
          ImGui::Checkbox(_("core_current_block_extract_label"), &block_extract);
-         tooltip(_("core_current_block_extract_desc"));
+         Widgets::Tooltip(_("core_current_block_extract_desc"));
          ImGui::Checkbox(_("core_current_full_path_label"), &full_path);
-         tooltip(_("core_current_full_path_desc"));
+         Widgets::Tooltip(_("core_current_full_path_desc"));
       }
    }
    else
@@ -407,7 +406,7 @@ void Kami::Main(const char* title)
          }
          else
          {
-            if (file_list("", &index, list, 10))
+            if (Widgets::FileList("", &index, list, 10))
             {
                fill_pathname_join(cur, old, list->file_names[index], sizeof(cur));
                if (path_is_directory(cur))

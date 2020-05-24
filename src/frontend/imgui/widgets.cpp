@@ -7,23 +7,47 @@ static const char* tag = "[widgets]";
 
 static bool file_manager_dialog_is_open = false;
 
-// tooltip widget
-void tooltip(const char* desc)
+namespace Widgets
 {
-   ImGui::SameLine(0, 0);
-   ImGui::TextDisabled(" (?)");
-   if (ImGui::IsItemHovered(0))
-   {
-      ImGui::BeginTooltip();
-      ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-      ImGui::TextUnformatted(desc, (const char*)NULL);
-      ImGui::PopTextWrapPos();
-      ImGui::EndTooltip();
-   }
+// controller entries widget
+bool ControllerTypesCombo(
+   const char* label, int* current_item, const controller_description_t* list, size_t size,
+   int popup_max_height_in_items)
+{
+   bool ret = false;
+   char** entries = (char**)calloc(size, sizeof(char*));
+   for (unsigned i = 0; i < size; i++)
+      entries[i] = (char*)list[i].desc;
+
+   if (ImGui::Combo(label, current_item, entries, size, popup_max_height_in_items))
+      ret = true;
+   else
+      ret = false;
+
+   return ret;
 }
 
+// TODO: replace libretro common string list with std::vector
+// string list combo widget
+bool StringListCombo(const char* label, int* current_item, struct string_list* list, int popup_max_height_in_items)
+{
+   bool ret = false;
+   char** entries = (char**)calloc(list->size, sizeof(char*));
+   for (unsigned i = 0; i < list->size; i++)
+   {
+      entries[i] = list->elems[i].data;
+   }
+   if (ImGui::Combo(label, current_item, entries, list->size, popup_max_height_in_items))
+      ret = true;
+   else
+      ret = false;
+   free(entries);
+   return ret;
+}
+
+// TODO: replace paths with std::filesystem
 // file list widget
-bool file_list(const char* label, int* current_item, file_list_t* list, int popup_max_height_in_items)
+bool FileList(const char* label, int* current_item, file_list_t* list, int popup_max_height_in_items)
 {
    bool ret = false;
    char** entries = (char**)calloc(list->file_count, sizeof(char*));
@@ -43,43 +67,23 @@ bool file_list(const char* label, int* current_item, file_list_t* list, int popu
    return ret;
 }
 
-// string list combo widget
-bool string_list_combo(const char* label, int* current_item, struct string_list* list, int popup_max_height_in_items)
+// tooltip widget
+void Tooltip(const char* desc)
 {
-   bool ret = false;
-   char** entries = (char**)calloc(list->size, sizeof(char*));
-   for (unsigned i = 0; i < list->size; i++)
+   ImGui::SameLine(0, 0);
+   ImGui::TextDisabled(" (?)");
+   if (ImGui::IsItemHovered(0))
    {
-      entries[i] = list->elems[i].data;
+      ImGui::BeginTooltip();
+      ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+      ImGui::TextUnformatted(desc, (const char*)NULL);
+      ImGui::PopTextWrapPos();
+      ImGui::EndTooltip();
    }
-   if (ImGui::Combo(label, current_item, entries, list->size, popup_max_height_in_items))
-      ret = true;
-   else
-      ret = false;
-   free(entries);
-   return ret;
-}
-
-// controller entries widget
-bool controller_combo(
-   const char* label, int* current_item, const controller_description_t* list, size_t size,
-   int popup_max_height_in_items)
-{
-   bool ret = false;
-   char** entries = (char**)calloc(size, sizeof(char*));
-   for (unsigned i = 0; i < size; i++)
-      entries[i] = (char*)list[i].desc;
-
-   if (ImGui::Combo(label, current_item, entries, size, popup_max_height_in_items))
-      ret = true;
-   else
-      ret = false;
-
-   return ret;
 }
 
 // setting checkbox
-bool setting_checkbox(Setting<bool>* setting)
+bool SettingCheckbox(Setting<bool>* setting)
 {
    std::string label(setting->GetName());
    label = label + "_label";
@@ -88,7 +92,7 @@ bool setting_checkbox(Setting<bool>* setting)
    desc = desc + "_desc";
 
    bool ret = ImGui::Checkbox(_(label.c_str()), setting->GetPtr());
-   tooltip(_(desc.c_str()));
+   Widgets::Tooltip(_(desc.c_str()));
 
    if (ret)
       setting->SetChanged();
@@ -96,8 +100,11 @@ bool setting_checkbox(Setting<bool>* setting)
    return ret;
 }
 
+}  // namespace Widgets
+
 // TODO: finish this up
 // rudimentary file manager
+#if 0
 void file_manager(const char* dir_left, const char* dir_right)
 {
    static int padding = ImGui::GetStyle().WindowPadding.x;
@@ -128,7 +135,7 @@ void file_manager(const char* dir_left, const char* dir_right)
          else
          {
             ImGui::PushID("left");
-            if (file_list("", &index_left, list_left, 10))
+            if (FileList("", &index_left, list_left, 10))
             {
                fill_pathname_join(cur_left, old_left, list_left->file_names[index_left], sizeof(cur_left));
                if (path_is_directory(cur_left))
@@ -151,7 +158,7 @@ void file_manager(const char* dir_left, const char* dir_right)
          else
          {
             ImGui::PushID("right");
-            if (file_list("", &index_right, list_right, 10))
+            if (FileList("", &index_right, list_right, 10))
             {
                fill_pathname_join(cur_right, old_right, list_right->file_names[index_right], sizeof(cur_right));
                if (path_is_directory(cur_right))
@@ -190,3 +197,4 @@ void file_manager(const char* dir_left, const char* dir_right)
       }
    }
 }
+#endif

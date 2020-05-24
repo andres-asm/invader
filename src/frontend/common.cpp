@@ -8,6 +8,7 @@ const char* glsl_version;
 SDL_Window* invader_window = NULL;
 SDL_GLContext invader_context = NULL;
 
+// TODO: ifdef this for other possible backends, OpenGL only for now
 bool create_window(const char* app_name, unsigned width, unsigned height)
 {
    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_EVENTS | SDL_INIT_AUDIO | SDL_INIT_GAMECONTROLLER) == -1)

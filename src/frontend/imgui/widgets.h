@@ -6,13 +6,18 @@
 
 #include "settings.h"
 
-void tooltip(const char* desc);
-bool file_list(const char* label, int* current_item, file_list_t* list, int popup_max_height_in_items);
-bool string_list_combo(const char* label, int* current_item, struct string_list* list, int popup_max_height_in_items);
-bool controller_combo(
+namespace Widgets
+{
+// generic widgets
+void Tooltip(const char* desc);
+bool FileList(const char* label, int* current_item, file_list_t* list, int popup_max_height_in_items);
+bool StringListCombo(const char* label, int* current_item, struct string_list* list, int popup_max_height_in_items);
+bool ControllerTypesCombo(
    const char* label, int* current_item, const controller_description_t* list, size_t size,
    int popup_max_height_in_items);
 
-bool setting_checkbox(Setting<bool>* setting);
+// setting widgets
+bool SettingCheckbox(Setting<bool>* setting);
+}  // namespace Widgets
 
 #endif

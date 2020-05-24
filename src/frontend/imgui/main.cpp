@@ -213,7 +213,7 @@ void invader()
    controller->Update();
    render_frontend_input_device_state();
 
-   if (setting_checkbox(video_fullscreen))
+   if (Widgets::SettingCheckbox(video_fullscreen))
       set_fullscreen_mode(video_fullscreen->GetValue(), true);
 
    ImGui::End();

@@ -5,7 +5,7 @@
 #include <libintl.h>
 #include <locale.h>
 
-// TODO: ifdef this for other possible backends
+// TODO: ifdef this for other possible backends, OpenGL only for now
 // GLEW
 #include <GL/glew.h>
 #include <SDL2/SDL.h>

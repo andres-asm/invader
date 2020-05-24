@@ -15,9 +15,6 @@ GamePad::GamePad()
 
 bool GamePad::Initialize(void)
 {
-   // TODO: remove this, it's done elsewhere
-   // SDL_Init(SDL_INIT_GAMECONTROLLER);
-
    // load mappings from file
    int entries = SDL_GameControllerAddMappingsFromFile("gamecontrollerdb.txt");
    if (entries == -1)

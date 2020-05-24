@@ -5,13 +5,13 @@
 
 extern toml::table settings;
 
-void settings_init(const char* path);
+void settings_init(std::string path);
 
 template <class T>
 class Setting
 {
 private:
-   const char* name;
+   std::string name;
    T data;
    T min;
    T max;
@@ -21,22 +21,22 @@ private:
    bool changed;
 
 public:
-   Setting<T>(const char* name, T data)
+   Setting<T>(std::string name, T data)
    {
-      this->name = strdup(name);
+      this->name = name;
       this->data = data;
    };
 
-   Setting<T>(const char* name, T data, T def)
+   Setting<T>(std::string name, T data, T def)
    {
-      this->name = strdup(name);
+      this->name = name;
       this->data = data;
       this->def = def;
    };
 
-   Setting<T>(const char* name, T data, T min, T max, T step, T def)
+   Setting<T>(std::string name, T data, T min, T max, T step, T def)
    {
-      this->name = strdup(name);
+      this->name = name;
       this->data = data;
       this->min = min;
       this->min = max;
@@ -48,7 +48,7 @@ public:
    T* GetPtr() { return &data; }
    void SetChanged() { changed = true; }
 
-   const char* GetName() { return name; }
+   std::string GetName() { return name; }
 };
 
 extern Setting<bool>* video_fullscreen;
