@@ -6,6 +6,24 @@
 extern toml::table settings;
 
 void settings_init(const char* path);
-auto settings_get_value(const char* name);
+
+template <class T>
+class Setting
+{
+   const char* name;
+   T data;
+   T min;
+   T max;
+   T step;
+   T def;
+
+public:
+   Setting<T>(const char* name, T data)
+   {
+      this->name = name;
+      this->data = data;
+   };
+   T GetValue() { return data; }
+};
 
 #endif

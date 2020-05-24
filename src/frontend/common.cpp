@@ -1,5 +1,4 @@
 #include "common.h"
-#include "settings.h"
 #include "util.h"
 
 static const char* tag = "[common]";
@@ -65,6 +64,16 @@ bool create_window(const char* app_name, unsigned width, unsigned height)
    }
 
    return true;
+}
+
+void set_fullscreen_mode(bool fullscreen, bool desktop)
+{
+   if (fullscreen && desktop)
+      SDL_SetWindowFullscreen(invader_window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+   else if (fullscreen)
+      SDL_SetWindowFullscreen(invader_window, SDL_WINDOW_FULLSCREEN);
+   else
+      SDL_SetWindowFullscreen(invader_window, 0);
 }
 
 void destroy_window()

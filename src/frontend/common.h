@@ -11,6 +11,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 
+#include "settings.h"
 #include "util.h"
 
 #define _(str) gettext(str)
@@ -37,6 +38,7 @@ extern const char* glsl_version;
 
 bool create_window(const char* app_name, unsigned width, unsigned height);
 void destroy_window();
+void set_fullscreen_mode(bool fullscreen, bool desktop);
 
 SDL_GLContext get_context();
 SDL_Window* get_window();

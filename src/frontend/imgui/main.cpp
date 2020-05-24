@@ -5,6 +5,7 @@
 
 #include "input/gamepad.h"
 #include "kami.h"
+#include "widgets.h"
 
 static const char* tag = "[main]";
 static const char* app_name = "invader";
@@ -211,6 +212,9 @@ void invader()
    }
    controller->Update();
    render_frontend_input_device_state();
+
+   // ImGui::Checkbox("Video fullscreen", &video_fullscreen);
+   tooltip(_("NAAA"));
 
    ImGui::End();
 }
@@ -455,12 +459,12 @@ int main(int argc, char* argv[])
    init_localization();
    common_config_load();
 
-   // return 0;
-
    if (!create_window(app_name, WINDOW_WIDTH, WINDOW_HEIGHT))
       return -1;
    invader_window = get_window();
    invader_context = get_context();
+
+   // set_fullscreen_mode(video_fullscreen, true);
 
    glsl_version = get_glsl_version();
 
