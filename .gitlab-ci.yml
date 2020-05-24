@@ -1,7 +1,0 @@
-before_script:
-  - git submodule sync --recursive
-  - git submodule update --init --recursive
-  - git clean -xdf
-build:
-  script:
-    - make -j2 -f Makefile
