@@ -15,6 +15,8 @@ SOURCES_C = \
 
 ifeq ($(WITH_GUI), imgui)
    SOURCES_CXX += \
+         ./deps/imgui/examples/imgui_impl_opengl3.cpp \
+         ./deps/imgui/examples/imgui_impl_sdl.cpp \
          ./deps/imgui/imgui_demo.cpp \
          ./deps/imgui/imgui_draw.cpp \
          ./deps/imgui/imgui_widgets.cpp \
@@ -23,8 +25,6 @@ ifeq ($(WITH_GUI), imgui)
          ./src/common/settings.cpp \
          ./src/common/util.cpp \
          ./src/frontend/common.cpp \
-         ./src/frontend/imgui/imgui_impl_opengl3.cpp \
-         ./src/frontend/imgui/imgui_impl_sdl.cpp \
          ./src/frontend/imgui/kami_asset_opengl3.cpp \
          ./src/frontend/imgui/kami_imgui_opengl3.cpp \
          ./src/frontend/imgui/main.cpp \
@@ -40,4 +40,4 @@ endif
 SOURCES_LOCALIZATION = \
       ./src/frontend/intl/settings.def.c
 
-INCLUDE += -I./deps/libretro/include -I./src/common -I./src/backend/ -I./src/frontend/ -I./deps/stb
+INCLUDE += -I./deps/libretro/include -I./src/common -I./src/backend/ -I./src/frontend/ -I./deps/stb -I./deps/imgui/examples `pkg-config --cflags-only-I sdl2`
