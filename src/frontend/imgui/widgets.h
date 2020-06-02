@@ -16,8 +16,6 @@ bool ControllerTypesCombo(
    const char* label, int* current_item, const controller_description_t* list, size_t size,
    int popup_max_height_in_items);
 
-// setting widgets
-bool SettingCheckbox(Setting<bool>* setting);
 }  // namespace Widgets
 
 #endif

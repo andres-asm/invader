@@ -107,5 +107,4 @@ const char* get_glsl_version()
 void common_config_load()
 {
    settings_init("settings.toml");
-   // settings_get_value("fullscreen");
 }

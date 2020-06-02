@@ -213,7 +213,7 @@ void invader()
    controller->Update();
    render_frontend_input_device_state();
 
-   if (Widgets::SettingCheckbox(video_fullscreen))
+   if (video_fullscreen->Render())
       set_fullscreen_mode(video_fullscreen->GetValue(), true);
 
    ImGui::End();
@@ -460,7 +460,7 @@ int main(int argc, char* argv[])
    invader_window = get_window();
    invader_context = get_context();
 
-   // set_fullscreen_mode(video_fullscreen, true);
+   set_fullscreen_mode(video_fullscreen->GetValue(), true);
 
    glsl_version = get_glsl_version();
 

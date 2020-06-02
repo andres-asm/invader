@@ -81,29 +81,36 @@ void Tooltip(const char* desc)
       ImGui::EndTooltip();
    }
 }
-
-// setting checkbox
-bool SettingCheckbox(Setting<bool>* setting)
+/*
+bool SettingCheckbox::Draw(Setting<bool> setting)
 {
-   std::string label(setting->GetName());
-   label = label + "_label";
+   this = &setting;
+   std::string label = m_name + "_label";
+   std::string desc = m_name + "_desc";
 
-   std::string desc(setting->GetName());
-   desc = desc + "_desc";
-
-   bool ret = ImGui::Checkbox(_(label.c_str()), setting->GetPtr());
+   bool ret = ImGui::Checkbox(_(label.c_str()), &m_value);
    Widgets::Tooltip(_(desc.c_str()));
 
-   if (ret)
-      setting->SetChanged();
+   return ret;
+}
+*/
+
+}  // namespace Widgets
+
+bool Setting<bool>::Render()
+{
+   std::string label = m_name + "_label";
+   std::string desc = m_name + "_desc";
+
+   bool ret = ImGui::Checkbox(_(label.c_str()), &m_value);
+   Widgets::Tooltip(_(desc.c_str()));
 
    return ret;
 }
 
-}  // namespace Widgets
-
 // TODO: finish this up
 // rudimentary file manager
+
 #if 0
 void file_manager(const char* dir_left, const char* dir_right)
 {
