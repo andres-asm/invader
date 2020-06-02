@@ -4,11 +4,9 @@
 #include "common.h"
 #include "kami.h"
 
-#include "settings.h"
-
+// generic widgets
 namespace Widgets
 {
-// generic widgets
 void Tooltip(const char* desc);
 bool FileList(const char* label, int* current_item, file_list_t* list, int popup_max_height_in_items);
 bool StringListCombo(const char* label, int* current_item, struct string_list* list, int popup_max_height_in_items);

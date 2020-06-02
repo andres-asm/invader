@@ -28,6 +28,7 @@ ifeq ($(WITH_GUI), imgui)
          ./frontend/imgui/kami_asset_opengl3.cpp \
          ./frontend/imgui/kami_imgui_opengl3.cpp \
          ./frontend/imgui/main.cpp \
+         ./frontend/imgui/settings_imgui.cpp \
          ./frontend/imgui/widgets.cpp \
          ./frontend/input/gamepad.cpp \
          ./frontend/kami.cpp
