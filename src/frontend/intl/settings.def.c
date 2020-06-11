@@ -26,6 +26,10 @@ static void localization_strings()
    _("video_vsync_desc");
    _("video_fullscreen_label");
    _("video_fullscreen_desc");
+   _("video_fullscreen_windowed_label");
+   _("video_fullscreen_windowed_desc");
+   _("video_scale_mode_label");
+   _("video_scale_mode_desc");
 
    // audio
    _("audio_enable_label");
@@ -121,3 +125,9 @@ static void localization_strings()
 
    // long_labels
    _("file_selector_label");
+
+   // scale modes
+   _("scale_mode_off_label");
+   _("scale_mode_full_label");
+   _("scale_mode_integer_label");
+   _("scale_mode_integer_overscale_label");
