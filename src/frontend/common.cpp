@@ -77,6 +77,11 @@ void set_fullscreen_mode(bool fullscreen, bool desktop)
       SDL_SetWindowFullscreen(invader_window, 0);
 }
 
+void set_vsync_mode(bool vsync)
+{
+   SDL_GL_SetSwapInterval(vsync ? 1 : 0);
+}
+
 void destroy_window()
 {
    SDL_GL_DeleteContext(invader_context);

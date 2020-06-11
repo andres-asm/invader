@@ -38,7 +38,9 @@ extern const char* glsl_version;
 
 bool create_window(const char* app_name, unsigned width, unsigned height);
 void destroy_window();
+
 void set_fullscreen_mode(bool fullscreen, bool desktop);
+void set_vsync_mode(bool vsync);
 
 SDL_GLContext get_context();
 SDL_Window* get_window();

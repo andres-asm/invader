@@ -11,6 +11,21 @@ extern toml::table settings;
 
 void settings_init(std::string path);
 
+enum scale_modes_enum
+{
+   SCALE_MODE_OFF = 0,
+   SCALE_MODE_FULL,
+   SCALE_MODE_INTEGER,
+   SCALE_MODE_INTEGER_OVERSCALE,
+   SCALE_MODE_LAST,
+};
+
+typedef struct scale_mode
+{
+   std::string m_name;
+   int m_mode;
+} scale_mode_t;
+
 template <typename T>
 class SettingBase
 {
@@ -71,6 +86,22 @@ public:
    bool Render();
 };
 
+template <>
+class Setting<scale_mode_t>: public SettingBase<scale_mode_t>
+{
+public:
+   Setting(std::string name, scale_mode_t value, scale_mode_t def)
+      : SettingBase<scale_mode_t>(std::move(name), std::move(value), std::move(def))
+   { }
+
+   bool Render();
+};
+
+extern scale_mode_t scale_modes[];
+
 extern Setting<bool>* video_fullscreen;
+extern Setting<bool>* video_fullscreen_windowed;
+extern Setting<bool>* video_vsync;
+extern Setting<scale_mode_t>* video_scale_mode;
 
 #endif

@@ -213,8 +213,15 @@ void invader()
    controller->Update();
    render_frontend_input_device_state();
 
-   if (video_fullscreen->Render())
-      set_fullscreen_mode(video_fullscreen->GetValue(), true);
+   if (video_fullscreen->Render() || video_fullscreen_windowed->Render())
+      set_fullscreen_mode(video_fullscreen->GetValue(), video_fullscreen_windowed->GetValue());
+
+   if (video_vsync->Render())
+      set_vsync_mode(video_vsync->GetValue());
+
+   if (video_scale_mode->Render())
+   {
+   }
 
    ImGui::End();
 }
@@ -340,17 +347,9 @@ void framebuffer_setup()
    glBindVertexArray(vao);
 }
 
-enum scale
-{
-   SCALE_OFF = 0,
-   SCALE_FULL,
-   SCALE_INTEGER_UP,
-   SCALE_INTEGER_DOWN,
-};
-
 void framebuffer_render()
 {
-   unsigned integer_scale = SCALE_INTEGER_DOWN;
+   unsigned integer_scale = video_scale_mode->GetValue().m_mode;
 
    core_info* info = kami1->GetCoreInfo();
    float aspect = info->av_info.geometry.aspect_ratio;
@@ -361,7 +360,7 @@ void framebuffer_render()
    if (kami1_output)
       switch (integer_scale)
       {
-         case SCALE_OFF:
+         case SCALE_MODE_OFF:
          {
             height = base_height;
             width = height * aspect;
@@ -370,7 +369,7 @@ void framebuffer_render()
             y = (WINDOW_HEIGHT - height) / 2;
             break;
          }
-         case SCALE_FULL:
+         case SCALE_MODE_FULL:
          {
             height = WINDOW_HEIGHT;
             width = height * aspect;
@@ -378,7 +377,7 @@ void framebuffer_render()
             y = 0;
             break;
          }
-         case SCALE_INTEGER_UP:
+         case SCALE_MODE_INTEGER_OVERSCALE:
          {
             unsigned scale = WINDOW_HEIGHT / base_height + (WINDOW_HEIGHT % base_height != 0);
 
@@ -390,7 +389,7 @@ void framebuffer_render()
 
             break;
          }
-         case SCALE_INTEGER_DOWN:
+         case SCALE_MODE_INTEGER:
          {
             unsigned scale = WINDOW_HEIGHT / base_height;
             height = base_height * scale;
@@ -460,7 +459,7 @@ int main(int argc, char* argv[])
    invader_window = get_window();
    invader_context = get_context();
 
-   set_fullscreen_mode(video_fullscreen->GetValue(), true);
+   set_fullscreen_mode(video_fullscreen->GetValue(), video_fullscreen_windowed->GetValue());
 
    glsl_version = get_glsl_version();
 
