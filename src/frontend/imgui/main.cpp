@@ -28,6 +28,9 @@ std::vector<Asset> gamead_assets;
 
 GamePad* controller;
 
+SDL_AudioSpec want, have;
+SDL_AudioDeviceID device;
+
 const char* device_gamepad_asset_names[] = {
    "base.png",         "b.png",     "y.png",  "select.png", "start.png",       "up.png",          "down.png",
    "left.png",         "right.png", "a.png",  "x.png",      "l.png",           "r.png",           "l2.png",
@@ -409,6 +412,56 @@ void framebuffer_render()
       glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
+bool audio_setup()
+{
+   unsigned i = 0;
+   int devices = SDL_GetNumAudioDevices(0);
+
+   for (i = 0; i < SDL_GetNumAudioDrivers(); ++i)
+   {
+      logger(LOG_DEBUG, tag, "Audio driver %d: %s\n", i, SDL_GetAudioDriver(i));
+   }
+
+   logger(LOG_INFO, tag, "current audio driver %s\n", SDL_GetCurrentAudioDriver());
+   logger(LOG_INFO, tag, "audio devices: %d\n", devices);
+
+   if (devices >= 0)
+   {
+      for (i = 0; i < devices; i++)
+         logger(LOG_INFO, tag, "device %d: %s\n", i, SDL_GetAudioDeviceName(i, 0));
+   }
+
+   SDL_zero(want);
+
+   want.freq = 48000;
+   want.format = AUDIO_S16;
+   want.channels = 2;
+   want.samples = 4096;
+   want.callback = NULL;
+
+   logger(
+      LOG_INFO, tag, "want - frequency: %d format: f %d s %d be %d sz %d channels: %d samples: %d\n", want.freq,
+      SDL_AUDIO_ISFLOAT(want.format), SDL_AUDIO_ISSIGNED(want.format), SDL_AUDIO_ISBIGENDIAN(want.format),
+      SDL_AUDIO_BITSIZE(want.format), want.channels, want.samples);
+   device = SDL_OpenAudioDevice(NULL, 0, &want, &have, 0);
+   if (!device)
+   {
+      logger(LOG_ERROR, tag, "failed to open audio device: %s\n", SDL_GetError());
+      SDL_Quit();
+      return false;
+   }
+   else
+      logger(LOG_INFO, tag, "opened audio device: %s\n", SDL_GetAudioDeviceName(0, 0));
+
+   logger(
+      LOG_INFO, tag, "have - frequency: %d format: f %d s %d be %d sz %d channels: %d samples: %d\n", have.freq,
+      SDL_AUDIO_ISFLOAT(have.format), SDL_AUDIO_ISSIGNED(have.format), SDL_AUDIO_ISBIGENDIAN(have.format),
+      SDL_AUDIO_BITSIZE(have.format), have.channels, have.samples);
+
+   SDL_PauseAudioDevice(device, 0);
+   return true;
+}
+
 void imgui_draw_frame()
 {
    SDL_Event e;
@@ -478,6 +531,7 @@ int main(int argc, char* argv[])
    }
 
    framebuffer_setup();
+   audio_setup();
 
    while (!quit)
    {

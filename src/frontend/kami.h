@@ -8,6 +8,7 @@
 #include "common.h"
 #include "libretro/piccolo.h"
 
+
 enum device_gamepad_enum
 {
    GAMEPAD_B = RETRO_DEVICE_ID_JOYPAD_B,
@@ -98,6 +99,5 @@ public:
 
 // TODO: reimplement these
 size_t kami_render_audio(const int16_t* data, size_t frames);
-bool kami_init_audio();
 
 #endif
