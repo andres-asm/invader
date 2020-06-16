@@ -235,11 +235,7 @@ public:
    // constructor
    PiccoloWrapper() { }
    // destructor
-   ~PiccoloWrapper()
-   {
-      piccolo->set_instance_ptr(piccolo);
-      delete piccolo;
-   }
+   ~PiccoloWrapper() { piccolo->set_instance_ptr(piccolo); }
 
    // load core for use
    bool load_game(const char* core_file_name, const char* game_file_name, bool bitmasks)

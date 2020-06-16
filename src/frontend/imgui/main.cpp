@@ -28,9 +28,6 @@ std::vector<Asset> gamead_assets;
 
 GamePad* controller;
 
-SDL_AudioSpec want, have;
-SDL_AudioDeviceID device;
-
 const char* device_gamepad_asset_names[] = {
    "base.png",         "b.png",     "y.png",  "select.png", "start.png",       "up.png",          "down.png",
    "left.png",         "right.png", "a.png",  "x.png",      "l.png",           "r.png",           "l2.png",
@@ -247,221 +244,6 @@ void imgui_setup()
    io.Fonts->AddFontDefault();
 }
 
-const char* vertex_shader_source =
-   "#version 330 core\n"
-   "layout (location = 0) in vec3 aPos;\n"
-   "layout (location = 1) in vec3 aColor;\n"
-   "layout (location = 2) in vec2 aTexCoord;\n"
-   "out vec3 ourColor;\n"
-   "out vec2 TexCoord;\n"
-   "void main()\n"
-   "{\n"
-   "    gl_Position = vec4(aPos, 1.0);\n"
-   "    ourColor = aColor;\n"
-   "    TexCoord = aTexCoord;\n"
-   "}\n";
-
-const char* fragment_shader_source =
-   "#version 330 core\n"
-   "out vec4 FragColor;\n"
-   "in vec3 ourColor;\n"
-   "in vec2 TexCoord;\n"
-   "uniform sampler2D ourTexture;\n"
-   "void main()\n"
-   "{\n"
-   "    FragColor = texture(ourTexture, TexCoord);\n"
-   "}\n";
-
-void framebuffer_setup()
-{
-   int success;
-   char infoLog[512];
-
-   // vertex shader
-   int vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-   glShaderSource(vertex_shader, 1, &vertex_shader_source, NULL);
-   glCompileShader(vertex_shader);
-
-   glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
-   if (!success)
-   {
-      glGetShaderInfoLog(vertex_shader, 512, NULL, infoLog);
-      logger(LOG_DEBUG, tag, "vertex shader compilation error: %s\n", infoLog);
-   }
-
-   // fragment shader
-   int fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-   glShaderSource(fragment_shader, 1, &fragment_shader_source, NULL);
-   glCompileShader(fragment_shader);
-
-   glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
-   if (!success)
-   {
-      glGetShaderInfoLog(fragment_shader, 512, NULL, infoLog);
-      logger(LOG_DEBUG, tag, "fragment shader compilation error: %s\n", infoLog);
-   }
-
-   // link shaders
-   int shader_program = glCreateProgram();
-   glAttachShader(shader_program, vertex_shader);
-   glAttachShader(shader_program, fragment_shader);
-   glLinkProgram(shader_program);
-
-   glGetProgramiv(shader_program, GL_LINK_STATUS, &success);
-   if (!success)
-   {
-      glGetProgramInfoLog(shader_program, 512, NULL, infoLog);
-      logger(LOG_DEBUG, tag, "shader program linking error: %s\n", infoLog);
-   }
-   glDeleteShader(vertex_shader);
-   glDeleteShader(fragment_shader);
-
-   float vertices[] = {1.0f, -1.0f, 0.0f,  1.0f,  0.0f, 0.0f,  1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
-                       0.0f, 1.0f,  0.0f,  1.0f,  0.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-                       0.0f, 0.0f,  -1.0f, -1.0f, 0.0f, 1.0f,  1.0f, 0.0f, 0.0f, 1.0f};
-   unsigned int indices[] = {0, 1, 3, 1, 2, 3};
-
-   unsigned int vbo, vao, ebo;
-   glGenVertexArrays(1, &vao);
-   glGenBuffers(1, &vbo);
-   glGenBuffers(1, &ebo);
-
-   glBindVertexArray(vao);
-
-   glBindBuffer(GL_ARRAY_BUFFER, vbo);
-   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-   // position attributes
-   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-   glEnableVertexAttribArray(0);
-   // color attributes
-   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-   glEnableVertexAttribArray(1);
-   // texture coordinate attributes
-   glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-   glEnableVertexAttribArray(2);
-   glActiveTexture(GL_TEXTURE0);
-   glBindTexture(GL_TEXTURE_2D, kami1_output);
-
-   glUseProgram(shader_program);
-   glBindVertexArray(vao);
-}
-
-void framebuffer_render()
-{
-   unsigned integer_scale = video_scale_mode->GetValue().m_mode;
-
-   core_info* info = kami1->GetCoreInfo();
-   float aspect = info->av_info.geometry.aspect_ratio;
-   int width, height, x, y;
-
-   int base_height = info->av_info.geometry.base_height;
-
-   if (kami1_output)
-      switch (integer_scale)
-      {
-         case SCALE_MODE_OFF:
-         {
-            height = base_height;
-            width = height * aspect;
-
-            x = (WINDOW_WIDTH - width) / 2;
-            y = (WINDOW_HEIGHT - height) / 2;
-            break;
-         }
-         case SCALE_MODE_FULL:
-         {
-            height = WINDOW_HEIGHT;
-            width = height * aspect;
-            x = (WINDOW_WIDTH - width) / 2;
-            y = 0;
-            break;
-         }
-         case SCALE_MODE_INTEGER_OVERSCALE:
-         {
-            unsigned scale = WINDOW_HEIGHT / base_height + (WINDOW_HEIGHT % base_height != 0);
-
-            height = base_height * scale;
-            width = height * aspect;
-
-            x = (WINDOW_WIDTH - width) / 2;
-            y = (abs(WINDOW_HEIGHT - height) / 2) * -1;
-
-            break;
-         }
-         case SCALE_MODE_INTEGER:
-         {
-            unsigned scale = WINDOW_HEIGHT / base_height;
-            height = base_height * scale;
-            width = height * aspect;
-
-            x = (WINDOW_WIDTH - width) / 2;
-            y = (WINDOW_HEIGHT - height) / 2;
-            break;
-         }
-         default:
-            break;
-      }
-
-   glViewport(x, y, width, height);
-   // TODO: setup viewport
-   if (kami1_output)
-      glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-}
-
-bool audio_setup()
-{
-   unsigned i = 0;
-   int devices = SDL_GetNumAudioDevices(0);
-
-   for (i = 0; i < SDL_GetNumAudioDrivers(); ++i)
-   {
-      logger(LOG_DEBUG, tag, "Audio driver %d: %s\n", i, SDL_GetAudioDriver(i));
-   }
-
-   logger(LOG_INFO, tag, "current audio driver %s\n", SDL_GetCurrentAudioDriver());
-   logger(LOG_INFO, tag, "audio devices: %d\n", devices);
-
-   if (devices >= 0)
-   {
-      for (i = 0; i < devices; i++)
-         logger(LOG_INFO, tag, "device %d: %s\n", i, SDL_GetAudioDeviceName(i, 0));
-   }
-
-   SDL_zero(want);
-
-   want.freq = 48000;
-   want.format = AUDIO_S16;
-   want.channels = 2;
-   want.samples = 4096;
-   want.callback = NULL;
-
-   logger(
-      LOG_INFO, tag, "want - frequency: %d format: f %d s %d be %d sz %d channels: %d samples: %d\n", want.freq,
-      SDL_AUDIO_ISFLOAT(want.format), SDL_AUDIO_ISSIGNED(want.format), SDL_AUDIO_ISBIGENDIAN(want.format),
-      SDL_AUDIO_BITSIZE(want.format), want.channels, want.samples);
-   device = SDL_OpenAudioDevice(NULL, 0, &want, &have, 0);
-   if (!device)
-   {
-      logger(LOG_ERROR, tag, "failed to open audio device: %s\n", SDL_GetError());
-      SDL_Quit();
-      return false;
-   }
-   else
-      logger(LOG_INFO, tag, "opened audio device: %s\n", SDL_GetAudioDeviceName(0, 0));
-
-   logger(
-      LOG_INFO, tag, "have - frequency: %d format: f %d s %d be %d sz %d channels: %d samples: %d\n", have.freq,
-      SDL_AUDIO_ISFLOAT(have.format), SDL_AUDIO_ISSIGNED(have.format), SDL_AUDIO_ISBIGENDIAN(have.format),
-      SDL_AUDIO_BITSIZE(have.format), have.channels, have.samples);
-
-   SDL_PauseAudioDevice(device, 0);
-   return true;
-}
-
 void imgui_draw_frame()
 {
    SDL_Event e;
@@ -496,7 +278,9 @@ void imgui_draw_frame()
    glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
    glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
    glClear(GL_COLOR_BUFFER_BIT);
-   framebuffer_render();
+
+   if (kami1_output)
+      render_framebuffer(kami1->GetCoreInfo());
    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
    SDL_GL_SwapWindow(invader_window);
 }
@@ -504,11 +288,12 @@ void imgui_draw_frame()
 int main(int argc, char* argv[])
 {
    logger_set_level(LOG_DEBUG);
+
    init_localization();
    common_config_load();
 
    if (!create_window(app_name, WINDOW_WIDTH, WINDOW_HEIGHT))
-      return -1;
+      goto shutdown;
    invader_window = get_window();
    invader_context = get_context();
 
@@ -519,25 +304,30 @@ int main(int argc, char* argv[])
    imgui_setup();
    set_default_style();
 
+   if (!create_framebuffer(kami1_output))
+      goto shutdown;
+   if (!create_audio_device())
+      goto shutdown;
+
    kami1 = new Kami();
-   kami1->CoreListInit("./cores");
+   if (!kami1->CoreListInit("./cores"))
+      goto shutdown;
    kami1->TextureListInit(asset_dir);
 
    if (second_instance)
    {
       kami2 = new Kami();
-      kami2->CoreListInit("./cores");
+      if (!kami2->CoreListInit("./cores"))
+         goto shutdown;
       kami2->TextureListInit(asset_dir);
    }
-
-   framebuffer_setup();
-   audio_setup();
 
    while (!quit)
    {
       imgui_draw_frame();
    }
 
+shutdown:
    logger(LOG_DEBUG, tag, "shutting down\n");
    delete kami1;
    if (second_instance)

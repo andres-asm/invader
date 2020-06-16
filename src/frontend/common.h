@@ -5,12 +5,13 @@
 #include <libintl.h>
 #include <locale.h>
 
-// TODO: ifdef this for other possible backends, OpenGL only for now
-// GLEW
+// TODO: abstract this for other possible backends, OpenGL only for now
+
 #include <GL/glew.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 
+#include "libretro/piccolo.h"
 #include "settings.h"
 #include "util.h"
 
@@ -36,17 +37,27 @@ extern SDL_GLContext invader_context;
 
 extern const char* glsl_version;
 
-bool create_window(const char* app_name, unsigned width, unsigned height);
-void destroy_window();
-
-void set_fullscreen_mode(bool fullscreen, bool desktop);
-void set_vsync_mode(bool vsync);
-
 SDL_GLContext get_context();
 SDL_Window* get_window();
 
 const char* get_glsl_version();
 
+// window creation
+bool create_window(const char* app_name, unsigned width, unsigned height);
+void destroy_window();
+
+// video framebuffer creation
+bool create_framebuffer(int texture);
+void render_framebuffer(core_info_t* info);
+
+// audio device creation
+bool create_audio_device();
+
+// video utilities
+void set_fullscreen_mode(bool fullscreen, bool desktop);
+void set_vsync_mode(bool vsync);
+
+// configuration management
 void common_config_load();
 
 #endif
