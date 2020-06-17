@@ -20,7 +20,7 @@ Kami* current_kami_instance;
 ImVec4 clearColor;
 ImGuiIO io;
 
-std::vector<Asset> gamead_assets;
+std::vector<Asset> gamepad_assets;
 
 GamePad* controller;
 
@@ -152,11 +152,11 @@ void render_frontend_input_device_state()
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    Asset asset;
    GLuint base, result;
-   asset = gamead_assets.at(0);
+   asset = gamepad_assets.at(0);
    base = asset.get_texture();
 
-   unsigned width = gamead_assets[0].get_width() / 2;
-   unsigned height = width / gamead_assets[0].get_aspect();
+   unsigned width = gamepad_assets[0].get_width() / 2;
+   unsigned height = width / gamepad_assets[0].get_aspect();
 
    ImVec2 p = ImGui::GetCursorScreenPos();
    ImGui::Image((void*)(intptr_t)base, ImVec2(width, height));
@@ -168,12 +168,12 @@ void render_frontend_input_device_state()
       if (i != GAMEPAD_L2 && i != GAMEPAD_R2)
       {
          if (controller->GetButtonState((SDL_GameControllerButton)lut[i].sdl_id))
-            asset = gamead_assets.at(i + 1);
+            asset = gamepad_assets.at(i + 1);
       }
       else
       {
          if (controller->GetAxisValue((SDL_GameControllerAxis)lut[i].sdl_id))
-            asset = gamead_assets.at(i + 1);
+            asset = gamepad_assets.at(i + 1);
       }
       result = asset.get_texture();
       ImGui::GetWindowDrawList()->AddImage(
@@ -183,7 +183,7 @@ void render_frontend_input_device_state()
    for (unsigned i = GAMEPAD_LEFT_STICK_X; i < GAMEPAD_LAST; i++)
    {
       if (abs(controller->GetAxisValue((SDL_GameControllerAxis)lut[i].sdl_id)) > 10000)
-         asset = gamead_assets.at(i + 1);
+         asset = gamepad_assets.at(i + 1);
       result = asset.get_texture();
       ImGui::GetWindowDrawList()->AddImage(
          (void*)(intptr_t)result, p, ImVec2(p.x + width, p.y + height), ImVec2(0, 0), ImVec2(1, 1));

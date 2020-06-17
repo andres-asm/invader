@@ -12,7 +12,7 @@
 
 static const char* tag = "[main]";
 
-extern std::vector<Asset> gamead_assets;
+extern std::vector<Asset> gamepad_assets;
 extern GamePad* controller;
 
 void RenderBackendInputState(Kami* kami, unsigned port, unsigned width, unsigned height)
@@ -20,7 +20,7 @@ void RenderBackendInputState(Kami* kami, unsigned port, unsigned width, unsigned
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    Asset asset;
    GLuint base, result;
-   asset = gamead_assets.at(0);
+   asset = gamepad_assets.at(0);
    base = asset.get_texture();
 
    ImVec2 p = ImGui::GetCursorScreenPos();
@@ -32,7 +32,7 @@ void RenderBackendInputState(Kami* kami, unsigned port, unsigned width, unsigned
    {
       if (true)
       {
-         asset = gamead_assets.at(i + 1);
+         asset = gamepad_assets.at(i + 1);
          result = asset.get_texture();
          if ((state.buttons & (1 << i)) >> i)
             ImGui::GetWindowDrawList()->AddImage(
@@ -50,7 +50,7 @@ void Kami::TextureListInit(const char* path)
       fill_pathname_join(filename, path, device_gamepad_asset_names[i], sizeof(filename));
       Asset* asset = new Asset();
       asset->Load(filename);
-      gamead_assets.push_back(*asset);
+      gamepad_assets.push_back(*asset);
    }
 }
 
@@ -232,8 +232,8 @@ void Kami::Main(const char* title)
             if (ImGui::CollapsingHeader(_("core_current_input_label"), ImGuiTreeNodeFlags_None))
             {
                // TODO: remove this, asset rendering example
-               // gamead_assets[0].Render(width, height);
-               // gamead_assets[1].Render(width, height);
+               // gamepad_assets[0].Render(width, height);
+               // gamepad_assets[1].Render(width, height);
 
                ImGui::Indent(ImGui::GetTreeNodeToLabelSpacing());
 
@@ -244,8 +244,8 @@ void Kami::Main(const char* title)
                   if (ImGui::CollapsingHeader(buf, ImGuiTreeNodeFlags_None))
                   {
                      ImGui::Columns(2, "", false);
-                     unsigned width = gamead_assets[0].get_width() / 2;
-                     unsigned height = width / gamead_assets[0].get_aspect();
+                     unsigned width = gamepad_assets[0].get_width() / 2;
+                     unsigned height = width / gamepad_assets[0].get_aspect();
                      ImGui::SetColumnWidth(-1, width + ImGui::GetTreeNodeToLabelSpacing());
                      RenderBackendInputState(this, 0, width, height);
                      ImGui::NextColumn();
