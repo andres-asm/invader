@@ -16,4 +16,6 @@ bool ControllerTypesCombo(
 
 }  // namespace Widgets
 
+void texture_list_init(const char* path);
+
 #endif

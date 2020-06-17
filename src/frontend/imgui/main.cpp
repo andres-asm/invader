@@ -190,14 +190,19 @@ void render_frontend_input_device_state()
    }
 }
 
-void add_instance()
+bool add_instance()
 {
+   bool ret = false;
+
    Kami* new_instance;
    new_instance = new Kami();
 
-   new_instance->CoreListInit("./cores");
-   new_instance->TextureListInit(asset_dir);
-   kami_instances.push_back(new_instance);
+   ret = new_instance->CoreListInit("./cores");
+
+   if (ret)
+      kami_instances.push_back(new_instance);
+
+   return ret;
 }
 
 void invader()
@@ -289,6 +294,7 @@ void imgui_draw_frame()
    {
       std::string title = "Core ";
       title += std::to_string(i + 1);
+
       instance->Main(title.c_str());
       i++;
    }
@@ -300,7 +306,7 @@ void imgui_draw_frame()
    glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
    glClear(GL_COLOR_BUFFER_BIT);
 
-   if (current_kami_instance->GetCoreStatus() == CORE_STATUS_RUNNING)
+   if (current_kami_instance && current_kami_instance->GetCoreStatus() == CORE_STATUS_RUNNING)
       render_framebuffer(current_kami_instance->GetTextureData(), current_kami_instance->GetCoreInfo());
    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
    SDL_GL_SwapWindow(invader_window);
@@ -330,8 +336,12 @@ int main(int argc, char* argv[])
    if (!create_audio_device())
       goto shutdown;
 
-   add_instance();
-   current_kami_instance = kami_instances.at(0);
+   texture_list_init(asset_dir);
+
+   if (add_instance())
+      current_kami_instance = kami_instances.at(0);
+   else
+      current_kami_instance = NULL;
 
    while (!quit)
    {

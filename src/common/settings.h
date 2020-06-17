@@ -33,6 +33,7 @@ protected:
    T m_value{};
    T m_default{};
    std::string m_name{};
+   void (*setting_event)(void);
 
 public:
    SettingBase(std::string name, T value, T def)

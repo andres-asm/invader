@@ -4,6 +4,8 @@ static const char* tag = "[invader]";
 
 bool Kami::CoreListInit(const char* path)
 {
+   bool ret = false;
+
    char buf[PATH_MAX_LENGTH];
    bool peeked = false;
    file_list_t* core_list = (file_list_t*)calloc(1, sizeof(file_list_t));
@@ -15,39 +17,48 @@ bool Kami::CoreListInit(const char* path)
 
    piccolo = new PiccoloWrapper();
    logger(LOG_DEBUG, tag, "core count: %d\n", core_list->file_count);
-   for (unsigned i = 0; i < core_list->file_count; i++)
+
+   if (core_list->file_count > 0)
    {
-      snprintf(buf, sizeof(buf), "%s/%s", path, core_list->file_names[i]);
-      peeked = piccolo->peek_core(buf);
-      if (peeked)
+      for (unsigned i = 0; i < core_list->file_count; i++)
       {
-         core_info_t* info = piccolo->get_info();
+         snprintf(buf, sizeof(buf), "%s/%s", path, core_list->file_names[i]);
+         peeked = piccolo->peek_core(buf);
+         if (peeked)
+         {
+            core_info_t* info = piccolo->get_info();
 
-         strlcpy(core_info_list[i].file_name, info->file_name, sizeof(core_info_list[i].file_name));
-         strlcpy(core_info_list[i].core_name, info->core_name, sizeof(core_info_list[i].core_name));
-         strlcpy(core_info_list[i].core_version, info->core_version, sizeof(core_info_list[i].core_version));
-         strlcpy(core_info_list[i].extensions, info->extensions, sizeof(core_info_list[i].extensions));
-         core_info_list[i].supports_no_game = info->supports_no_game;
-         core_info_list[i].block_extract = info->block_extract;
-         core_info_list[i].full_path = info->full_path;
+            strlcpy(core_info_list[i].file_name, info->file_name, sizeof(core_info_list[i].file_name));
+            strlcpy(core_info_list[i].core_name, info->core_name, sizeof(core_info_list[i].core_name));
+            strlcpy(core_info_list[i].core_version, info->core_version, sizeof(core_info_list[i].core_version));
+            strlcpy(core_info_list[i].extensions, info->extensions, sizeof(core_info_list[i].extensions));
+            core_info_list[i].supports_no_game = info->supports_no_game;
+            core_info_list[i].block_extract = info->block_extract;
+            core_info_list[i].full_path = info->full_path;
 
-         logger(LOG_DEBUG, tag, "file name: %s\n", core_info_list[i].file_name);
-         logger(LOG_DEBUG, tag, "core name: %s\n", core_info_list[i].core_name);
-         logger(LOG_DEBUG, tag, "core version: %s\n", core_info_list[i].core_version);
-         logger(LOG_DEBUG, tag, "valid extensions: %s\n", core_info_list[i].extensions);
-         core_count++;
+            logger(LOG_DEBUG, tag, "file name: %s\n", core_info_list[i].file_name);
+            logger(LOG_DEBUG, tag, "core name: %s\n", core_info_list[i].core_name);
+            logger(LOG_DEBUG, tag, "core version: %s\n", core_info_list[i].core_version);
+            logger(LOG_DEBUG, tag, "valid extensions: %s\n", core_info_list[i].extensions);
+            core_count++;
+         }
+         piccolo->unload_core();
       }
-      piccolo->unload_core();
-   }
 
-   logger(LOG_DEBUG, tag, "cores found: %d\n", core_count);
-   for (unsigned i = 0; i < core_count; i++)
-   {
-      core_entries[i] = core_info_list[i].core_name;
-      logger(LOG_DEBUG, tag, "loading file %s\n", core_entries[i]);
+      logger(LOG_DEBUG, tag, "cores found: %d\n", core_count);
+      for (unsigned i = 0; i < core_count; i++)
+      {
+         core_entries[i] = core_info_list[i].core_name;
+         logger(LOG_DEBUG, tag, "loading file %s\n", core_entries[i]);
+      }
+
+      ret = true;
    }
+   else
+      ret = false;
    free(core_list);
-   return true;
+
+   return ret;
 }
 
 void Kami::OptionUpdate(core_option_t* option, const char* value)
@@ -97,7 +108,6 @@ void Kami::ParseInputDescriptors()
 
 size_t kami_render_audio(const int16_t* data, size_t frames)
 {
-   //SDL_QueueAudio(device, data, 4 * frames);
+   // SDL_QueueAudio(device, data, 4 * frames);
    return frames;
 }
-

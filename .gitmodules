@@ -25,3 +25,6 @@
 [submodule "deps/stb"]
 	path = deps/stb
 	url = https://github.com/nothings/stb
+[submodule "deps/borealis"]
+	path = deps/borealis
+	url = https://github.com/natinusala/borealis.git

@@ -97,9 +97,6 @@ public:
    void Main(const char* title);
    unsigned RenderVideo(unsigned* output);
    static void InputPoll();
-
-   // TODO: this shouldn't be a part of this class
-   void TextureListInit(const char* path);
 };
 
 // TODO: reimplement these

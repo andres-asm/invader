@@ -41,7 +41,7 @@ void RenderBackendInputState(Kami* kami, unsigned port, unsigned width, unsigned
    }
 }
 
-void Kami::TextureListInit(const char* path)
+void texture_list_init(const char* path)
 {
    char filename[PATH_MAX_LENGTH];
 
