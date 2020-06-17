@@ -305,8 +305,11 @@ bool create_audio_device()
    return true;
 }
 
-void set_fullscreen_mode(bool fullscreen, bool desktop)
+void set_fullscreen_mode()
 {
+   bool fullscreen = video_fullscreen->GetValue();
+   bool desktop = video_fullscreen_windowed->GetValue();
+
    if (fullscreen && desktop)
       SDL_SetWindowFullscreen(invader_window, SDL_WINDOW_FULLSCREEN_DESKTOP);
    else if (fullscreen)
@@ -315,8 +318,10 @@ void set_fullscreen_mode(bool fullscreen, bool desktop)
       SDL_SetWindowFullscreen(invader_window, 0);
 }
 
-void set_vsync_mode(bool vsync)
+void set_vsync_mode()
 {
+   bool vsync = video_vsync->GetValue();
+
    SDL_GL_SetSwapInterval(vsync ? 1 : 0);
 }
 
@@ -339,4 +344,8 @@ const char* get_glsl_version()
 void common_config_load()
 {
    settings_init("settings.toml");
+
+   video_fullscreen->SetEventCallback(set_fullscreen_mode);
+   video_fullscreen_windowed->SetEventCallback(set_fullscreen_mode);
+   video_vsync->SetEventCallback(set_vsync_mode);
 }

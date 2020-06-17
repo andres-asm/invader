@@ -45,6 +45,7 @@ public:
    T GetValue() { return m_value; };
    T SetValue(T value) { m_value = value; };
    T SetToDefault() { m_value = m_default; };
+   void SetEventCallback(void (*evt)(void)) { setting_event = evt; }
 
    static T Render();
 };

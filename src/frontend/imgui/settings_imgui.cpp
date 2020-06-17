@@ -13,6 +13,9 @@ bool Setting<bool>::Render()
    bool ret = ImGui::Checkbox(_(label.c_str()), &m_value);
    Widgets::Tooltip(_(desc.c_str()));
 
+   if (ret)
+      setting_event();
+
    return ret;
 }
 

@@ -54,8 +54,8 @@ void render_framebuffer(unsigned texture_data, core_info_t* info);
 bool create_audio_device();
 
 // video utilities
-void set_fullscreen_mode(bool fullscreen, bool desktop);
-void set_vsync_mode(bool vsync);
+void set_fullscreen_mode();
+void set_vsync_mode();
 
 // configuration management
 void common_config_load();

@@ -233,11 +233,9 @@ void invader()
    controller->Update();
    render_frontend_input_device_state();
 
-   if (video_fullscreen->Render() || video_fullscreen_windowed->Render())
-      set_fullscreen_mode(video_fullscreen->GetValue(), video_fullscreen_windowed->GetValue());
-
-   if (video_vsync->Render())
-      set_vsync_mode(video_vsync->GetValue());
+   video_fullscreen->Render();
+   video_fullscreen_windowed->Render();
+   video_vsync->Render();
 
    if (video_scale_mode->Render())
    {
@@ -324,7 +322,7 @@ int main(int argc, char* argv[])
    invader_window = get_window();
    invader_context = get_context();
 
-   set_fullscreen_mode(video_fullscreen->GetValue(), video_fullscreen_windowed->GetValue());
+   set_fullscreen_mode();
 
    glsl_version = get_glsl_version();
 
