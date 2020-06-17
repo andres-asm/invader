@@ -15,9 +15,6 @@ static const char* tag = "[main]";
 extern Kami* kami1;
 extern Kami* kami2;
 
-extern int kami1_output;
-extern int kami2_output;
-
 extern std::vector<Asset> gamead_assets;
 extern GamePad* controller;
 
@@ -60,17 +57,15 @@ void Kami::TextureListInit(const char* path)
    }
 }
 
-int Kami::RenderVideo()
+unsigned Kami::RenderVideo(unsigned* output)
 {
    unsigned pixel_format = core_info->pixel_format;
    core_frame_buffer_t* video_data = piccolo->get_video_data();
 
-   GLuint texture;
+   if (*output == 0)
+      glGenTextures(1, (GLuint*)output);
+   glBindTexture(GL_TEXTURE_2D, (GLuint)*output);
 
-   if (!texture)
-      glGenTextures(1, &texture);
-
-   glBindTexture(GL_TEXTURE_2D, texture);
    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -100,8 +95,7 @@ int Kami::RenderVideo()
       default:
          logger(LOG_DEBUG, tag, "pixel format: %s (%d) unhandled\n", PRINT_PIXFMT(pixel_format), pixel_format);
    }
-
-   return ((int)texture);
+   return (*output);
 }
 
 void Kami::InputPoll()
@@ -216,8 +210,8 @@ void Kami::Main(const char* title)
             else
                aspect = core_info->av_info.geometry.aspect_ratio;
 
-            kami1_output = RenderVideo();
-            ImTextureID image_texture = (void*)(intptr_t)kami1_output;
+            unsigned output = RenderVideo(&texture_data);
+            ImTextureID image_texture = (void*)(intptr_t)output;
 
             // TODO: remove this, example of drawing to the background, could be useful
             // auto draw_list = ImGui::GetBackgroundDrawList();
@@ -445,4 +439,3 @@ void Kami::Main(const char* title)
    ImGui::End();
    return;
 }
-

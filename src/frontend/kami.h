@@ -8,7 +8,6 @@
 #include "common.h"
 #include "libretro/piccolo.h"
 
-
 enum device_gamepad_enum
 {
    GAMEPAD_B = RETRO_DEVICE_ID_JOYPAD_B,
@@ -63,6 +62,8 @@ private:
    input_descriptor_t input_descriptors[MAX_PORTS][MAX_IDS];
    core_frame_buffer_t* video_data;
 
+   unsigned texture_data;
+
 public:
    Kami()
    {
@@ -73,6 +74,8 @@ public:
       core_loaded = false;
       this->piccolo = new PiccoloWrapper();
       core_info = piccolo->get_info();
+
+      texture_data = 0;
    }
 
    ~Kami() { delete piccolo; }
@@ -87,10 +90,12 @@ public:
    input_state_t GetInputState(int port) { return input_state[port]; }
 
    core_info_t* GetCoreInfo() { return core_info; }
+   unsigned GetCoreStatus() { return status; }
+   unsigned GetTextureData() { return texture_data; }
 
    // implementation specific functions
    void Main(const char* title);
-   int RenderVideo();
+   unsigned RenderVideo(unsigned* output);
    static void InputPoll();
 
    // TODO: this shouldn't be a part of this class

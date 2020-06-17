@@ -47,8 +47,8 @@ bool create_window(const char* app_name, unsigned width, unsigned height);
 void destroy_window();
 
 // video framebuffer creation
-bool create_framebuffer(int texture);
-void render_framebuffer(core_info_t* info);
+bool create_framebuffer();
+void render_framebuffer(unsigned texture_data, core_info_t* info);
 
 // audio device creation
 bool create_audio_device();

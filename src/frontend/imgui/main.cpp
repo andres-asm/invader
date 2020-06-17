@@ -13,13 +13,10 @@ static const char* app_name = "invader";
 static const char* asset_dir = "./assets/gamepad/generic";
 
 static bool quit = false;
-static bool second_instance = false;
+static bool second_instance = true;
 
 Kami* kami1;
 Kami* kami2;
-
-int kami1_output;
-int kami2_output;
 
 ImVec4 clearColor;
 ImGuiIO io;
@@ -274,13 +271,14 @@ void imgui_draw_frame()
       kami2->Main("Core 2");
 
    ImGui::Render();
+
    SDL_GL_MakeCurrent(invader_window, invader_context);
    glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
    glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
    glClear(GL_COLOR_BUFFER_BIT);
 
-   if (kami1_output)
-      render_framebuffer(kami1->GetCoreInfo());
+   if (kami1->GetCoreStatus() == CORE_STATUS_RUNNING)
+      render_framebuffer(kami1->GetTextureData(), kami1->GetCoreInfo());
    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
    SDL_GL_SwapWindow(invader_window);
 }
@@ -304,7 +302,7 @@ int main(int argc, char* argv[])
    imgui_setup();
    set_default_style();
 
-   if (!create_framebuffer(kami1_output))
+   if (!create_framebuffer())
       goto shutdown;
    if (!create_audio_device())
       goto shutdown;

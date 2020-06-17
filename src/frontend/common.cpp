@@ -80,7 +80,7 @@ bool create_window(const char* app_name, unsigned width, unsigned height)
    SDL_GL_SetSwapInterval(1);
 
    // check opengl version sdl uses
-   logger(LOG_DEBUG, tag, "opengl version: %s", (char*)glGetString(GL_VERSION));
+   logger(LOG_DEBUG, tag, "opengl version: %s\n", (char*)glGetString(GL_VERSION));
 
    glViewport(0, 0, width, height);
    glewExperimental = 1;
@@ -107,7 +107,7 @@ void destroy_window()
    SDL_Quit();
 }
 
-bool create_framebuffer(int texture)
+bool create_framebuffer()
 {
    int success;
    char log[512];
@@ -184,8 +184,6 @@ bool create_framebuffer(int texture)
    // texture coordinate attributes
    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
    glEnableVertexAttribArray(2);
-   glActiveTexture(GL_TEXTURE0);
-   glBindTexture(GL_TEXTURE_2D, texture);
 
    glUseProgram(shader_program);
    glBindVertexArray(vao);
@@ -193,7 +191,7 @@ bool create_framebuffer(int texture)
    return true;
 }
 
-void render_framebuffer(core_info_t* info)
+void render_framebuffer(unsigned texture_data, core_info_t* info)
 {
    unsigned integer_scale = video_scale_mode->GetValue().m_mode;
 
@@ -247,6 +245,7 @@ void render_framebuffer(core_info_t* info)
          break;
    }
 
+   glBindTexture(GL_TEXTURE_2D, texture_data);
    glViewport(x, y, width, height);
    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
@@ -261,7 +260,7 @@ bool create_audio_device()
 
    for (i = 0; i < SDL_GetNumAudioDrivers(); ++i)
    {
-      logger(LOG_DEBUG, tag, "Audio driver %d: %s\n", i, SDL_GetAudioDriver(i));
+      logger(LOG_DEBUG, tag, "audio driver %d: %s\n", i, SDL_GetAudioDriver(i));
    }
 
    logger(LOG_INFO, tag, "current audio driver %s\n", SDL_GetCurrentAudioDriver());
