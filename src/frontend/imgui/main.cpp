@@ -13,10 +13,9 @@ static const char* app_name = "invader";
 static const char* asset_dir = "./assets/gamepad/generic";
 
 static bool quit = false;
-static bool second_instance = true;
 
-Kami* kami1;
-Kami* kami2;
+std::vector<Kami*> kami_instances;
+Kami* current_kami_instance;
 
 ImVec4 clearColor;
 ImGuiIO io;
@@ -191,8 +190,21 @@ void render_frontend_input_device_state()
    }
 }
 
+void add_instance()
+{
+   Kami* new_instance;
+   new_instance = new Kami();
+
+   new_instance->CoreListInit("./cores");
+   new_instance->TextureListInit(asset_dir);
+   kami_instances.push_back(new_instance);
+}
+
 void invader()
 {
+   int instance_count = kami_instances.size();
+   static int current_instance = 1;
+
    ImGui::Begin(_("window_title_invader"), NULL, ImGuiWindowFlags_AlwaysAutoResize);
 
    // if (ImGui::Button(_("invader_file_manager"), ImVec2(120, 0)))
@@ -201,6 +213,12 @@ void invader()
    //   file_manager_dialog_is_open = true;
    //}
    // file_manager(".", ".");
+
+   if (ImGui::Button(_("kami_add_instace"), ImVec2(120, 0)))
+      add_instance();
+
+   if (instance_count > 1 && ImGui::SliderInt(_("kami_instance_selector"), &current_instance, 1, instance_count))
+      current_kami_instance = kami_instances.at(current_instance - 1);
 
    if (!controller)
    {
@@ -243,6 +261,7 @@ void imgui_setup()
 
 void imgui_draw_frame()
 {
+   unsigned i = 0;
    SDL_Event e;
 
    while (SDL_PollEvent(&e) != 0)
@@ -266,9 +285,13 @@ void imgui_draw_frame()
 
    invader();
 
-   kami1->Main("Core 1");
-   if (second_instance)
-      kami2->Main("Core 2");
+   for (Kami* instance : kami_instances)
+   {
+      std::string title = "Core ";
+      title += std::to_string(i + 1);
+      instance->Main(title.c_str());
+      i++;
+   }
 
    ImGui::Render();
 
@@ -277,8 +300,8 @@ void imgui_draw_frame()
    glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
    glClear(GL_COLOR_BUFFER_BIT);
 
-   if (kami1->GetCoreStatus() == CORE_STATUS_RUNNING)
-      render_framebuffer(kami1->GetTextureData(), kami1->GetCoreInfo());
+   if (current_kami_instance->GetCoreStatus() == CORE_STATUS_RUNNING)
+      render_framebuffer(current_kami_instance->GetTextureData(), current_kami_instance->GetCoreInfo());
    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
    SDL_GL_SwapWindow(invader_window);
 }
@@ -307,18 +330,8 @@ int main(int argc, char* argv[])
    if (!create_audio_device())
       goto shutdown;
 
-   kami1 = new Kami();
-   if (!kami1->CoreListInit("./cores"))
-      goto shutdown;
-   kami1->TextureListInit(asset_dir);
-
-   if (second_instance)
-   {
-      kami2 = new Kami();
-      if (!kami2->CoreListInit("./cores"))
-         goto shutdown;
-      kami2->TextureListInit(asset_dir);
-   }
+   add_instance();
+   current_kami_instance = kami_instances.at(0);
 
    while (!quit)
    {
@@ -327,9 +340,7 @@ int main(int argc, char* argv[])
 
 shutdown:
    logger(LOG_DEBUG, tag, "shutting down\n");
-   delete kami1;
-   if (second_instance)
-      delete kami2;
+   // delete kami;
 
    imgui_shutdown();
    destroy_window();

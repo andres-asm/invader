@@ -12,9 +12,6 @@
 
 static const char* tag = "[main]";
 
-extern Kami* kami1;
-extern Kami* kami2;
-
 extern std::vector<Asset> gamead_assets;
 extern GamePad* controller;
 
