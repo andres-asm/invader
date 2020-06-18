@@ -292,27 +292,17 @@ void imgui_draw_frame()
    {
       std::string title = "Core ";
       title += std::to_string(i + 1);
-
-      instance->Main();
       instance->RenderGui(title.c_str());
       i++;
    }
 
    ImGui::Render();
-
-   SDL_GL_MakeCurrent(invader_window, invader_context);
-   glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
-   glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
-   glClear(GL_COLOR_BUFFER_BIT);
-
-   if (current_kami_instance && current_kami_instance->GetCoreStatus() == CORE_STATUS_RUNNING)
-      render_framebuffer(current_kami_instance->GetTextureData(), current_kami_instance->GetCoreInfo());
    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-   SDL_GL_SwapWindow(invader_window);
 }
 
 int main(int argc, char* argv[])
 {
+   unsigned i = 0;
    logger_set_level(LOG_DEBUG);
 
    init_localization();
@@ -342,9 +332,26 @@ int main(int argc, char* argv[])
    else
       current_kami_instance = NULL;
 
+   SDL_GL_MakeCurrent(invader_window, invader_context);
    while (!quit)
    {
+      for (Kami* instance : kami_instances)
+      {
+         std::string title = "Core ";
+         title += std::to_string(i + 1);
+
+         instance->Main();
+         i++;
+      }
+
+      glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
+      glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
+      glClear(GL_COLOR_BUFFER_BIT);
+
+      if (current_kami_instance && current_kami_instance->GetCoreStatus() == CORE_STATUS_RUNNING)
+         render_framebuffer(current_kami_instance->GetTextureData(), current_kami_instance->GetCoreInfo());
       imgui_draw_frame();
+      SDL_GL_SwapWindow(invader_window);
    }
 
 shutdown:
