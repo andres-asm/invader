@@ -98,7 +98,21 @@ unsigned Kami::RenderVideo(unsigned* output)
 void Kami::InputPoll()
 { }
 
-void Kami::Main(const char* title)
+void Kami::Main()
+{
+   if (core_loaded)
+   {
+      status = piccolo->get_status();
+
+      if (status == CORE_STATUS_LOADED || status == CORE_STATUS_RUNNING)
+      {
+         piccolo->core_run(NULL);
+         RenderVideo(&texture_data);
+      }
+   }
+}
+
+void Kami::RenderGui(const char* title)
 {
    const char* core_name;
    const char* core_version;
@@ -130,7 +144,6 @@ void Kami::Main(const char* title)
 
       size_t option_count = piccolo->get_option_count();
       core_option_t* options = piccolo->get_options();
-      status = piccolo->get_status();
 
       size_t controller_port_count = piccolo->get_controller_port_count();
       controller_info_t* controllers = piccolo->get_controller_info();
@@ -196,8 +209,6 @@ void Kami::Main(const char* title)
          case CORE_STATUS_LOADED:
          case CORE_STATUS_RUNNING:
          {
-            piccolo->core_run(NULL);
-
             int width = core_info->av_info.geometry.base_width;
             int height = core_info->av_info.geometry.base_height;
             float aspect;
@@ -207,8 +218,7 @@ void Kami::Main(const char* title)
             else
                aspect = core_info->av_info.geometry.aspect_ratio;
 
-            unsigned output = RenderVideo(&texture_data);
-            ImTextureID image_texture = (void*)(intptr_t)output;
+            ImTextureID image_texture = (void*)(intptr_t)GetTextureData();
 
             // TODO: remove this, example of drawing to the background, could be useful
             // auto draw_list = ImGui::GetBackgroundDrawList();

@@ -93,8 +93,10 @@ public:
    unsigned GetCoreStatus() { return status; }
    unsigned GetTextureData() { return texture_data; }
 
+   void Main();
+
    // implementation specific functions
-   void Main(const char* title);
+   void RenderGui(const char* title);
    unsigned RenderVideo(unsigned* output);
    static void InputPoll();
 };

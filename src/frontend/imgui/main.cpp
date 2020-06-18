@@ -293,7 +293,8 @@ void imgui_draw_frame()
       std::string title = "Core ";
       title += std::to_string(i + 1);
 
-      instance->Main(title.c_str());
+      instance->Main();
+      instance->RenderGui(title.c_str());
       i++;
    }
 
