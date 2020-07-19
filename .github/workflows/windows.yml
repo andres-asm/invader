@@ -22,6 +22,7 @@ jobs:
         submodules: 'true'
     - name: make
       run: msys2do make -C src/ -j4
+
     - name: upload
       if: github.event_name == 'push'
       uses: actions/upload-artifact@v2
