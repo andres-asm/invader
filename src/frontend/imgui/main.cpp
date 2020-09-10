@@ -236,10 +236,7 @@ void invader()
    video_fullscreen->Render();
    video_fullscreen_windowed->Render();
    video_vsync->Render();
-
-   if (video_scale_mode->Render())
-   {
-   }
+   video_scale_mode->Render();
 
    ImGui::End();
 }
@@ -326,12 +323,12 @@ int main(int argc, char* argv[])
       goto shutdown;
 
    texture_list_init(asset_dir);
-
-   if (add_instance())
-      current_kami_instance = kami_instances.at(0);
-   else
-      current_kami_instance = NULL;
-
+   /*
+      if (add_instance())
+         current_kami_instance = kami_instances.at(0);
+      else
+         current_kami_instance = NULL;
+   */
    SDL_GL_MakeCurrent(invader_window, invader_context);
    while (!quit)
    {
