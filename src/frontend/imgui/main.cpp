@@ -10,7 +10,7 @@
 static const char* tag = "[main]";
 static const char* app_name = "invader";
 
-static const char* asset_dir = "./assets/gamepad/generic";
+static const char* asset_dir = "./assets/icons/gamepad/generic";
 
 static bool quit = false;
 
