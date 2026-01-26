@@ -12,6 +12,7 @@
          "args": ["-v"],
          "stopAtEntry": false,
          "cwd": "${workspaceFolder}",
+         "preLaunchTask": "msys2-mingw64 build",
          "environment": [],
          "externalConsole": true,
          "MIMode": "gdb",
@@ -39,7 +40,7 @@
                  "ignoreFailures": true
              }
          ]
-      },
+      }
 
    ]
 }

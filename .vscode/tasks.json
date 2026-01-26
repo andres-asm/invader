@@ -48,12 +48,13 @@
             "isDefault": true
          },
 
-         "command": "./configure; make -j2",
+         "command": "make -j2",
          "options": {
+            "cwd": "${workspaceFolder}/src",
             "shell": {
                "executable": "C:\\msys64\\usr\\bin\\bash.exe",
                "args": [
-                  "-c"
+                  "-lc"
                ]
             }
          }
@@ -64,12 +65,13 @@
 
          "group": "build",
 
-         "command": "./configure; DEBUG=1 make -j2",
+         "command": "DEBUG=1 make -j2",
          "options": {
+            "cwd": "${workspaceFolder}/src",
             "shell": {
                "executable": "C:\\msys64\\usr\\bin\\bash.exe",
                "args": [
-                  "-c"
+                  "-lc"
                ]
             }
          }
@@ -82,10 +84,11 @@
 
          "command": "make -j2",
          "options": {
+            "cwd": "${workspaceFolder}/src",
             "shell": {
                "executable": "C:\\msys64\\usr\\bin\\bash.exe",
                "args": [
-                  "-c"
+                  "-lc"
                ]
             }
          }
@@ -98,10 +101,11 @@
 
          "command": "make clean",
          "options": {
+            "cwd": "${workspaceFolder}/src",
             "shell": {
                "executable": "C:\\msys64\\usr\\bin\\bash.exe",
                "args": [
-                  "-c"
+                  "-lc"
                ]
             }
          }
@@ -114,12 +118,13 @@
             "kind": "test",
             "isDefault": true },
 
-         "command": "./invader -v",
+         "command": "./invader_imgui_sdl2.exe -v",
          "options": {
+            "cwd": "${workspaceFolder}",
             "shell": {
                "executable": "C:\\msys64\\usr\\bin\\bash.exe",
                "args": [
-                  "-c"
+                  "-lc"
                ]
             }
          }

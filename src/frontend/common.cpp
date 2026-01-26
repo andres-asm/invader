@@ -51,12 +51,12 @@ bool create_window(const char* app_name, unsigned width, unsigned height)
    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
 #else
-   // GL 3.0 + GLSL 130
-   glsl_version = "#version 130";
+   // GL 3.3 + GLSL 330 (slang-compatible baseline)
+   glsl_version = "#version 330";
    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 #endif
 
    SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
