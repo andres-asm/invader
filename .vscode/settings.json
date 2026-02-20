@@ -1,45 +1,15 @@
 {
-   "terminal.integrated.shell.windows": "C:\\msys64\\usr\\bin\\bash.exe",
-   "terminal.integrated.env.windows": {
-      "PATH": "/mingw64/lib/ccache/bin:/mingw64/lib/ccache/bin:/mingw64/lib/ccache/bin:/mingw64/bin:/usr/local/bin:/usr/bin:/bin:$PATH",
-      "MSYSTEM": "MINGW64"
-   },
-   "terminal.integrated.cursorBlinking": true,
-   "editor.tabSize": 3,
-   "editor.detectIndentation": false,
-   "editor.formatOnSave": true,
-   "clang-format.executable": "E:\\msys64\\mingw64\\bin\\clang-format.exe",
-   "editor.renderWhitespace": "all",
-   "editor.insertSpaces": true,
-   "files.associations": {
-      "*.in": "cpp",
-      "imgui_impl_opengl3.h": "c",
-      "sdl.h": "c",
-      "glew.h": "c",
-      "*.tcc": "cpp",
-      "istream": "cpp",
-      "ostream": "cpp",
-      "streambuf": "cpp",
-      "*.def": "cpp",
-      "array": "c",
-      "string": "c",
-      "string_view": "c",
-      "list": "c",
-      "bitset": "c",
-      "initializer_list": "c",
-      "utility": "c",
-      "optional": "cpp",
-      "ratio": "cpp",
-      "system_error": "cpp",
-      "functional": "cpp",
-      "regex": "cpp",
-      "tuple": "cpp",
-      "type_traits": "cpp",
-      "vector": "cpp",
-      "memory": "cpp",
-      "memory_resource": "cpp",
-      "cmath": "cpp"
-   },
-   "C_Cpp.dimInactiveRegions": false,
-   "C_Cpp.default.compilerPath": "C:/msys64/mingw64/bin/g++.exe"
+    "terminal.integrated.profiles.windows": {
+        "MSYS2 UCRT64": {
+            "path": "C:\\msys64\\usr\\bin\\bash.exe",
+            "args": ["--login", "-i"],
+            "env": {
+                "MSYSTEM": "UCRT64",
+                "CHERE_INVOKING": "1",
+                "MSYS2_PATH_TYPE": "inherit"
+            }
+        }
+    },
+    "terminal.integrated.defaultProfile.windows": "MSYS2 UCRT64",
+    "terminal.integrated.cwd": "${workspaceFolder}"
 }

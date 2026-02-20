@@ -11,17 +11,12 @@ LIBS  :=
 
 WITH_GUI := imgui
 
-ifeq ($(WITH_GUI), nuklear)
-   TARGET = ../invader_nuklear_sdl2
-   WITH_GUI := nuklear
-else ifeq ($(WITH_GUI), imgui)
-   TARGET = ../invader_imgui_sdl2
+ifeq ($(WITH_GUI), imgui)
+   TARGET = ../invader
    WITH_GUI := imgui
 endif
 
 include Makefile.common
-
-OBJDIR = obj/
 
 OBJECTS  = $(SOURCES_CXX:.cpp=.o) $(SOURCES_C:.c=.o)
 LOCALIZATION = $(SOURCES_LOCALIZATION:.c=.po)
@@ -43,6 +38,7 @@ else
    CFLAGS += -O3 -pedantic -DGNU_SOURCE
    CXXFLAGS += -O3 -pedantic -DGNU_SOURCE
 endif
+   TARGET = ../invader_dbg
 endif
 
 ifneq ($(SANITIZER),)

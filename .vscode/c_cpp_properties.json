@@ -1,155 +1,20 @@
 {
     "configurations": [
         {
-            "name": "Mac",
+            "name": "UCRT64",
             "includePath": [
-                "/usr/include",
-                "/usr/local/include",
-                "${workspaceRoot}",
-                "${workspaceRoot}/deps/libretro/include",
-                "${workspaceRoot}/deps/nuklear",
-                "${workspaceRoot}/include",
-                "${workspaceRoot}/include/nuklear/"
-            ],
-            "defines": [],
-            "intelliSenseMode": "clang-x64",
-            "browse": {
-                "path": [
-                    "/usr/include",
-                    "/usr/local/include",
-                    "${workspaceRoot}",
-                    "${workspaceRoot}/deps/libretro/include",
-                    "${workspaceRoot}/deps/nuklear",
-                    "${workspaceRoot}/include",
-                    "${workspaceRoot}/include/nuklear/"
-                ],
-                "limitSymbolsToIncludedHeaders": true,
-                "databaseFilename": ""
-            },
-            "macFrameworkPath": [
-                "/System/Library/Frameworks",
-                "/Library/Frameworks"
-            ]
-        },
-        {
-            "name": "Linux",
-            "includePath": [
-                "/usr/include",
-                "/usr/local/include",
-                "${workspaceRoot}",
-                "${workspaceRoot}/deps/libretro/include",
-                "${workspaceRoot}/deps/nuklear",
-                "${workspaceRoot}/include",
-                "${workspaceRoot}/include/nuklear/"
-            ],
-            "defines": [],
-            "intelliSenseMode": "clang-x64",
-            "browse": {
-                "path": [
-                    "/usr/include",
-                    "/usr/local/include",
-                    "${workspaceRoot}"
-                ],
-                "limitSymbolsToIncludedHeaders": true,
-                "databaseFilename": ""
-            }
-        },
-        {
-            "name": "Win32",
-            "includePath": [
-                "C:/Program Files (x86)/Windows Kits/10/Include/10.0.15063.0/um",
-                "C:/Program Files (x86)/Windows Kits/10/Include/10.0.15063.0/ucrt",
-                "C:/Program Files (x86)/Windows Kits/10/Include/10.0.15063.0/shared",
-                "C:/Program Files (x86)/Windows Kits/10/Include/10.0.15063.0/winrt",
-                "${workspaceRoot}",
-                "${workspaceRoot}/deps/libretro/include",
-                "${workspaceRoot}/deps/nuklear",
-                "${workspaceRoot}/include",
-                "${workspaceRoot}/include/nuklear/",
-                "${workspaceFolder}/deps/imgui"
+                "${workspaceFolder}/**",
+                "C:/msys64/ucrt64/include/**"
             ],
             "defines": [
                 "_DEBUG",
-                "UNICODE"
+                "UNICODE",
+                "_UNICODE"
             ],
-            "intelliSenseMode": "msvc-x64",
-            "browse": {
-                "path": [
-                    "C:/Program Files (x86)/Windows Kits/10/Include/10.0.15063.0/um",
-                    "C:/Program Files (x86)/Windows Kits/10/Include/10.0.15063.0/ucrt",
-                    "C:/Program Files (x86)/Windows Kits/10/Include/10.0.15063.0/shared",
-                    "C:/Program Files (x86)/Windows Kits/10/Include/10.0.15063.0/winrt",
-                    "${workspaceRoot}",
-                    "${workspaceRoot}/deps/libretro/include",
-                    "${workspaceRoot}/deps/nuklear",
-                    "${workspaceRoot}/include",
-                    "${workspaceRoot}/include/nuklear/"
-                ],
-                "limitSymbolsToIncludedHeaders": true,
-                "databaseFilename": ""
-            },
-            "cStandard": "c11",
-            "cppStandard": "c++17"
-        },
-        {
-            "name": "msys2-mingw32",
-            "includePath": [
-                "C:/msys64/mingw32/include",
-                "C:/msys64/mingw32/i686-w64-mingw32/include",
-                "${workspaceRoot}",
-                "${workspaceRoot}/deps/libretro/include",
-                "${workspaceRoot}/deps/nuklear",
-                "${workspaceRoot}/include",
-                "${workspaceRoot}/include/nuklear/"
-            ],
-            "defines": [
-                "_DEBUG",
-                "UNICODE"
-            ],
-            "intelliSenseMode": "msvc-x64",
-            "browse": {
-                "path": [
-                    "C:/msys64/mingw32/include",
-                    "C:/msys64/mingw32/i686-w64-mingw32/include",
-                    "${workspaceRoot}",
-                    "${workspaceRoot}/deps/libretro/include",
-                    "${workspaceRoot}/deps/nuklear",
-                    "${workspaceRoot}/include",
-                    "${workspaceRoot}/include/nuklear/"
-                ],
-                "limitSymbolsToIncludedHeaders": true,
-                "databaseFilename": ""
-            }
-        },
-        {
-            "name": "msys2-mingw64",
-            "includePath": [
-                "C:/msys64/mingw64/include",
-                "C:/msys64/mingw64/x86_64-w64-mingw32/include",
-                "${workspaceRoot}",
-                "${workspaceRoot}/deps/libretro/include",
-                "${workspaceRoot}/deps/nuklear",
-                "${workspaceRoot}/include",
-                "${workspaceRoot}/include/nuklear/"
-            ],
-            "defines": [
-                "_DEBUG",
-                "UNICODE"
-            ],
-            "intelliSenseMode": "msvc-x64",
-            "browse": {
-                "path": [
-                    "C:/msys64/mingw64/include",
-                    "C:/msys64/mingw64/x86_64-w64-mingw32/include",
-                    "${workspaceRoot}",
-                    "${workspaceRoot}/deps/libretro/include",
-                    "${workspaceRoot}/deps/nuklear",
-                    "${workspaceRoot}/include",
-                    "${workspaceRoot}/include/nuklear/"
-                ],
-                "limitSymbolsToIncludedHeaders": true,
-                "databaseFilename": ""
-            }
+            "compilerPath": "C:/msys64/ucrt64/bin/gcc.exe",
+            "cStandard": "c17",
+            "cppStandard": "c++20",
+            "intelliSenseMode": "windows-gcc-x64"
         }
     ],
     "version": 4

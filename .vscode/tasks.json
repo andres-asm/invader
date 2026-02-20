@@ -1,133 +1,89 @@
 {
-   // See https://go.microsoft.com/fwlink/?LinkId=733558
-   // for the documentation about the tasks.json format
-   "version": "2.0.0",
-   "tasks": [
-      {
-         "label": "linux clean build",
-         "type": "shell",
-         "group": "build",
-         "command": "make clean && ./configure && make -j2"
-      },
-      {
-         "label": "linux clean",
-         "type": "shell",
-         "group": "build",
-         "command": "make clean"
-      },
-      {
-         "label": "linux build with debug symbols",
-         "type": "shell",
-         "group": "build",
-         "command": "DEBUG=1 make -j2"
-      },
-      {
-         "label": "linux build",
-         "type": "shell",
-         "group": "build",
-         "command": "make -j2"
-      },
-      {
-         "label": "linux build and run",
-         "type": "shell",
-         "group": "build",
-         "command": "make -j2 && ./invader -v"
-      },
-      {
-         "label": "linux build and run with debug symbols",
-         "type": "shell",
-         "group": "build",
-         "command": "DEBUG=1 make -j2 && ./invader -v"
-      },
-      {
-         "label": "msys2-mingw64 build",
-         "type": "shell",
-
-         "group": {
-            "kind": "build",
-            "isDefault": true
-         },
-
-         "command": "make -j2",
-         "options": {
-            "cwd": "${workspaceFolder}/src",
-            "shell": {
-               "executable": "C:\\msys64\\usr\\bin\\bash.exe",
-               "args": [
-                  "-lc"
-               ]
-            }
-         }
-      },
-      {
-         "label": "msys2-mingw64 build with debug symbols",
-         "type": "shell",
-
-         "group": "build",
-
-         "command": "DEBUG=1 make -j2",
-         "options": {
-            "cwd": "${workspaceFolder}/src",
-            "shell": {
-               "executable": "C:\\msys64\\usr\\bin\\bash.exe",
-               "args": [
-                  "-lc"
-               ]
-            }
-         }
-      },
-      {
-         "label": "msys2-mingw64 rebuild",
-         "type": "shell",
-
-         "group": "build",
-
-         "command": "make -j2",
-         "options": {
-            "cwd": "${workspaceFolder}/src",
-            "shell": {
-               "executable": "C:\\msys64\\usr\\bin\\bash.exe",
-               "args": [
-                  "-lc"
-               ]
-            }
-         }
-      },
-      {
-         "label": "msys2-mingw64 clean",
-         "type": "shell",
-
-         "group": "build",
-
-         "command": "make clean",
-         "options": {
-            "cwd": "${workspaceFolder}/src",
-            "shell": {
-               "executable": "C:\\msys64\\usr\\bin\\bash.exe",
-               "args": [
-                  "-lc"
-               ]
-            }
-         }
-      },
-      {
-         "label": "msys2-mingw64 run",
-         "type": "shell",
-
-         "group": {
-            "kind": "test",
-            "isDefault": true },
-
-         "command": "./invader_imgui_sdl2.exe -v",
-         "options": {
-            "cwd": "${workspaceFolder}",
-            "shell": {
-               "executable": "C:\\msys64\\usr\\bin\\bash.exe",
-               "args": [
-                  "-lc"
-               ]
-            }
-         }
-      }
-   ]
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "UCRT64 build",
+            "type": "shell",
+            "command": "time make -j$(($(nproc)-1))",
+            "options": {
+                "cwd": "${workspaceFolder}/src",
+                "env": {
+                    "MSYSTEM": "UCRT64",
+                    "PATH": "C:\\msys64\\ucrt64\\bin;C:\\msys64\\usr\\bin;${env:PATH}"
+                }
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            "label": "UCRT64 clean",
+            "type": "shell",
+            "command": "make clean",
+            "options": {
+                "cwd": "${workspaceFolder}/src",
+                "env": {
+                    "MSYSTEM": "UCRT64",
+                    "PATH": "C:\\msys64\\ucrt64\\bin;C:\\msys64\\usr\\bin;${env:PATH}"
+                }
+            },
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "UCRT64 clean & build",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "UCRT64 clean",
+                "UCRT64 build"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": []
+        }
+{
+            "label": "UCRT64 build without ccache",
+            "type": "shell",
+            "command": "make clean && time make -j$(($(nproc)-1))",
+            "options": {
+                "cwd": "${workspaceFolder}/src",
+                "env": {
+                    "MSYSTEM": "UCRT64",
+                    "CCACHE_DISABLE": "1",
+                    "PATH": "C:\\msys64\\ucrt64\\bin;C:\\msys64\\usr\\bin;${env:PATH}"
+                }
+            },
+            "group": "build",
+            "problemMatcher": [
+                "$gcc"
+            ]
+        }
+{
+            "label": "UCRT64 debug build",
+            "type": "shell",
+            "command": "time DEBUG=1 make -j$(($(nproc)-1))",
+            "options": {
+                "cwd": "${workspaceFolder}/src",
+                "env": {
+                    "MSYSTEM": "UCRT64",
+                    "CCACHE_DISABLE": "1",
+                    "PATH": "C:\\msys64\\ucrt64\\bin;C:\\msys64\\usr\\bin;${env:PATH}"
+                }
+            },
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "UCRT64 clean"
+            ],
+            "group": "build",
+            "problemMatcher": [
+                "$gcc"
+            ]
+        }
+    ]
 }
