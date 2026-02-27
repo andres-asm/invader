@@ -14,14 +14,16 @@ jobs:
     steps:
     - uses: numworks/setup-msys2@v1
       with:
-        msystem: MINGW64
+        msystem: UCRT64
     - run: msys2do pacman -S --noconfirm --needed libintl
-    - run: msys2do pacman -S --noconfirm --needed make mingw-w64-x86_64-toolchain mingw-w64-x86_64-ntldd mingw-w64-x86_64-zlib mingw-w64-x86_64-pkg-config mingw-w64-x86_64-SDL2 mingw-w64-x86_64-drmingw mingw-w64-x86_64-glew mingw-w64-x86_64-gettext
+    - run: msys2do pacman -S --noconfirm --needed cmake ninja mingw-w64-ucrt-x86_64-toolchain mingw-w64-ucrt-x86_64-sdl3 mingw-w64-ucrt-x86_64-vulkan-headers mingw-w64-ucrt-x86_64-vulkan-loader
     - uses: actions/checkout@v2
       with:
         submodules: 'true'
-    - name: make
-      run: msys2do make -C src/ -j4
+    - name: cmake
+      run: |
+        msys2do cmake -S . -B build -G Ninja
+        msys2do cmake --build build
 
     - name: upload
       if: github.event_name == 'push'
