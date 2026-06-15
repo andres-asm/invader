@@ -1,6 +1,10 @@
 DEBUG := 0
 GIT_VERSION := " $(shell git rev-parse --short HEAD)"
 
+ifneq (,$(findstring _NT,$(shell uname -s)))
+   OS := Windows_NT
+endif
+
 INCLUDE	:=
 SOURCES_C   :=
 SOURCES_CXX :=
@@ -14,6 +18,10 @@ WITH_GUI := imgui
 ifeq ($(WITH_GUI), imgui)
    TARGET = ../invader
    WITH_GUI := imgui
+endif
+
+ifeq ($(WITH_GUI), vulkan)
+   TARGET = ../invader_vulkan
 endif
 
 include Makefile.common
@@ -48,6 +56,14 @@ endif
 
 OBJ = $(SRC:.c=.o)
 
+ifeq ($(WITH_GUI), vulkan)
+   ifeq ($(OS),Windows_NT)
+      TARGET := $(TARGET).exe
+      LIBS += -lmingw32 -lintl `pkg-config --libs sdl3` `pkg-config --libs vulkan`
+   else
+      LIBS += `pkg-config --libs sdl3` `pkg-config --libs vulkan`
+   endif
+else
 ifeq ($(OS),Windows_NT)
    TARGET := $(TARGET).exe
    LIBS += -lmingw32 -lSDL2main -lSDL2 -lopengl32 -lm -lGLU32 -lGLEW32 -lintl
@@ -58,6 +74,7 @@ else
    else
       LIBS += -lSDL2 -lGL -lm -lGLU -lGLEW -ldl
    endif
+endif
 endif
 
 all: $(TARGET)

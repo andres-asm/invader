@@ -1,4 +1,4 @@
-#include "common.h"
+#include "common_gl.h"
 #include "util.h"
 
 static const char* tag = "[common]";

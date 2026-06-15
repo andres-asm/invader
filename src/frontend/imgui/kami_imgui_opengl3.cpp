@@ -6,6 +6,7 @@
 // libretro common
 #include <file/file_path.h>
 
+#include "common_gl.h"
 #include "input/gamepad.h"
 #include "kami.h"
 #include "widgets.h"

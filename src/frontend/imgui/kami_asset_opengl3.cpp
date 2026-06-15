@@ -11,7 +11,7 @@
 #include <file/file_path.h>
 
 #include "asset.h"
-#include "common.h"
+#include "common_gl.h"
 
 static const char* tag = "[asset]";
 
