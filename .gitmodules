@@ -1,18 +1,6 @@
-[submodule "deps/nuklear"]
-	path = deps/nuklear
-	url = https://github.com/vurtun/nuklear.git
-[submodule "deps/common"]
-	path = deps/common
-	url = https://github.com/libretro/libretro-common.git
 [submodule "deps/libretro"]
 	path = deps/libretro
 	url = https://github.com/libretro/libretro-common.git
-[submodule "deps/inih"]
-	path = deps/inih
-	url = https://github.com/benhoyt/inih.git
-[submodule "deps/cimgui"]
-	path = deps/cimgui
-	url = https://github.com/cimgui/cimgui.git
 [submodule "deps/imgui"]
 	path = deps/imgui
 	url = https://github.com/ocornut/imgui.git
@@ -22,6 +10,3 @@
 [submodule "deps/stb"]
 	path = deps/stb
 	url = https://github.com/nothings/stb
-[submodule "deps/borealis"]
-	path = deps/borealis
-	url = https://github.com/natinusala/borealis.git
